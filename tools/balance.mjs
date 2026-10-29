@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Runs the real economy and growth sim (src/js/sim/*) in Node with scripted players and reports
 // income per day, days to reach each era, and energy pressure against the PRD §9 target bands.
-//   node games/farm-sim/tools/balance.mjs [seeds=6]
+//   node tools/balance.mjs [seeds=6]
 // The bots act through the same rule functions the game uses (till, plant, water, harvest, chop,
 // mine, cast/reel, buy, craft, talk, give, sleep). Walking is modelled as a time cost per action.
 import path from 'node:path';

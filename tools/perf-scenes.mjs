@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Frame-rate and frame-cost survey of the busiest scenes, at both viewports, from file://.
-//   node games/farm-sim/tools/perf-scenes.mjs [--gpu]
+//   node tools/perf-scenes.mjs [--gpu]
 // --gpu launches Chromium on the real GPU (ANGLE/D3D11) instead of the harness's software renderer.
 // Reports rAF fps while walking, the game's own script time per frame, the worst frame, chunk bakes and heap.
 import { createRequire } from 'node:module';
@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const require = createRequire(path.resolve(HERE, '../../../shared/test-harness/package.json'));
+const require = createRequire(path.resolve(HERE, '../shared/test-harness/package.json'));
 const { chromium } = require('playwright');
 const gpu = process.argv.includes('--gpu');
 const url = pathToFileURL(path.resolve(HERE, '..', 'index.html')).href;

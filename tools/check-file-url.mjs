@@ -2,14 +2,14 @@
 // Opens the built game from file:// (no server) in the harness's Chromium at both viewports, plays into a town
 // at night, waits for every painted asset to decode, and fails on console errors, failed art or any request
 // that is not a local file or data: URI. Also saves a screenshot per viewport to art-src/ (git-ignored).
-//   node games/farm-sim/tools/check-file-url.mjs
+//   node tools/check-file-url.mjs
 // The test harness cannot do this itself: it blocks every URL that is not its own server.
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const require = createRequire(path.resolve(HERE, '../../../shared/test-harness/package.json'));
+const require = createRequire(path.resolve(HERE, '../shared/test-harness/package.json'));
 const { chromium } = require('playwright');
 const url = pathToFileURL(path.resolve(HERE, '..', 'index.html')).href;
 const browser = await chromium.launch();

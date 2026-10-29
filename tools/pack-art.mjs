@@ -7,11 +7,11 @@
 //   - "sheet": [cols, rows] cut a sprite sheet (crop stages) into equal cells, each trimmed, packed into one
 //     strip of cells "w" × "h" with every cell bottom-aligned.
 //
-//   node games/farm-sim/tools/pack-art.mjs [--only a,b] [--group tex]
+//   node tools/pack-art.mjs [--only a,b] [--group tex]
 //
 // art-src/art.json: { "quality": 0.82, "items": [ { "name", "src", "w", "h"?, "keyWhite"?, "trim"?, "seamless"?,
 //   "sheet"?, "quality"? } ] }. Writes assets/<name>.webp, assets/manifest.json, art-src/sheet.png (review).
-import { chromium } from '../../../shared/test-harness/node_modules/playwright/index.mjs';
+import { chromium } from '../shared/test-harness/node_modules/playwright/index.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

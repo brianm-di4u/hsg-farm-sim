@@ -1,6 +1,6 @@
 # Valley of Vapors: one jointed character, rendered to layered sprite atlases that the game tints per person.
 #
-#   "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python games/farm-sim/art-src/blender/characters.py
+#   "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" -b --factory-startup --python art-src/blender/characters.py
 #
 # Writes art-src/blender/characters.blend and art-src/chars-<atlas>.png (packed to WebP by art-pack).
 # Units: 1 = one map tile. The character faces -Y ("down", toward the camera) at rest; "left" is rendered,

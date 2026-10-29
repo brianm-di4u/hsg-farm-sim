@@ -1,6 +1,6 @@
 // Inline the vendored OFL fonts (vendor/fonts/*.woff2, from npm @fontsource/* 5.2.5) into assets/fonts.css as
 // data URIs. Chrome blocks @font-face url() loads from file://, so the fonts travel inside the stylesheet,
-// which the build inlines into index.html.  Run: node games/farm-sim/tools/build-fonts.mjs
+// which the build inlines into index.html.  Run: node tools/build-fonts.mjs
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

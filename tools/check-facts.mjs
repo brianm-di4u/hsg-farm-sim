@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Checks every history fact the game can display.
-//   node games/farm-sim/tools/check-facts.mjs
+//   node tools/check-facts.mjs
 // 1. data/facts.json: bank facts exist in the audited bank (games/trivia/data/questions.json), are
 //    `confirmed`, cite the same source and URL, and the card text contains the key part(s) of the bank's
 //    answer; corpus facts quote strings that really appear in the named research file.
@@ -13,9 +13,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const game = path.resolve(here, '..');
-const repo = path.resolve(game, '../..');
+const repo = path.resolve(game);
 const facts = JSON.parse(fs.readFileSync(path.join(game, 'data/facts.json'), 'utf8')).facts;
-const bank = JSON.parse(fs.readFileSync(path.join(repo, 'games/trivia/data/questions.json'), 'utf8')).questions;
+const bank = JSON.parse(fs.readFileSync(path.join(repo, 'shared/data/trivia-questions.json'), 'utf8')).questions;
 const D = await import(pathToFileURL(path.join(game, 'src/js/sim/data.js')).href);
 
 const norm = (s) => String(s).toLowerCase().replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();

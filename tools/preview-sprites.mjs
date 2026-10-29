@@ -1,7 +1,7 @@
 // Review sheet for the layered character atlases: composes sample people with the game's own
 // src/js/render/sprites.js and screenshots them on grass at full and in-game size.
-//   node games/farm-sim/tools/preview-sprites.mjs   ->  games/farm-sim/art-src/preview-chars.png (git-ignored)
-import { chromium } from '../../../shared/test-harness/node_modules/playwright/index.mjs';
+//   node tools/preview-sprites.mjs   ->  art-src/preview-chars.png (git-ignored)
+import { chromium } from '../shared/test-harness/node_modules/playwright/index.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
