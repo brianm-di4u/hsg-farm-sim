@@ -159,7 +159,7 @@ function windows(ctx, x, y, w, rows, cols, u, glass, frame, skipX) {
 export function signText(ctx, text, cx, cy, maxW, u, fg, bg, style) {
   if (!text) return;
   const fs = Math.round(u * 0.36);
-  ctx.font = `bold ${fs}px ${style === 'deco' ? '"Century Gothic", Futura, "Trebuchet MS", sans-serif' : style === 'neon' ? '"Arial Black", Impact, sans-serif' : 'Georgia, "Times New Roman", serif'}`;
+  ctx.font = `bold ${fs}px ${style === 'deco' ? '"Century Gothic", Futura, "Trebuchet MS", sans-serif' : style === 'neon' ? '"Arial Black", Impact, sans-serif' : style || 'Georgia, "Times New Roman", serif'}`;
   let tw = ctx.measureText(text).width;
   const scale = Math.min(1, (maxW - u * 0.3) / tw);
   const bw = tw * scale + u * 0.3, bh = fs * 1.35;
@@ -340,7 +340,20 @@ export function objSprite(o, P, u) {
       case 'crystal': for (const [ox, h, a] of [[-0.18, 0.7, -0.2], [0.05, 0.95, 0], [0.24, 0.6, 0.25]]) { ctx.save(); ctx.translate(cx + ox * u, by - u * 0.12); ctx.rotate(a); poly(ctx, [[-u * 0.09, 0], [-u * 0.09, -h * u * 0.75], [0, -h * u], [u * 0.09, -h * u * 0.75], [u * 0.09, 0]], '#e8f0f8', OUT, u * 0.04); R(ctx, -u * 0.03, -h * u * 0.7, u * 0.03, h * u * 0.5, '#ffffff'); ctx.restore(); } break;
       case 'stump': ell(ctx, cx, by - u * 0.25, u * 0.3, u * 0.16, '#6a4a2c'); ctx.stroke(); ell(ctx, cx, by - u * 0.3, u * 0.22, u * 0.1, '#c8a070'); break;
       case 'tuft': for (let i = 0; i < 5; i++) poly(ctx, [[cx + (i - 2) * u * 0.12, by - u * 0.12], [cx + (i - 2) * u * 0.16, by - u * (0.45 + (i % 2) * 0.15)], [cx + (i - 2) * u * 0.12 + u * 0.07, by - u * 0.12]], shade(P.grass, -0.25)); break;
-      case 'fence': case 'pen': R(ctx, u * 0.1, by - u * 0.75, u * 0.12, u * 0.7, P.woodDark); R(ctx, u * 0.78, by - u * 0.75, u * 0.12, u * 0.7, P.woodDark); R(ctx, 0, by - u * 0.65, u, u * 0.1, P.wood); R(ctx, 0, by - u * 0.38, u, u * 0.1, P.wood); break;
+      case 'fence': case 'pen': {
+        // Era fences: split rails (to 1886), sawn boards (1931), white-painted boards (1955 on).
+        const white = P.ch >= 5, board = P.ch === 4;
+        const post = white ? '#e8e4da' : '#6a4e34', rail = white ? '#f4f1ea' : board ? '#9a7652' : '#8a6a48';
+        ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.beginPath(); ctx.ellipse(u * 0.5, by - u * 0.06, u * 0.5, u * 0.07, 0, 0, 7); ctx.fill();
+        const railY = board || white ? [0.72, 0.5, 0.28] : [0.66, 0.36];
+        for (const ry of railY) {
+          R(ctx, -u * 0.02, by - u * ry, u * 1.04, u * (board || white ? 0.11 : 0.09), rail);
+          R(ctx, -u * 0.02, by - u * ry + u * (board || white ? 0.08 : 0.065), u * 1.04, u * 0.03, shade(rail, -0.35));
+          if (!board && !white) for (let k = 0; k < 3; k++) R(ctx, u * (0.15 + k * 0.3), by - u * ry + u * 0.02, u * 0.12, u * 0.015, shade(rail, -0.2));
+        }
+        for (const px of [0.06, 0.82]) { R(ctx, u * px, by - u * 0.84, u * 0.13, u * 0.8, post); R(ctx, u * px + u * 0.09, by - u * 0.84, u * 0.04, u * 0.8, shade(post, -0.3)); R(ctx, u * px, by - u * 0.86, u * 0.13, u * 0.05, shade(post, 0.25)); }
+        break;
+      }
       case 'chest': rr(ctx, u * 0.12, by - u * 0.7, u * 0.76, u * 0.6, u * 0.08); ctx.fillStyle = '#9a6a3a'; ctx.fill(); ctx.stroke(); R(ctx, u * 0.12, by - u * 0.5, u * 0.76, u * 0.06, '#5a3a22'); R(ctx, cx - u * 0.06, by - u * 0.55, u * 0.12, u * 0.14, '#d4af37'); break;
       case 'bin': rr(ctx, u * 0.06, by - u * 0.85, u * 0.88, u * 0.75, u * 0.06); ctx.fillStyle = '#8a6a3a'; ctx.fill(); ctx.stroke(); R(ctx, u * 0.02, by - u * 0.95, u * 0.96, u * 0.18, '#6a4a2a'); ctx.strokeRect(u * 0.02, by - u * 0.95, u * 0.96, u * 0.18); for (let i = 1; i < 4; i++) R(ctx, u * 0.06 + i * u * 0.22, by - u * 0.75, Math.max(1, u * 0.03), u * 0.6, '#6a4a2a'); signText(ctx, 'SHIP', cx, by - u * 0.45, u * 0.9, u * 0.7, '#f4f2ec', null); break;
       case 'trough': R(ctx, u * 0.04, by - u * 0.55, u * 0.92, u * 0.4, '#7a5a3a'); ctx.strokeRect(u * 0.04, by - u * 0.55, u * 0.92, u * 0.4); R(ctx, u * 0.1, by - u * 0.5, u * 0.8, u * 0.12, '#c8b070'); break;

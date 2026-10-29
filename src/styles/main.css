@@ -4,6 +4,14 @@
   --font-deco: "Century Gothic", Futura, "Avenir Next", "Trebuchet MS", "Gill Sans", sans-serif;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-frontier: Georgia, "Times New Roman", serif;
+  --font-body-serif: Alegreya, Georgia, "Times New Roman", serif;
+  --font-body-sans: "Nunito Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --disp-frontier: "IM Fell English", Georgia, serif;
+  --disp-victorian: "Playfair Display", Georgia, serif;
+  --disp-deco: "Josefin Sans", "Century Gothic", sans-serif;
+  --disp-mid: Righteous, "Arial Black", sans-serif;
+  --disp-modern: Outfit, system-ui, sans-serif;
+  --ui-display: var(--disp-victorian);
   --ui-bg: #F2EFE8; --ui-fg: #1F2A24; --ui-accent: #A9432C; --ui-accent-fg: #fff; --ui-muted: #5A4C38; --ui-border: #D9A23A;
   --ui-font: var(--font-serif-victorian);
   --r: 10px;
@@ -26,17 +34,17 @@ button:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--ui-acc
 #hud > * { pointer-events: auto; }
 .panel-s { background: var(--ui-bg); color: var(--ui-fg); border: 2px solid var(--ui-border); border-radius: var(--r); padding: 6px 10px; box-shadow: 0 2px 8px rgba(0,0,0,.35); }
 .hud-l { min-width: 9.5rem; }
-.h-date { font-weight: 700; font-size: 0.95rem; }
+.h-date { font-weight: 700; font-size: 1.02rem; font-family: var(--ui-display); letter-spacing: .01em; }
 .h-row { display: flex; gap: 8px; align-items: center; font-size: 0.95rem; }
 .h-time { font-variant-numeric: tabular-nums; font-weight: 700; }
 .h-wx { color: var(--ui-muted); }
-.h-quest { max-width: 22rem; font-size: 0.85rem; line-height: 1.25; }
-.h-quest b { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ui-muted); }
+.h-quest { max-width: 22rem; font-size: 0.92rem; line-height: 1.28; }
+.h-quest b { display: block; font-family: var(--ui-display); font-size: 0.82rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ui-muted); }
 .h-quest .q { display: flex; gap: 6px; }
 .h-quest .q.done { color: var(--ui-muted); text-decoration: line-through; }
 .hud-r { margin-left: auto; display: flex; gap: 8px; align-items: flex-start; }
 .h-stats { min-width: 9rem; }
-.h-money { font-weight: 700; font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.h-money { font-weight: 700; font-size: 1.12rem; font-family: var(--ui-display); font-variant-numeric: tabular-nums; }
 .h-energy { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
 .h-energy .bar { flex: 1; height: 10px; min-width: 70px; background: rgba(0,0,0,.25); border-radius: 5px; overflow: hidden; border: 1px solid var(--ui-fg); }
 .h-energy .bar i { display: block; height: 100%; background: #4caf50; }
@@ -73,8 +81,8 @@ button:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--ui-acc
 .screen { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; background: rgba(10,8,6,.55); padding: 12px; font-family: var(--ui-font); }
 .screen.title { background: transparent; }
 .panel { background: var(--ui-bg); color: var(--ui-fg); border: 3px solid var(--ui-border); border-radius: 14px; width: min(46rem, 100%); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); overflow: auto; padding: 16px 18px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
-.panel h2 { margin: 0 0 8px; font-size: 1.35rem; }
-.panel h3 { margin: 12px 0 6px; font-size: 1.05rem; }
+.panel h2 { margin: 0 0 8px; font-size: 1.5rem; font-family: var(--ui-display); font-weight: 700; letter-spacing: .01em; }
+.panel h3 { margin: 12px 0 6px; font-size: 1.12rem; font-family: var(--ui-display); }
 .panel p { margin: 6px 0; line-height: 1.45; }
 .muted { color: var(--ui-muted); }
 .small { font-size: 0.85rem; }
@@ -109,15 +117,15 @@ table.keys td { padding: 4px 6px; border-bottom: 1px solid rgba(0,0,0,.12); vert
 .dialog { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); width: min(44rem, calc(100vw - 20px)); z-index: 22; display: flex; gap: 12px; align-items: flex-start; }
 .dialog .portrait { width: 84px; height: 112px; flex: none; border-radius: 10px; border: 3px solid var(--ui-border); background: var(--ui-bg); }
 .dialog .panel { width: auto; flex: 1; padding: 12px 14px; }
-.dialog .who { font-weight: 800; font-size: 1.1rem; }
+.dialog .who { font-weight: 700; font-size: 1.25rem; font-family: var(--ui-display); }
 .dialog .role { font-size: 0.82rem; color: var(--ui-muted); }
 .dialog .text { margin: 8px 0; font-size: 1.02rem; line-height: 1.45; }
 
 /* Title */
 .title-wrap { text-align: center; color: #fff; width: min(40rem, 100%); }
-.title-wrap .brand { display: inline-block; padding: 10px 22px 4px; border-radius: 14px; background: rgba(16,14,12,.55); margin-bottom: 14px; }
-.title-wrap h1 { font-family: var(--font-serif-victorian); font-size: clamp(2.1rem, 7vw, 3.6rem); margin: 0; text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 0 18px rgba(0,0,0,.4); line-height: 1.05; }
-.title-wrap .sub { font-family: var(--font-deco); font-size: clamp(1rem, 3.6vw, 1.35rem); letter-spacing: .18em; text-transform: uppercase; margin: 6px 0 8px; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+.title-wrap .brand { display: inline-block; padding: 12px 28px 6px; margin-bottom: 16px; background: radial-gradient(ellipse at center, rgba(16,12,8,.5), rgba(16,12,8,0) 70%); }
+.title-wrap h1 { font-family: "Playfair Display", Georgia, serif; font-weight: 700; font-size: clamp(2.4rem, 8vw, 4.4rem); margin: 0; color: #fff4dc; text-shadow: 0 2px 0 #5a3418, 0 4px 0 rgba(40,20,8,.6), 0 0 26px rgba(0,0,0,.55); line-height: 1.02; }
+.title-wrap .sub { font-family: "Josefin Sans", var(--font-deco); color: #f6e7c4; font-size: clamp(1rem, 3.6vw, 1.35rem); letter-spacing: .18em; text-transform: uppercase; margin: 6px 0 8px; text-shadow: 0 2px 6px rgba(0,0,0,.6); }
 .title-menu { display: grid; gap: 10px; width: min(20rem, 100%); margin: 0 auto; background: var(--ui-bg); color: var(--ui-fg); padding: 14px; border-radius: 14px; border: 3px solid var(--ui-border); }
 .title-menu .btn { width: 100%; }
 .title-note { margin-top: 12px; font-size: 0.85rem; background: rgba(16,14,12,.78); color: #fff; padding: 6px 10px; border-radius: 8px; display: inline-block; }
@@ -151,3 +159,68 @@ body.hc .toast { background: #000; }
   .dialog .portrait { width: 60px; height: 80px; }
   .panel { padding: 12px; }
 }
+
+/* ---------- visual pass: framed panels, inset slots, chunkier HUD ---------- */
+.panel, .panel-s, .title-menu {
+  background-color: var(--ui-bg);
+  background-image: radial-gradient(ellipse at 30% 0%, rgba(255,255,255,.07), rgba(255,255,255,0) 60%),
+    repeating-linear-gradient(115deg, rgba(0,0,0,.018) 0 2px, rgba(255,255,255,.018) 2px 4px);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.35), inset 0 0 0 3px var(--ui-bg), inset 0 0 0 4px color-mix(in srgb, var(--ui-border) 70%, transparent), 0 10px 28px rgba(0,0,0,.45);
+}
+.panel { border-width: 3px; }
+.panel h2 { padding-bottom: 6px; border-bottom: 1px solid color-mix(in srgb, var(--ui-border) 55%, transparent); }
+.slot { background: color-mix(in srgb, var(--ui-fg) 9%, var(--ui-bg)); box-shadow: inset 0 2px 4px rgba(0,0,0,.35), inset 0 -1px 0 rgba(255,255,255,.08); border-color: color-mix(in srgb, var(--ui-border) 60%, transparent); }
+.slot.sel, .slot[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ui-accent), inset 0 2px 4px rgba(0,0,0,.25); }
+.slot img { filter: drop-shadow(0 2px 1px rgba(0,0,0,.35)); }
+.hotbar { box-shadow: 0 0 0 1px rgba(0,0,0,.4), inset 0 0 0 3px var(--ui-bg), inset 0 0 0 4px color-mix(in srgb, var(--ui-border) 70%, transparent), 0 8px 22px rgba(0,0,0,.45); }
+.btn { box-shadow: inset 0 -2px 0 rgba(0,0,0,.22), 0 1px 2px rgba(0,0,0,.25); }
+.btn.primary { box-shadow: inset 0 -3px 0 rgba(0,0,0,.28), 0 2px 4px rgba(0,0,0,.3); }
+.fact { border-left-width: 4px; }
+.fact .src .site { font-variant: small-caps; letter-spacing: .03em; }
+.toast { box-shadow: 0 4px 14px rgba(0,0,0,.35); border-radius: 10px; }
+.prompt { box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+
+/* toasts sit in a lane above the hotbar, clear of the player; numbers line up */
+.toasts { top: auto; bottom: 124px; flex-direction: column-reverse; }
+#hud, .hotbar, .h-money, .h-energy, .slot .n, .price { font-variant-numeric: lining-nums tabular-nums; }
+.h-date, .h-row, .h-quest { font-variant-numeric: lining-nums; }
+.fact .src { font-size: 0.86rem; }
+.small { font-size: 0.9rem; }
+.pad { transition: opacity .3s; }
+#touch:not(:focus-within) .pad:not(:active) { opacity: .6; }
+@media (max-width: 699px) {
+  .toasts { top: auto; bottom: 236px; }
+  .h-date { white-space: nowrap; font-size: 0.78rem; }
+  .h-row { white-space: nowrap; }
+  .hud-l .h-row { gap: 4px; }
+  .h-stats .h-money { white-space: nowrap; }
+}
+@media (max-width: 699px) {
+  /* keep the date, money and buttons on one row in every era's typeface */
+  .hud-l { padding: 3px 7px; }
+  .h-date { font-size: 0.74rem; }
+  .h-row { font-size: 0.78rem; }
+  .h-stats { padding: 3px 7px; }
+  .h-money { font-size: 0.86rem; }
+  .h-energy { font-size: 0.72rem; gap: 4px; }
+  .h-energy .bar { min-width: 30px; width: 30px; }
+}
+
+/* painted seed icons: the packet with the crop on its corner */
+.ic-seed { position: relative; display: inline-block; width: 40px; height: 40px; flex: none; }
+.ic-seed img { width: 100%; height: 100%; display: block; }
+.ic-seed .ic-crop { position: absolute; width: 62%; height: 62%; right: -6%; bottom: -6%; }
+.slot .ic-seed { width: 40px; height: 40px; pointer-events: none; }
+.slot .ic-seed img { width: 100%; height: 100%; }
+@media (max-width: 699px) { .slot .ic-seed { width: 34px; height: 34px; } }
+.li .ic-seed { width: 36px; height: 36px; }
+.li .ic-seed img { width: 100%; height: 100%; }
+.row img.big, .row .ic-seed.big { width: 40px; height: 40px; flex: none; }
+
+/* themed toasts in the era's panel colours */
+.toast { background: var(--ui-bg); color: var(--ui-fg); border: 2px solid var(--ui-border); border-left-width: 6px; font-family: var(--ui-font); }
+.toast.good { border-left-color: #4caf50; } .toast.quest { border-left-color: var(--ui-accent); } .toast.warn { border-left-color: #e0a030; }
+.pad { opacity: .5; } .pad:active { opacity: 1; }
+.h-date, .h-money, .h-row { font-family: var(--ui-font); font-variant-numeric: lining-nums tabular-nums; }
+.h-date { font-weight: 700; }
+@media (max-width: 699px) { .toasts { bottom: 272px; } }

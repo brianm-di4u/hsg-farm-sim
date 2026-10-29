@@ -156,7 +156,8 @@ export function buildWorld(seed, ch, opts = {}) {
   // Lamps: era light sources at doors and along the street.
   const lamps = [];
   const lampKind = ['', 'fire', 'lantern', 'gas', 'neon', 'sodium', 'led'][ch];
-  if (ch === 1) { lamps.push({ x: 28.5, y: 21, k: 'fire' }, { x: 5.5, y: 14.2, k: 'fire' }); }
+  // The trade camp's fire burns beside the path, clear of where people stand.
+  if (ch === 1) { lamps.push({ x: 26.4, y: 21.2, k: 'fire' }, { x: 5.5, y: 14.2, k: 'fire' }); }
   else {
     for (const b of buildings) if (b.place || b.label) lamps.push({ x: b.front.x + 0.5, y: b.front.y - 0.3, k: lampKind, door: true });
     if (ch >= 3) for (const x of [27, 33, 41, 47]) for (const y of [14.9, 21.9]) lamps.push({ x: x + 0.5, y, k: lampKind, post: true });

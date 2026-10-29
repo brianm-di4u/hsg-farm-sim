@@ -1,8 +1,20 @@
 # Valley of Vapors: Through the Ages — report
 
 An original farming and life sim on one creek-bottom farm in the Hot Springs valley, played across six
-chapters from 1807 to 2026. Single self-contained `index.html` (299 KB), built from `src/` with
-`node shared/tools/inline.mjs games/farm-sim`. Nothing is committed; the coordinator reviews and commits.
+chapters from 1807 to 2026. `index.html` (0.65 MB, including inlined fonts) plus `assets/` (222 painted WebP
+images, 9.3 MB, loaded progressively). Build `src/` with `node shared/tools/inline.mjs games/farm-sim`. Nothing is
+committed; the coordinator reviews and commits.
+
+**Visual pass (2026-10-29).** Painted art replaced the vector prototype. It covers:
+- 48 era buildings, terrain textures laid as smooth regions, and crops, animals, props, vehicles and icons;
+- Blender-rendered characters with walk and tool-swing cycles;
+- era lighting with lit windows and neon, moving sun shadows, steam, and weather;
+- a per-era display typeface, and painted title and era-wipe panoramas.
+
+The simulation, saves and balance are unchanged. The final run (`--milestone visual-final`) passed **88/88**
+at both viewports, and the file:// check passes. The independent review scored the game 35/80 before the
+pass and 44/80 after its last round. Details are in `VISUAL-PLAN.md` and `VISUAL-REPORT.md`. The sections
+below describe the build before the visual pass, except where noted.
 
 ## What was built
 - **The daily loop.** A 60 × 44-tile valley (farm, Gulpha Creek, town, the springs, the north ridge,
@@ -153,12 +165,13 @@ machine, not the game. The final run waited for the CPU to stay under 50% before
   the live region was tested automatically only.
 - **The revival years (1968–1999) are not a playable chapter.** The brief asked for six eras; the corpus
   has seven ids, so revival appears on the chapter 5 closing card and the chapter 6 intro.
-- Chapter 4's night uses deco-neon lamp colors and neon signs over the linen-postcard day palette rather
-  than a full palette swap.
+- ~~Chapter 4 has no full palette swap.~~ Fixed in the visual pass: each era has its own world tint, road
+  surface, light colour, display face and painted buildings.
 - Each person has 5–6 lines; after a few weeks they repeat. No weekday or festival-day schedules.
 - Chapter select replaces the current save (no separate slot).
-- The lake shoreline is blocky (tile-level noise), and the tufa slope at the map's east edge reads a
-  little like pavement.
+- ~~Blocky lake shoreline; tufa reads like pavement.~~ Fixed in the visual pass: the shore and banks are smooth
+  contours, and the tufa is painted travertine with terraces and algae. The visual gaps that remain are listed in
+  `VISUAL-REPORT.md`.
 - The balance bot doesn't walk, so its day counts are a floor, not a prediction for people.
 - Out of scope per PRD §13: romance, combat, playable festivals, music, controller support.
 

@@ -6,7 +6,11 @@ import * as save from './sim/save.js';
 import * as scene from './render/scene.js';
 import * as ui from './ui.js';
 import { play, unlock, setVolume, audioState } from './audio.js';
-import { artCacheSize } from './render/art.js';
+import { artCacheSize, clearArt } from './render/art.js';
+import { FONT_FAMILIES } from './render/palette.js';
+import { ART, want, allNames } from './render/assets.js';
+import * as PA from './render/painted.js';
+import { terrainReady } from './render/terrain.js';
 
 const T0 = performance.now();
 const DEFAULT_KEYS = { up: ['ArrowUp', 'KeyW'], down: ['ArrowDown', 'KeyS'], left: ['ArrowLeft', 'KeyA'], right: ['ArrowRight', 'KeyD'], use: ['Space', 'KeyJ'], talk: ['KeyE', 'KeyK'], eat: ['KeyF'], prev: ['KeyQ'], next: ['KeyR'], inv: ['KeyI', 'Tab'], journal: ['KeyL'], pause: ['Escape'] };
@@ -26,7 +30,7 @@ function loadSettings() {
   let s = {};
   try { s = JSON.parse(load(save.SETTINGS_KEY) || '{}') || {}; } catch { s = {}; }
   const keys = { ...DEFAULT_KEYS, ...(s.keys || {}) };
-  return { text: s.text || 1, motion: s.motion || 'auto', touch: s.touch || 'auto', mute: !!s.mute, volume: s.volume ?? 0.5, assist: !!s.assist, contrast: !!s.contrast, keys };
+  return { text: s.text || 1, motion: s.motion || 'auto', touch: s.touch || 'auto', mute: !!s.mute, volume: s.volume ?? 0.5, assist: !!s.assist, contrast: !!s.contrast, gfx: s.gfx === 'simple' ? 'simple' : 'painted', keys };
 }
 function saveSettings() { store(save.SETTINGS_KEY, JSON.stringify(app.settings)); }
 function saveGame() {
@@ -194,9 +198,14 @@ function drawWipe(now) {
   const p = Math.max(0, Math.min(1, t / w.dur));
   const ctx = w.c.getContext('2d');
   ctx.drawImage(w.a, 0, 0);
-  const x = p * w.c.width;
-  ctx.save(); ctx.beginPath(); ctx.rect(0, 0, x, w.c.height); ctx.clip(); ctx.drawImage(w.b, 0, 0); ctx.restore();
-  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fillRect(x - 3, 0, 6, w.c.height);
+  // A soft-edged sweep from one era's painting to the next (eased), feathered over a fifth of the width.
+  const e = p * p * (3 - 2 * p), band = w.c.width * 0.2, x = -band + e * (w.c.width + 2 * band);
+  if (!w.m) { w.m = document.createElement('canvas'); w.m.width = w.c.width; w.m.height = w.c.height; }
+  const mg = w.m.getContext('2d');
+  mg.globalCompositeOperation = 'source-over'; mg.clearRect(0, 0, w.m.width, w.m.height); mg.drawImage(w.b, 0, 0);
+  const gr = mg.createLinearGradient(x - band, 0, x + band, 0); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  mg.globalCompositeOperation = 'destination-in'; mg.fillStyle = gr; mg.fillRect(0, 0, w.m.width, w.m.height);
+  ctx.drawImage(w.m, 0, 0);
   ctx.fillStyle = 'rgba(16,14,12,0.7)'; ctx.fillRect(0, w.c.height - 70 * scene.R.dpr, w.c.width, 70 * scene.R.dpr);
   ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.font = `bold ${Math.round(26 * scene.R.dpr)}px Georgia, serif`;
   ctx.fillText(`${D.CHAPTERS[w.from].year}  →  ${D.CHAPTERS[w.to].year}`, w.c.width / 2, w.c.height - 26 * scene.R.dpr);
@@ -225,6 +234,7 @@ function drainEvents() {
         break;
       }
       case 'chapter': ui.applyTheme(e.ch); break;
+      case 'heart': { const n = gm.S.npcs[e.npc]; if (n) scene.addHearts(n.x, n.y); break; }
       default: break;
     }
   }
@@ -253,6 +263,7 @@ function doUse(at) {
   const gm = app.gm;
   if (at) { const p = gm.S.player; const dx = at.x + 0.5 - p.x, dy = at.y + 0.5 - (p.y - 0.3); p.face = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); }
   const t = at || sim.target(gm);
+  scene.R.useT = performance.now();
   handleResult(sim.use(gm, at ? { x: at.x, y: at.y } : undefined), t);
 }
 function doTalk() {
@@ -447,6 +458,7 @@ function onClick(e) {
     case 'vol': app.settings.volume = +arg; app.settings.mute = false; saveSettings(); applySettings(); play('coin'); refreshModal(); break;
     case 'assist': app.settings.assist = arg === 'on'; saveSettings(); applySettings(); refreshModal(); break;
     case 'contrast': app.settings.contrast = arg === 'on'; saveSettings(); applySettings(); refreshModal(); break;
+    case 'gfx': if (app.settings.gfx !== arg) { app.settings.gfx = arg; saveSettings(); ui.toast(arg === 'simple' ? 'Simple graphics from the next start (reload the page).' : 'Painted graphics from the next start (reload the page).', 'good'); } refreshModal(); break;
     case 'rebind': app.ui.rebinding = arg; ui.settingsScreen(arg); break;
     case 'resetkeys': app.settings.keys = JSON.parse(JSON.stringify(DEFAULT_KEYS)); saveSettings(); refreshModal(); break;
   }
@@ -466,7 +478,7 @@ function frame(now) {
 function frameBody(now) {
   const dt = Math.min(0.25, lastT ? (now - lastT) / 1000 : 0); lastT = now;
   if (app.fx.wipe) { drawWipe(now); return; }
-  if (app.ui.scene === 'title') { if (!app.lastRenderTitle) renderTitle(); return; }
+  if (app.ui.scene === 'title') { if (!app.lastRenderTitle || app.titleArt !== ART.loaded) renderTitle(); return; }
   if (!app.gm) return;
   if (!app.paused && !app.ui.modal) {
     acc += dt;
@@ -474,10 +486,12 @@ function frameBody(now) {
     while (acc >= 1 / 60 && n < 10) { tickOnce(); acc -= 1 / 60; n++; }
     if (n >= 10) acc = 0;
   } else { acc = 0; if (app.queue.length && !app.ui.modal) tickOnce(); }
-  if (!app.ui.modal || app.dirty) render();
+  if (app.ui.modal && app.portraitArt !== ART.loaded && PA.peopleReady()) { app.portraitArt = ART.loaded; ui.repaintPortraits(); }
+  if (!app.ui.modal || app.dirty || ART.dirty) render();
 }
 function render() {
   const gm = app.gm;
+  if (gm.S.ch !== app.artCh) { app.artCh = gm.S.ch; wantChapter(gm.S.ch); wantAll(); }
   scene.draw(gm, { showTarget: !app.ui.modal && app.ui.scene === 'game' });
   ui.hud(gm);
   const pr = document.getElementById('prompt');
@@ -490,8 +504,10 @@ function renderTitle() {
   const c = scene.R.canvas, ctx = scene.R.ctx;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   const s = readSave();
-  scene.vista(ctx, c.width, c.height, s && !s.error ? s.ch : 3);
-  app.lastRenderTitle = true;
+  const ch = s && !s.error ? s.ch : 3;
+  want(['vista-' + ch]);
+  scene.vista(ctx, c.width, c.height, ch);
+  app.lastRenderTitle = true; app.titleArt = ART.loaded;
 }
 
 // ---------- test hooks ----------
@@ -514,7 +530,8 @@ function compact() {
     goalsDone: sim.goalsDone(S), canTurn: sim.goalsDone(S), fishing: S.fishing ? { ...S.fishing } : null, animals: S.animals.length, trough: S.trough, penOut: S.penOut,
     almanac: S.almanac.length, almanacIds: S.almanac, chapterEarned: S.chapterEarned, houseStyle: S.houseStyle, flags: S.flags, summary: S.summary, finished: S.finished,
     places: gm.world.places, buildings: gm.world.buildings.map((b) => ({ id: b.id, type: b.type, x: b.x, y: b.y, w: b.w, h: b.h, front: b.front, label: b.label })),
-    chunkBakes: scene.R.chunkBakes, frames: scene.R.frames, particles: scene.R.particles.length, frameMs: +(app.frameMs || 0).toFixed(2), srText: document.getElementById('sr').textContent, cam: { ...scene.R.cam }, autoPath: S.autoPath ? S.autoPath.length : 0,
+    chunkBakes: scene.R.chunkBakes, bakeMs: +(scene.R.bakeMs || 0).toFixed(1), bakeLog: (scene.R.bakeLog || []).slice(), artLoaded: ART.loaded, artPending: ART.pending, artFailed: ART.failed.slice(), artTotal: allNames().length, vectorFallback: [...scene.R.fallback],
+    painted: { terrain: terrainReady(), people: PA.peopleReady(), buildings: gm.world.buildings.filter((b) => PA.buildingSprite(S.ch, b, scene.R.u)).length }, frames: scene.R.frames, particles: scene.R.particles.length, frameMs: +(app.frameMs || 0).toFixed(2), srText: document.getElementById('sr').textContent, cam: { ...scene.R.cam }, autoPath: S.autoPath ? S.autoPath.length : 0,
   };
 }
 function deepMerge(t, p) {
@@ -543,7 +560,7 @@ const hooks = {
     scene.snapCamera(gm); ui.resetHud(); app.dirty = true; render();
     return compact();
   },
-  isIdle() { return !app.fx.wipe || app.fx.animAt != null; },
+  isIdle() { return (!app.fx.wipe || app.fx.animAt != null) && ART.pending === 0 && app.fontsReady !== false; },
   step(n = 1) { app.paused = true; for (let i = 0; i < n; i++) tickOnce(); if (app.ui.scene === 'game' && app.gm) render(); return compact(); },
   pause() { app.paused = true; return true; },
   resume() { app.paused = false; return true; },
@@ -623,8 +640,20 @@ const hooks = {
 };
 window.__game = hooks;
 
+// ---------- painted art ----------
+// The chapter on screen loads first; the rest follows in the background.
+function wantChapter(ch) {
+  const b = PA.buildingNames(ch);
+  return want(allNames().filter((n) => (!n.startsWith('vista-') || n === 'vista-' + ch || n === 'vista-' + (ch + 1)) && (!n.startsWith('bld-') || b.has(n))));
+}
+function wantAll() { if (!app.wantedAll) { app.wantedAll = true; setTimeout(() => want(allNames()), 1200); } }
+
 // ---------- boot ----------
 function boot() {
+  if (document.fonts && document.fonts.load) {
+    app.fontsReady = false;
+    Promise.all(FONT_FAMILIES.map((f) => document.fonts.load(`700 20px "${f}"`).catch(() => null))).then(() => { app.fontsReady = true; clearArt(); app.lastRenderTitle = false; app.dirty = true; });
+  }
   app.storageOK = probeStorage();
   app.settings = loadSettings();
   scene.setup(document.getElementById('view'));

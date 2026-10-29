@@ -60,17 +60,21 @@ export function palette(ch, sea) {
 
 // UI theme per chapter: panel background, text, accent (accent text), muted text, border.
 export const UI_THEME = {
-  1: { bg: '#1F3324', fg: '#EDEAE2', accent: '#C99A92', accentFg: '#1F3324', muted: '#BFC7B0', border: '#5C7A3A', font: 'var(--font-frontier)' },
-  2: { bg: '#EFE8DA', fg: '#2A2420', accent: '#8E3B2B', accentFg: '#FFFFFF', muted: '#5A4330', border: '#A58A64', font: 'var(--font-frontier)' },
-  3: { bg: '#F2EFE8', fg: '#1F2A24', accent: '#A9432C', accentFg: '#FFFFFF', muted: '#5A4C38', border: '#D9A23A', font: 'var(--font-serif-victorian)' },
-  4: { bg: '#1F1C2E', fg: '#D8CFBD', accent: '#D4AF37', accentFg: '#14121F', muted: '#A8A3AE', border: '#D4AF37', font: 'var(--font-deco)' },
-  5: { bg: '#FFF6E0', fg: '#222222', accent: '#1F7F78', accentFg: '#FFFFFF', muted: '#34424A', border: '#3FBFB5', font: 'var(--font-sans)' },
-  6: { bg: '#183F63', fg: '#F6F3EC', accent: '#F2A541', accentFg: '#183F63', muted: '#C3D3DF', border: '#4C8FA8', font: 'var(--font-sans)' },
+  1: { bg: '#1F3324', fg: '#EDEAE2', accent: '#C99A92', accentFg: '#1F3324', muted: '#BFC7B0', border: '#5C7A3A', font: 'var(--font-body-serif)', display: 'var(--disp-frontier)' },
+  2: { bg: '#EFE8DA', fg: '#2A2420', accent: '#8E3B2B', accentFg: '#FFFFFF', muted: '#5A4330', border: '#A58A64', font: 'var(--font-body-serif)', display: 'var(--disp-frontier)' },
+  3: { bg: '#F2EFE8', fg: '#1F2A24', accent: '#A9432C', accentFg: '#FFFFFF', muted: '#5A4C38', border: '#D9A23A', font: 'var(--font-body-serif)', display: 'var(--disp-victorian)' },
+  4: { bg: '#1F1C2E', fg: '#D8CFBD', accent: '#D4AF37', accentFg: '#14121F', muted: '#A8A3AE', border: '#D4AF37', font: 'var(--font-body-sans)', display: 'var(--disp-deco)' },
+  5: { bg: '#FFF6E0', fg: '#222222', accent: '#1F7F78', accentFg: '#FFFFFF', muted: '#34424A', border: '#3FBFB5', font: 'var(--font-body-sans)', display: 'var(--disp-mid)' },
+  6: { bg: '#183F63', fg: '#F6F3EC', accent: '#F2A541', accentFg: '#183F63', muted: '#C3D3DF', border: '#4C8FA8', font: 'var(--font-body-sans)', display: 'var(--disp-modern)' },
 };
 
 // Night tint and light color per chapter's light source.
+// Canvas sign faces per chapter (loaded from assets/fonts.css).
+export const SIGN_FONT = { 1: '"IM Fell English", Georgia, serif', 2: '"IM Fell English", Georgia, serif', 3: '"Playfair Display", Georgia, serif', 4: '"Josefin Sans", "Century Gothic", sans-serif', 5: 'Righteous, "Arial Black", sans-serif', 6: 'Outfit, system-ui, sans-serif' };
+export const FONT_FAMILIES = ['IM Fell English', 'Playfair Display', 'Josefin Sans', 'Righteous', 'Outfit', 'Alegreya', 'Nunito Sans'];
+
 export const LIGHT = {
   fire: { col: '#ffb060', r: 3.2 }, lantern: { col: '#ffc070', r: 2.6 }, gas: { col: '#ffe0a0', r: 2.6 },
-  neon: { col: '#ff6070', r: 2.6, alt: '#4fc3ff' }, sodium: { col: '#ffb040', r: 3.0 }, led: { col: '#f0f4ff', r: 3.2 },
+  neon: { col: '#ff6070', r: 2.6, alt: '#4fc3ff' }, sodium: { col: '#ffb040', r: 3.0 }, led: { col: '#d6e4ff', r: 3.4 },
 };
 export const NIGHT = { 1: '#0a1020', 2: '#0d1224', 3: '#101428', 4: '#14121f', 5: '#0e1630', 6: '#0a1a30' };

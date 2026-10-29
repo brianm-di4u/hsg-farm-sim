@@ -3,6 +3,7 @@
 import * as sim from './sim/sim.js';
 import * as D from './sim/data.js';
 import { iconURL, personSprite } from './render/art.js';
+import * as PA from './render/painted.js';
 import { UI_THEME } from './render/palette.js';
 
 export const qs = (s) => document.querySelector(s);
@@ -18,7 +19,7 @@ export function applyTheme(ch) {
   const t = UI_THEME[ch] || UI_THEME[3];
   const r = document.documentElement.style;
   r.setProperty('--ui-bg', t.bg); r.setProperty('--ui-fg', t.fg); r.setProperty('--ui-accent', t.accent);
-  r.setProperty('--ui-accent-fg', t.accentFg); r.setProperty('--ui-muted', t.muted); r.setProperty('--ui-border', t.border); r.setProperty('--ui-font', t.font);
+  r.setProperty('--ui-accent-fg', t.accentFg); r.setProperty('--ui-muted', t.muted); r.setProperty('--ui-border', t.border); r.setProperty('--ui-font', t.font); r.setProperty('--ui-display', t.display || t.font);
 }
 
 // ---------- HUD ----------
@@ -53,7 +54,7 @@ export function hotbar(gm) {
   last.hot = sig;
   const cap = D.JUG_CAP[D.CHAPTERS[S.ch].tier] || 20;
   qs('#hotbar').innerHTML = S.inv.slice(0, sim.HOTBAR).map((it, i) => `<button class="slot${i === S.sel ? ' sel' : ''}" data-act="hot" data-arg="${i}" aria-label="Slot ${i + 1}: ${it ? esc(D.itemName(it.id)) + (it.n > 1 ? ' ×' + it.n : '') : 'empty'}${i === S.sel ? ' (selected)' : ''}">
-      <span class="k">${i + 1}</span>${it ? `<img alt="" src="${iconURL(it.id)}">${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}
+      <span class="k">${i + 1}</span>${it ? `${icon(it.id)}${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}
       ${it && it.id === 'jug' ? `<span class="jug"><i style="width:${Math.round(S.jug / cap * 100)}%"></i></span>` : ''}</button>`).join('');
 }
 export function resetHud() { for (const k of Object.keys(last)) delete last[k]; }
@@ -90,11 +91,13 @@ export function describeTarget(gm) {
 // ---------- toasts ----------
 export function toast(text, kind = 'info') {
   const box = qs('#toasts');
-  const el = document.createElement('div');
-  el.className = 'toast ' + kind; el.textContent = text;
-  box.appendChild(el);
+  // The same message again just bumps a counter on the toast already showing.
+  const same = [...box.children].find((c) => c.dataset.text === text);
+  if (same) { same.dataset.n = (+same.dataset.n || 1) + 1; same.textContent = text + '  ×' + same.dataset.n; clearTimeout(same._t); same._t = setTimeout(() => same.remove(), 2800); }
+  const el = same || document.createElement('div');
+  if (!same) { el.className = 'toast ' + kind; el.textContent = text; el.dataset.text = text; box.appendChild(el); }
   while (box.children.length > 3) box.firstChild.remove();
-  setTimeout(() => el.remove(), kind === 'quest' ? 4200 : 2800);
+  if (!same) el._t = setTimeout(() => el.remove(), kind === 'quest' ? 4200 : 2800);
   const sr = qs('#sr'); sr.textContent = ''; sr.textContent = text;
   app.toastLog.push(text); if (app.toastLog.length > 30) app.toastLog.shift();
 }
@@ -167,7 +170,8 @@ export function aboutScreen() {
     <p><b>Valley of Vapors: Through the Ages</b> is an original, open-source (MIT) farming and life sim, part of the Hot Springs Games collection. It is not affiliated with any park, business or commercial game.</p>
     <p>History comes from the collection's research corpus and the audited trivia bank (Encyclopedia of Arkansas, National Park Service, USGS, Wikipedia and others); each card names its source. Native history is presented from National Park Service and Encyclopedia of Arkansas sources; the old quarry in the game is a place to read about, not to dig.</p>
     <p>Code ideas: tilemaps (MDN), grid search (Red Blob Games), fixed-step loop pattern (MainLoop.js, Glenn Fiedler), mulberry32 PRNG (Tommy Ettinger, via bryc/code, public domain). Details in SAMPLES.md.</p>
-    <p class="muted small">All art is drawn in code; all sounds are synthesized. Characters and prices are invented.</p>
+    <p class="muted small">The map condenses the valley: the farm, Bathhouse Row, the springs and the lake sit closer together than they really do, and the lake stands for the reservoirs that Remmel Dam (1924) and Carpenter Dam (1931) made below town.</p>
+    <p class="muted small">Painted art was made for this game (generated images and Blender renders); fonts are open-source (SIL OFL, see SAMPLES.md); all sounds are synthesized. Characters and prices are invented.</p>
   </div>`);
 }
 
@@ -187,7 +191,7 @@ export function pauseScreen(canSave) {
 export function inventoryScreen(gm, tab = 'items', pick = null) {
   const S = gm.S;
   const slots = S.inv.map((it, i) => `<button class="slot${i === S.sel ? ' sel' : ''}${i === pick ? ' pick' : ''}" data-act="slot" data-arg="${i}" aria-label="Slot ${i + 1}: ${it ? esc(D.itemName(it.id)) + ' ×' + it.n : 'empty'}">
-    ${i < sim.HOTBAR ? `<span class="k">${i + 1}</span>` : ''}${it ? `<img alt="" src="${iconURL(it.id)}">${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}</button>`).join('');
+    ${i < sim.HOTBAR ? `<span class="k">${i + 1}</span>` : ''}${it ? `${icon(it.id)}${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}</button>`).join('');
   const it = pick != null ? S.inv[pick] : sim.selected(S);
   const det = it ? itemDetail(gm, it) : '<span class="muted">Select an item. Click two slots to swap them; slots 1–8 are the hotbar.</span>';
   const tabs = `<div class="tabs"><button class="tab ${tab === 'items' ? 'on' : ''}" data-act="invtab" data-arg="items">Pack</button><button class="tab ${tab === 'craft' ? 'on' : ''}" data-act="invtab" data-arg="craft">Crafting</button></div>`;
@@ -196,7 +200,7 @@ export function inventoryScreen(gm, tab = 'items', pick = null) {
     body = `<ul class="list">${sim.recipesFor(S).map(([id, r]) => {
       const ok = sim.canCraft(S, id);
       const ins = Object.entries(r.in).map(([i, n]) => `<span class="${sim.count(S, i) >= n ? '' : 'muted'}">${n} ${esc(D.itemName(i).toLowerCase())} (${sim.count(S, i)})</span>`).join(', ');
-      return `<li class="li"><img alt="" src="${iconURL(r.out[0])}"><div class="grow"><b>${esc(D.itemName(r.out[0]))}${r.out[1] > 1 ? ' ×' + r.out[1] : ''}</b><div class="small">${r.at === 'mill' ? 'At the creek mill: ' : ''}${ins}</div></div>
+      return `<li class="li">${icon(r.out[0])}<div class="grow"><b>${esc(D.itemName(r.out[0]))}${r.out[1] > 1 ? ' ×' + r.out[1] : ''}</b><div class="small">${r.at === 'mill' ? 'At the creek mill: ' : ''}${ins}</div></div>
         ${r.at === 'pack' ? `<button class="btn sm ${ok ? 'primary' : ''}" data-act="craft" data-arg="${id}" ${ok ? '' : 'disabled'}>Craft</button>` : ''}</li>`;
     }).join('')}</ul><p class="small muted">Recipes are game content.</p>`;
   } else body = `<div class="grid">${slots}</div><div class="detail">${det}</div>`;
@@ -206,7 +210,7 @@ function itemDetail(gm, it) {
   const S = gm.S, def = D.ITEMS[it.id];
   const p = D.sellPrice(it.id, S.ch);
   const crop = def.kind === 'seed' ? D.CROPS[def.crop] : null;
-  return `<div class="row"><img alt="" src="${iconURL(it.id)}" width="40" height="40"><div class="grow"><b>${esc(def.name)}</b> ×${it.n}
+  return `<div class="row">${icon(it.id, 'big')}<div class="grow"><b>${esc(def.name)}</b> ×${it.n}
     <div class="small muted">${esc(kindLabel(def.kind))}${p ? ` · sells for ${money(p)}` : ''}${def.energy ? ` · +${def.energy} energy` : ''}${crop ? ` · ${crop.days} days, ${crop.seasons.map((s) => D.SEASON_NAME[s]).join('/')}${crop.regrow ? `, regrows every ${crop.regrow}` : ''}` : ''}${it.id === 'jug' ? ` · ${S.jug} water` : ''}</div></div>
     ${def.energy ? `<button class="btn sm" data-act="eat" data-arg="${it.id}">Eat</button>` : ''}</div>`;
 }
@@ -220,16 +224,16 @@ export function binScreen(gm) {
   show(`<div class="panel">${head('Shipping bin')}
     <p class="small muted">Items in the bin are sold overnight. Click an item to ship the whole stack; click a shipped item to take it back.</p>
     <div class="row spread"><h3>Your pack</h3><button class="btn sm" data-act="shipall">Ship all crops, fish and forage</button></div>
-    <ul class="list">${sellable.map(({ it, i }) => `<li class="li"><img alt="" src="${iconURL(it.id)}"><div class="grow">${esc(D.itemName(it.id))} ×${it.n}</div><span class="price">${money(D.sellPrice(it.id, S.ch))} each</span><button class="btn sm" data-act="ship" data-arg="${i}">Ship</button></li>`).join('') || '<li class="muted">Nothing to ship.</li>'}</ul>
+    <ul class="list">${sellable.map(({ it, i }) => `<li class="li">${icon(it.id)}<div class="grow">${esc(D.itemName(it.id))} ×${it.n}</div><span class="price">${money(D.sellPrice(it.id, S.ch))} each</span><button class="btn sm" data-act="ship" data-arg="${i}">Ship</button></li>`).join('') || '<li class="muted">Nothing to ship.</li>'}</ul>
     <h3>In the bin · ${money(total)} tonight</h3>
-    <ul class="list">${S.bin.map((e, i) => `<li class="li"><img alt="" src="${iconURL(e.id)}"><div class="grow">${esc(D.itemName(e.id))} ×${e.n}</div><span class="price">${money(D.sellPrice(e.id, S.ch) * e.n)}</span><button class="btn sm" data-act="unship" data-arg="${i}">Take back</button></li>`).join('') || '<li class="muted">Empty.</li>'}</ul>
+    <ul class="list">${S.bin.map((e, i) => `<li class="li">${icon(e.id)}<div class="grow">${esc(D.itemName(e.id))} ×${e.n}</div><span class="price">${money(D.sellPrice(e.id, S.ch) * e.n)}</span><button class="btn sm" data-act="unship" data-arg="${i}">Take back</button></li>`).join('') || '<li class="muted">Empty.</li>'}</ul>
   </div>`);
 }
 
 // ---------- chest ----------
 export function chestScreen(gm) {
   const S = gm.S;
-  const cell = (it, act, i) => `<button class="slot" data-act="${act}" data-arg="${i}" aria-label="${it ? esc(D.itemName(it.id)) + ' ×' + it.n : 'empty'}">${it ? `<img alt="" src="${iconURL(it.id)}">${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}</button>`;
+  const cell = (it, act, i) => `<button class="slot" data-act="${act}" data-arg="${i}" aria-label="${it ? esc(D.itemName(it.id)) + ' ×' + it.n : 'empty'}">${it ? `${icon(it.id)}${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}</button>`;
   show(`<div class="panel">${head('Chest')}<p class="small muted">Click an item to move it between your pack and the chest.</p>
     <h3>Chest</h3><div class="grid">${S.chest.map((it, i) => cell(it, 'cslot', i)).join('')}</div>
     <h3>Pack</h3><div class="grid">${S.inv.map((it, i) => cell(it, 'pslot', i)).join('')}</div></div>`);
@@ -252,7 +256,7 @@ export function shopScreen(gm, tab = 'buy') {
   } else {
     const items = S.inv.filter((it) => it && D.ITEMS[it.id].kind !== 'tool' && D.sellPrice(it.id, S.ch));
     const seen = new Set();
-    body = `<ul class="list">${items.filter((it) => !seen.has(it.id) && seen.add(it.id)).map((it) => `<li class="li"><img alt="" src="${iconURL(it.id)}"><div class="grow">${esc(D.itemName(it.id))} ×${sim.count(S, it.id)}</div><span class="price">${money(D.sellPrice(it.id, S.ch))}</span>
+    body = `<ul class="list">${items.filter((it) => !seen.has(it.id) && seen.add(it.id)).map((it) => `<li class="li">${icon(it.id)}<div class="grow">${esc(D.itemName(it.id))} ×${sim.count(S, it.id)}</div><span class="price">${money(D.sellPrice(it.id, S.ch))}</span>
       <button class="btn sm" data-act="sell" data-arg="${it.id}|1">Sell 1</button><button class="btn sm" data-act="sell" data-arg="${it.id}|99">All</button></li>`).join('') || '<li class="muted">Nothing to sell.</li>'}</ul>`;
   }
   show(`<div class="panel">${head(D.SHOPS[S.ch].name, `<span class="muted">${money(S.money)}</span>`)}${tabs}${body}<p class="small muted">Prices are game prices, not historical ones.</p></div>`);
@@ -278,13 +282,31 @@ export function journalScreen(gm, tab = 'goals') {
     body = `<p class="small muted">${ids.length} of ${FACT.size} facts collected.</p>` + body;
   }
   show(`<div class="panel">${head('Journal')}<div class="tabs">${tabs}</div>${body}</div>`);
-  document.querySelectorAll('canvas.pp').forEach((c) => { const id = c.dataset.pid; const ctx = c.getContext('2d'); ctx.drawImage(personSprite(id, D.PEOPLE[id].look, 'down', 0, 64), 0, 0, 36, 48); });
+  document.querySelectorAll('canvas.pp').forEach((c) => { const id = c.dataset.pid; const ctx = c.getContext('2d'); portrait(ctx, id, 36, 48, 64) || ctx.drawImage(personSprite(id, D.PEOPLE[id].look, 'down', 0, 64), 0, 0, 36, 48); });
 }
+export function repaintPortraits() {
+  document.querySelectorAll('canvas.pp').forEach((c) => { const ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height); portrait(ctx, c.dataset.pid, 36, 48, 64); });
+  const c = document.querySelector('.dialog .portrait'), id = c && c.dataset.pid;
+  if (c && id) { const ctx = c.getContext('2d'); ctx.clearRect(0, 0, 84, 112); ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(0, 0, 84, 112); portrait(ctx, id, 84, 112, 160); }
+}
+// Painted portrait: the upper body of the person's sprite, scaled up. False when the art has not loaded.
+function portrait(ctx, id, w, h, u) {
+  const sp = PA.personSprite(id, D.PEOPLE[id].look, 'down', 'idle', u);
+  if (!sp) return false;
+  const cw = sp.c.width * 0.78, ch = cw * h / w;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(sp.c, (sp.c.width - cw) / 2, sp.c.height * 0.03, cw, ch, 0, 0, w, h);
+  return true;
+}
+// An item icon: the painted file when there is one, else the drawn icon as a data URL.
+function icon(id, cls = '') { return PA.iconHtml(id, cls) || `<img alt="" class="${cls}" src="${iconURL(id)}"${cls === 'big' ? ' width="40" height="40"' : ''}>`; }
 const giftName = (g) => (g.startsWith('kind:') ? 'any ' + g.slice(5) : D.itemName(g).toLowerCase());
 export function factHtml(id) {
   const f = FACT.get(id);
   if (!f) return '';
-  return `<div class="fact">${f.legend ? '<span class="tag">Legend</span>' : ''}${esc(f.text)}<span class="src">Source: ${esc(f.source)} · ${esc(f.sourceUrl)}</span></div>`;
+  // The full address stays available (tooltip, and copyable as selected text) but the card shows only its site.
+  const site = String(f.sourceUrl || '').replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+  return `<div class="fact">${f.legend ? '<span class="tag">Legend</span>' : ''}${esc(f.text)}<span class="src" title="${esc(f.sourceUrl)}">Source: ${esc(f.source)} · <span class="site">${esc(site)}</span></span></div>`;
 }
 
 // ---------- settings ----------
@@ -298,6 +320,7 @@ export function settingsScreen(waiting) {
     <h3>Motion</h3><div class="tabs">${opt('motion', 'auto', s.motion, 'Follow system')}${opt('motion', 'reduced', s.motion, 'Reduced')}${opt('motion', 'full', s.motion, 'Full')}</div>
     <h3>Touch controls</h3><div class="tabs">${opt('touch', 'auto', s.touch, 'Auto')}${opt('touch', 'on', s.touch, 'Always show')}${opt('touch', 'off', s.touch, 'Hide')}</div>
     <h3>Sound</h3><div class="tabs">${opt('mute', 'off', s.mute ? 'on' : 'off', 'Sound on')}${opt('mute', 'on', s.mute ? 'on' : 'off', 'Muted')}${opt('vol', '0.25', String(s.volume), 'Quiet')}${opt('vol', '0.5', String(s.volume), 'Normal')}${opt('vol', '1', String(s.volume), 'Loud')}</div>
+    <h3>Graphics</h3><div class="tabs">${opt('gfx', 'painted', s.gfx || 'painted', 'Painted')}${opt('gfx', 'simple', s.gfx || 'painted', 'Simple (faster)')}</div>
     <h3>Assists</h3><div class="tabs">${opt('assist', 'on', s.assist ? 'on' : 'off', 'Wider fishing window')}${opt('assist', 'off', s.assist ? 'on' : 'off', 'Normal window')}${opt('contrast', 'on', s.contrast ? 'on' : 'off', 'High-contrast HUD')}${opt('contrast', 'off', s.contrast ? 'on' : 'off', 'Standard HUD')}</div>
     <h3>Keys</h3>
     <table class="keys">${Object.entries(ACTIONS).map(([a, label]) => `<tr><td>${label}</td><td>${s.keys[a].map((k) => `<span class="kbd">${esc(keyName(k))}</span>`).join(' ')}</td><td><button class="btn sm" data-act="rebind" data-arg="${a}">${waiting === a ? 'Press a key…' : 'Change'}</button></td></tr>`).join('')}</table>
@@ -311,7 +334,7 @@ export function dialogScreen(d, gm) {
   const sel = sim.selected(S);
   const canGive = sel && D.ITEMS[sel.id].kind !== 'tool';
   const facts = (d.facts || []).map(factHtml).join('');
-  show(`<div class="dialog" role="dialog" aria-label="${esc(d.name)}"><canvas class="portrait" width="84" height="112" aria-hidden="true"></canvas>
+  show(`<div class="dialog" role="dialog" aria-label="${esc(d.name)}"><canvas class="portrait" data-pid="${d.npc}" width="84" height="112" aria-hidden="true"></canvas>
     <div class="panel"><div class="row spread"><div><div class="who">${esc(d.name)} <span class="hearts small" aria-label="${d.hearts} hearts">${'♥'.repeat(d.hearts)}${'♡'.repeat(5 - d.hearts)}</span></div><div class="role">${esc(d.role)}</div></div></div>
     ${d.lines.map((l, i) => `<p class="text">${d.legend && i === d.lines.length - 1 ? '<span class="tag">Legend</span>' : ''}${esc(l)}</p>`).join('')}
     ${(d.reminders || []).map((r) => `<p class="text small"><span class="tag">Request</span>${esc(r)}</p>`).join('')}
@@ -319,7 +342,7 @@ export function dialogScreen(d, gm) {
     ${facts ? `<details><summary class="small">Source</summary>${facts}</details>` : ''}
     <div class="row">${canGive && !d.giftText ? `<button class="btn" data-act="give" data-arg="${d.npc}">Give ${esc(D.itemName(sel.id).toLowerCase())}</button>` : ''}<button class="btn primary" data-act="close" data-focus>Bye</button></div></div></div>`, 'dlg');
   const c = document.querySelector('.dialog .portrait');
-  if (c) { const ctx = c.getContext('2d'); ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(0, 0, 84, 112); ctx.drawImage(personSprite(d.npc, D.PEOPLE[d.npc].look, 'down', 0, 80), 2, -6, 80, 120); }
+  if (c) { const ctx = c.getContext('2d'); ctx.fillStyle = 'rgba(0,0,0,0.08)'; ctx.fillRect(0, 0, 84, 112); portrait(ctx, d.npc, 84, 112, 160) || ctx.drawImage(personSprite(d.npc, D.PEOPLE[d.npc].look, 'down', 0, 80), 2, -6, 80, 120); }
 }
 export function bedScreen(gm) {
   const S = gm.S;
@@ -365,7 +388,7 @@ export function summaryScreen(gm, sum) {
     <div class="card-era">Good morning</div><h2>${esc(sim.dateLabel(S))}</h2>
     ${sum.passOut ? `<p><b>You collapsed after 2:00.</b> Someone carried you home. You lost ${money(sum.lost)} and woke tired.</p>` : ''}
     <h3>Shipped yesterday (${esc(sum.date)})</h3>
-    <ul class="list">${sum.shipped.map((e) => `<li class="li"><img alt="" src="${iconURL(e.id)}"><div class="grow">${esc(D.itemName(e.id))} ×${e.n}</div><span class="price">${money(e.total)}</span></li>`).join('') || '<li class="muted">Nothing shipped.</li>'}</ul>
+    <ul class="list">${sum.shipped.map((e) => `<li class="li">${icon(e.id)}<div class="grow">${esc(D.itemName(e.id))} ×${e.n}</div><span class="price">${money(e.total)}</span></li>`).join('') || '<li class="muted">Nothing shipped.</li>'}</ul>
     ${sum.rent ? `<p>Rent and stand sales: <b>${money(sum.rent)}</b></p>` : ''}
     <p>Earned: <b>${money(sum.total + sum.rent)}</b> · Cash: <b>${money(S.money)}</b></p>
     ${sum.wilted ? `<p>${sum.wilted} out-of-season crop${sum.wilted > 1 ? 's' : ''} wilted with the change of season. Clear them with the scythe.</p>` : ''}

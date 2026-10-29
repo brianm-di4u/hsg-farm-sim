@@ -200,3 +200,23 @@ MainLoop.js's phases closely, add the attribution comments given in sections 2 a
   "Introduction to A*" page's footer was not checked.
 - MDN states that its CC0 code-sample rule cannot be confirmed per sample since 2020 (Yari). That doesn't
   matter here because the Tilemaps material is reference only.
+
+## Visual pass (2026-10-29): vendored fonts
+
+Seven font families, latin subsets only, from npm `@fontsource/*` **5.2.5** (`npm pack`), each under the
+SIL Open Font License 1.1 (license text copied beside each file as `vendor/fonts/LICENSE-<family>.txt`).
+`tools/build-fonts.mjs` inlines them as base64 into `assets/fonts.css`, which the build inlines into
+`index.html` (Chrome blocks `@font-face url()` from file://).
+
+| Family | Weight(s) | npm package | Used for |
+|---|---|---|---|
+| IM Fell English | 400 | @fontsource/im-fell-english@5.2.5 | 1807 and 1871 display type and signs |
+| Playfair Display | 700 | @fontsource/playfair-display@5.2.5 | 1886 display, signs, the title wordmark |
+| Josefin Sans | 700 | @fontsource/josefin-sans@5.2.5 | 1931 display and signs, title subtitle |
+| Righteous | 400 | @fontsource/righteous@5.2.5 | 1955 display and signs |
+| Outfit | 600 | @fontsource/outfit@5.2.5 | 2026 display and signs |
+| Alegreya | 400, 700 | @fontsource/alegreya@5.2.5 | body text, chapters 1–3 |
+| Nunito Sans | 400, 700 | @fontsource/nunito-sans@5.2.5 | body text, chapters 4–6 |
+
+No other third-party code or art is used: painted images are generated for this game (see VISUAL-REPORT.md),
+characters are rendered from `art-src/blender/characters.py`.

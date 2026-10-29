@@ -9,6 +9,7 @@ export const tests = [
       t.expect(bytes < 2 * 1024 * 1024, `page ${(bytes / 1024).toFixed(0)} KB < 2 MB`);
       for (const [ch, at] of [[1, 'farmDoor'], [3, 'town'], [4, 'town'], [6, 'lake']]) {
         await chapter(t, ch, { at, time: ch === 4 ? 1250 : 700 });
+        await t.waitForStable(); // painted art for the chapter has loaded and the first chunks are baked
         await t.game('resume');
         // Walk while measuring so the camera and chunks move.
         await t.page.keyboard.down('ArrowRight');
@@ -26,7 +27,7 @@ export const tests = [
       // Standing still doesn't rebake chunks.
       await chapter(t, 2, { at: 'town' });
       await t.game('resume');
-      await t.page.waitForTimeout(300);
+      await t.page.waitForTimeout(1500); // chunks around the view are baked ahead in the background first
       const a = (await t.state()).chunkBakes;
       await t.page.waitForTimeout(700);
       const b = (await t.state()).chunkBakes;
