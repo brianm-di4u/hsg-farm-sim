@@ -26,7 +26,8 @@ one tree repeated; no steam in play; web-like UI and small type; unfinished titl
 The game stays a top-down 2D tile game: the simulation, collision grid, saves and tests are built on tiles, phones
 need the flat camera, and the genre's best titles are 2D. What changes is everything drawn on top of the grid:
 
-- **Painted world art** (Codex image generation, one approved pilot as the style reference for every batch):
+- **Painted world art** (Codex image generation, one approved pilot as the style reference for every batch; tool,
+  prompts and license in `SAMPLES.md` → Art provenance, every prompt in `art-src/PROMPTS.md`):
   gouache storybook look, three-quarter top-down view, soft light from the upper left, warm brown outlines.
   Painted is chosen over pixel art because image generation keeps a consistent painted style but not a consistent
   pixel grid, and painted art scales cleanly across 36–64 px tiles and 1–2× DPR.
@@ -80,7 +81,8 @@ Era art direction (palette, materials, light):
 - **2026 Today** — restored Row in reuse, brick pavers, lake homes; cool LED light.
 
 Map accuracy: the play grid stays (moving the town or creek would break quests, schedules and tests), but it is
-read as a schematic of the real valley: Gulpha Creek bottoms with the farm, the town as Bathhouse Row with the
+read as a schematic of the real valley: Hot Springs Creek bottoms with the farm (the creek was named Gulpha here until
+the 2026-10-29 fix pass; Gulpha Creek runs east of Hot Springs Mountain), the town as Bathhouse Row with the
 springs' tufa at its end, the novaculite ridge north, Lake Hamilton south. Accuracy goes into what each place looks
 like in each era and into the painted vistas.
 

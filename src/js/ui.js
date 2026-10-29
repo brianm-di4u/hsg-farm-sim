@@ -25,12 +25,13 @@ export function applyTheme(ch) {
 // ---------- HUD ----------
 const last = {};
 const setText = (id, v) => { if (last[id] !== v) { last[id] = v; const el = document.getElementById(id); if (el) el.textContent = v; } };
-const WX = { clear: '☀ Clear', rain: '🌧 Rain', snow: '❄ Snow', fog: '🌫 Fog' };
+const WX = { clear: ['☀', 'Clear'], rain: ['🌧', 'Rain'], snow: ['❄', 'Snow'], fog: ['🌫', 'Fog'] };
 export function hud(gm) {
   const S = gm.S;
   setText('h-date', sim.dateLabel(S));
   setText('h-time', sim.clock(S));
-  setText('h-wx', WX[S.weather]);
+  // Icon and word in separate spans, so the phone HUD at large text can keep the icon and drop the word.
+  if (last.wx !== S.weather) { last.wx = S.weather; const [ic, word] = WX[S.weather]; const el = document.getElementById('h-wx'); if (el) el.innerHTML = `<span aria-hidden="true">${ic}</span><span class="wx-w"> ${word}</span>`; }
   setText('h-money', money(S.money));
   setText('h-energy', `${Math.round(S.energy)}/${S.maxEnergy}`);
   const pct = Math.round(S.energy / S.maxEnergy * 100);
@@ -170,8 +171,8 @@ export function aboutScreen() {
     <p><b>Valley of Vapors: Through the Ages</b> is an original, open-source (MIT) farming and life sim, part of the Hot Springs Games collection. It is not affiliated with any park, business or commercial game.</p>
     <p>History comes from the collection's research corpus and the audited trivia bank (Encyclopedia of Arkansas, National Park Service, USGS, Wikipedia and others); each card names its source. Native history is presented from National Park Service and Encyclopedia of Arkansas sources; the old quarry in the game is a place to read about, not to dig.</p>
     <p>Code ideas: tilemaps (MDN), grid search (Red Blob Games), fixed-step loop pattern (MainLoop.js, Glenn Fiedler), mulberry32 PRNG (Tommy Ettinger, via bryc/code, public domain). Details in SAMPLES.md.</p>
-    <p class="muted small">The map condenses the valley: the farm, Bathhouse Row, the springs and the lake sit closer together than they really do, and the lake stands for the reservoirs that Remmel Dam (1924) and Carpenter Dam (1931) made below town.</p>
-    <p class="muted small">Painted art was made for this game (generated images and Blender renders); fonts are open-source (SIL OFL, see SAMPLES.md); all sounds are synthesized. Characters and prices are invented.</p>
+    <p class="muted small">The map condenses the valley: the farm, Bathhouse Row, the springs and the lake sit closer together than they really do, and the lake stands for the reservoirs that Remmel Dam (1924) and Carpenter Dam (1931) made below town. The farm's creek is Hot Springs Creek, which has run in a stone arch under the town since the 1880s.</p>
+    <p class="muted small">Painted art was made for this game: images generated with OpenAI's Codex image tool from prompts kept in the repository, and Blender character renders (see SAMPLES.md); fonts are open-source (SIL OFL, see SAMPLES.md); all sounds are synthesized. Characters and prices are invented.</p>
   </div>`);
 }
 

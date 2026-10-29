@@ -16,9 +16,9 @@ export const CHAPTERS = [null,
   { n: 1, title: 'Steam Valley', year: 1807, corpus: 'ancient · frontier', pal: 'ouachita-forest',
     house: 'cabin', animal: null, lake: false, light: 'fire', tier: 1, street: 'trail',
     startMoney: 150, kit: [['seed:radish', 12], ['seed:corn', 6]],
-    who: 'Ada Vale', look: { shirt: '#7a5a3a', pants: '#4a3a2a', hat: 'none', hair: '#3b2a1c', skin: 2 },
+    who: 'Ada Vale', look: { shirt: '#a8473a', pants: '#4a3a2a', hat: 'bonnet', hair: '#3b2a1c', skin: 2 }, // madder-red linsey and a straw sunbonnet
     intro: [
-      'Spring, 1807. Ada Vale poles a flatboat up the Ouachita and turns into a creek the 1804 explorers called Calfait Creek. Steam rises from the hillside to the east.',
+      'Spring, 1807. Ada Vale poles a flatboat up the Ouachita, past the creek where the 1804 explorers camped, and follows the warm stream that runs down from the springs. Steam rises from the hillside to the east.',
       'There is no town yet: a trader\'s camp, a trapper\'s cabin, and a few huts where sick travelers soak in the hot water. The creek bottom is good, rocky ground. It is yours to work.',
     ],
     introFacts: ['f-calfait', 'f-prudhomme'],

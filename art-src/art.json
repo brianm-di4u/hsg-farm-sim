@@ -1437,6 +1437,30 @@
    ],
    "quality": 0.86,
    "keyAll": "holes"
+  },
+  {
+   "name": "ground-culvert",
+   "src": "prop-culvert.png",
+   "w": 512,
+   "keyWhite": 28,
+   "trim": true,
+   "quality": 0.84
+  },
+  {
+   "name": "ground-springbox",
+   "src": "prop-springbox.png",
+   "w": 256,
+   "keyWhite": 28,
+   "trim": true,
+   "quality": 0.84
+  },
+  {
+   "name": "ground-soakpool",
+   "src": "prop-soakpool.png",
+   "w": 448,
+   "keyWhite": 28,
+   "trim": true,
+   "quality": 0.84
   }
  ]
 }

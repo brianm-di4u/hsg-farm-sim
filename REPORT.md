@@ -17,7 +17,7 @@ pass and 44/80 after its last round. Details are in `VISUAL-PLAN.md` and `VISUAL
 below describe the build before the visual pass, except where noted.
 
 ## What was built
-- **The daily loop.** A 60 × 44-tile valley (farm, Gulpha Creek, town, the springs, the north ridge,
+- **The daily loop.** A 60 × 44-tile valley (farm, Hot Springs Creek, town, the springs, the north ridge,
   the south bottoms) with chunk-cached procedural tiles and a y-sorted object layer. Hoe, watering jug,
   axe, pick, scythe and fishing pole; till, plant, water, grow by season, harvest, regrow; trees, rocks,
   novaculite outcrops and quartz nodes; daily forage on the ridge; a shipping bin paid overnight; sleep,

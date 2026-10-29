@@ -224,3 +224,15 @@ body.hc .toast { background: #000; }
 .h-date, .h-money, .h-row { font-family: var(--ui-font); font-variant-numeric: lining-nums tabular-nums; }
 .h-date { font-weight: 700; }
 @media (max-width: 699px) { .toasts { bottom: 272px; } }
+
+/* Phones at large text (125% and up): the HUD's chips keep to one row above the goals. The date chip and the stats
+   chip are capped in px (the rest of the UI still scales), and the weather keeps its icon but drops the word. */
+@media (max-width: 699px) {
+  .text-l .hud-l { padding: 3px 6px; }
+  .text-l .h-date { font-size: 13px; }
+  .text-l .h-row { font-size: 13px; gap: 3px; }
+  .text-l .h-wx .wx-w { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .text-l .h-stats { padding: 3px 6px; }
+  .text-l .h-money { font-size: 15px; }
+  .text-l .h-energy { font-size: 12px; }
+}

@@ -4,7 +4,7 @@
 // while collision stays on whole tiles. The field is defined in world coordinates, so neighbouring
 // chunks meet exactly. Used only when the painted textures have loaded; art.js draws the vector tiles
 // otherwise.
-import { W, H, G } from '../sim/world.js';
+import { W, H, G, CREEK, CULVERT_Y, culverted } from '../sim/world.js';
 import { noise } from '../sim/rng.js';
 import { img } from './assets.js';
 import { rgba, mix, shade } from './palette.js';
@@ -30,6 +30,13 @@ export const STREET_TEX = { 1: 'tex-path', 2: 'tex-road', 3: 'tex-gravel', 4: 't
 const REPEAT = { 'tex-grass': 5, 'tex-forest': 5, 'tex-path': 3, 'tex-road': 4, 'tex-gravel': 3, 'tex-brick': 3, 'tex-asphalt': 4, 'tex-pavers': 2.5,
   'tex-flagstone': 3, 'tex-sand': 4, 'tex-clay': 4, 'tex-tufa': 4, 'tex-creek': 3, 'tex-lake': 6, 'tex-soil': 2, 'tex-soil-wet': 2, 'tex-snow': 4, 'tex-rock': 4 };
 export const TERRAIN_TEX = Object.keys(REPEAT);
+// The creek mouth: the strip of shore sand across the creek where it meets the lake is walkable (a plank crossing)
+// but is drawn as water, so the creek runs on into the lake.
+export function mouthAt(world, x, y) {
+  if (!CREEK.includes(x) || y <= 0 || y >= H - 1) return false;
+  const g = world.g, wet = (v) => v === G.WATER || v === G.DEEP;
+  return g[y * W + x] === G.SAND && wet(g[(y - 1) * W + x]) && wet(g[(y + 1) * W + x]);
+}
 export const terrainReady = () => ['tex-grass', 'tex-forest', 'tex-path', 'tex-creek'].every((n) => img(n));
 
 // A texture pre-scaled to its repeat size at this tile size, as a canvas pattern source.
@@ -47,6 +54,24 @@ export function texCanvas(name, u) {
     g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, px, px);
   });
 }
+// A painted image scaled once to w x h px (halving first so the downscale stays sharp), or null until it loads.
+export function paintedAt(name, w, h) {
+  const im = img(name);
+  if (!im) return null;
+  w = Math.max(2, Math.round(w)); h = Math.max(2, Math.round(h));
+  return cached(`pa|${name}|${w}x${h}`, w, h, (g) => {
+    let src = im, sw = im.naturalWidth, sh = im.naturalHeight;
+    while (sw / 2 >= w && sh / 2 >= h) {
+      const c = document.createElement('canvas'); c.width = Math.ceil(sw / 2); c.height = Math.ceil(sh / 2);
+      const cg = c.getContext('2d'); cg.imageSmoothingQuality = 'high'; cg.drawImage(src, 0, 0, c.width, c.height); src = c; sw = c.width; sh = c.height;
+    }
+    g.imageSmoothingQuality = 'high'; g.drawImage(src, 0, 0, w, h);
+  });
+}
+const aspectOf = (name) => { const im = img(name); return im ? im.naturalHeight / im.naturalWidth : 1; };
+// Names of the painted ground pieces baked into the chunks (their arrival triggers a rebake).
+export const GROUND_ART = ['ground-culvert', 'ground-springbox', 'ground-soakpool'];
+
 const patterns = new WeakMap();
 export function pattern(ctx, name, u) {
   const c = texCanvas(name, u);
@@ -184,7 +209,8 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
   }
 
   // 5. Sand (raw red clay on the new 1931 shore).
-  const sand = R((x, y) => (at(x, y) === G.SAND ? 1 : 0), 0.8, 23);
+  const mouth = (x, y) => mouthAt(world, x, y);
+  const sand = R((x, y) => (at(x, y) === G.SAND && !mouth(x, y) ? 1 : 0), 0.8, 23);
   fillTex(sand.fill, ch === 4 ? 'tex-clay' : 'tex-sand');
 
   // 6. The tufa slope: travertine, terraces and mineral streaks.
@@ -192,16 +218,23 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
   stroke(tufa.edge, '#8a7a5a', u * 0.22, 0.35);
   if (fillTex(tufa.fill, 'tex-tufa', '#a8a296', 0.4)) {
     ctx.save(); ctx.clip(tufa.fill);
-    // Porous grey tufa with creamy patches (the 1902 description), then terraces and the algae runs.
-    const grey = fieldRegion(x0, y0, n, u, (px, py) => vnoise(px * 0.6, py * 0.6, 61) - 0.52);
-    ctx.globalAlpha = 0.3; ctx.fillStyle = '#6e6c66'; ctx.fill(grey.fill); ctx.globalAlpha = 1;
+    // Porous grey tufa with creamy patches (the 1902 description), rust-coloured mineral stain and the algae runs.
+    // They are painted at an eighth of the resolution and scaled up, and the grey is laid in three thresholds, so
+    // every patch fades out instead of ending in a hard (or straight) edge. The terrace lips stay crisp on top.
+    const q = 8, span = size + 2 * M, pc = lowres(Math.ceil(span * u / q)), pg = pc.getContext('2d');
+    pg.setTransform(1, 0, 0, 1, 0, 0); pg.clearRect(0, 0, pc.width, pc.height); pg.setTransform(1 / q, 0, 0, 1 / q, -x0 * u / q, -y0 * u / q);
+    pg.fillStyle = '#6e6c66';
+    for (const t of [-0.08, 0, 0.08]) { pg.globalAlpha = 0.1; pg.fill(fieldRegion(x0, y0, n, u, (px, py) => vnoise(px * 0.6, py * 0.6, 61) - 0.52 - t).fill); }
+    pg.globalAlpha = 1;
+    stains(pg, world, tx0, ty0, size, u);
+    algae(pg, world, u);
+    ctx.save(); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(pc, x0 * u, y0 * u, pc.width * q, pc.height * q); ctx.restore();
     terraces(ctx, world, tx0, ty0, size, u);
-    algae(ctx, world, u);
     ctx.restore();
   }
 
   // 7. Water: banks, then the lake and creek beds, depth, shallows and a foam line.
-  const isW = (x, y) => (at(x, y) === G.WATER || at(x, y) === G.DEEP || at(x, y) === G.BRIDGE || at(x, y) === G.DOCK ? 1 : 0);
+  const isW = (x, y) => (at(x, y) === G.WATER || at(x, y) === G.DEEP || at(x, y) === G.BRIDGE || at(x, y) === G.DOCK || mouth(x, y) ? 1 : 0);
   const water = R(isW, 0.6, 23);
   const bank = ch >= 4 && world.lake.some((v) => v) ? (ch === 4 ? '#9a4a2a' : '#8a6a44') : '#6a5034';
   stroke(water.edge, bank, u * 0.34, 0.85);
@@ -214,14 +247,22 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
     const deeper = R((x, y) => { let k = 0; for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) if (at(Math.max(0, Math.min(W - 1, x + i)), Math.max(0, Math.min(H - 1, y + j))) === G.DEEP) k++; return k >= 9 ? 1 : 0; }, 1.0, 31);
     ctx.save(); ctx.globalAlpha = 0.28; ctx.fillStyle = shade(P.deep, -0.5); ctx.fill(deeper.fill); ctx.restore();
     const jy = mouthY(world);
-    if (jy) { // blend the creek bed into open lake water over the last three tiles
-      ctx.save(); ctx.clip(creek.fill); ctx.fillStyle = pattern(ctx, 'tex-lake', u);
-      for (let i = 0; i < 6; i++) { ctx.globalAlpha = (i + 1) / 7; ctx.fillRect(px0, (jy - 3 + i * 0.5) * u, pw, u * 0.5 + 1); }
+    if (jy) {
+      // The creek bed turns into open lake water over its last four tiles: thin bands of the lake texture and its
+      // tint, rising to full strength at the shore, so the creek ends in the lake's own colours with no edge.
+      ctx.save(); ctx.clip(creek.fill);
+      const lp = pattern(ctx, 'tex-lake', u), bx = x0 * u, bw = (size + 2 * M) * u;
+      for (let i = 0; i <= 20; i++) {
+        const a = Math.min(1, (i + 1) / 16), yb = (jy - 4 + i * 0.25) * u, bh = i === 20 ? u * 2 : u * 0.25 + 1;
+        ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = a; ctx.fillStyle = lp; ctx.fillRect(bx, yb, bw, bh);
+        ctx.globalCompositeOperation = 'color'; ctx.globalAlpha = a * 0.45; ctx.fillStyle = P.water; ctx.fillRect(bx, yb, bw, bh);
+      }
       ctx.restore();
     }
     stroke(water.edge, '#cfe8e0', u * 0.22, 0.22);
     stroke(water.edge, '#ffffff', u * 0.035, 0.55);
   }
+  if (culverted(ch) && tx0 - M <= CREEK[1] + 2 && tx0 + size + M >= CREEK[0] - 1 && ty0 - M <= CULVERT_Y + 2 && ty0 + size + M >= CULVERT_Y) culvert(ctx, u);
 
   // 8. Snow cover on snow days: a soft blanket that leaves water, streets and paths showing through at the edges.
   if (opts.snow) {
@@ -233,9 +274,10 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
   }
 }
 
-// Yellow centre lines and edge dashes on 1955 asphalt.
+// White broken centre lines on 1955 asphalt: the 1948 federal manual made white the centre-line colour; yellow
+// centre lines between opposing traffic only became the rule in the 1971 edition.
 function centreLines(ctx, world, tx0, ty0, size, u) {
-  ctx.save(); ctx.fillStyle = '#f2c84a'; ctx.globalAlpha = 0.85;
+  ctx.save(); ctx.fillStyle = '#eeebe2'; ctx.globalAlpha = 0.85;
   for (let y = ty0; y < ty0 + size; y++) for (let x = tx0; x < tx0 + size; x++) {
     if (x < 0 || y < 0 || x >= W || y >= H || world.g[y * W + x] !== G.STREET) continue;
     if (x === 37 && y > 14 && y % 2) ctx.fillRect((x + 1) * u - u * 0.05, (y + 0.15) * u, u * 0.1, u * 0.55);
@@ -303,6 +345,17 @@ function decals(ctx, world, tx0, ty0, size, u, P) {
     }
   }
 }
+// Rust-coloured mineral stain running downhill on the tufa, and algae spots (soft: drawn into the low-resolution layer).
+function stains(ctx, world, tx0, ty0, size, u) {
+  for (let y = ty0 - 1; y < ty0 + size + 1; y++) for (let x = tx0 - 1; x < tx0 + size + 1; x++) {
+    if (x < 0 || y < 0 || x >= W || y >= H) continue;
+    const v = world.g[y * W + x];
+    if (v !== G.TUFA && v !== G.POOL) continue;
+    const n = (k) => noise(x, y, 300 + k);
+    if (n(12) < 0.45) { ctx.fillStyle = 'rgba(176,96,40,0.2)'; ctx.beginPath(); ctx.ellipse((x + n(13)) * u, (y + 0.55) * u, u * 0.12, u * (0.35 + n(14) * 0.3), (n(16) - 0.5) * 0.3, 0, 7); ctx.fill(); }
+    if (n(15) < 0.3) { ctx.fillStyle = 'rgba(40,140,120,0.22)'; ctx.beginPath(); ctx.ellipse((x + n(16)) * u, (y + n(17)) * u, u * 0.36, u * 0.18, 0, 0, 7); ctx.fill(); }
+  }
+}
 // Thermophilic algae: blue-green runs from each hot pool down the slope, edged with rusty mineral stain.
 function algae(ctx, world, u) {
   ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -314,7 +367,7 @@ function algae(ctx, world, u) {
       const t = i / 5, wob = (noise(x, y, 610 + i) - 0.5) * 0.5;
       const ex = (x + 0.5 + wob * t * 1.4) * u, ey = (y + 0.9 + t * len) * u, rx = u * (0.32 + t * 0.4), ry = u * (0.22 + t * 0.12);
       ctx.fillStyle = 'rgba(176,96,40,0.16)'; ctx.beginPath(); ctx.ellipse(ex, ey, rx * 1.15, ry * 1.2, 0, 0, 7); ctx.fill();
-      ctx.fillStyle = `rgba(52,150,124,${0.42 - t * 0.25})`; ctx.beginPath(); ctx.ellipse(ex, ey, rx, ry, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = `rgba(52,150,124,${0.34 - t * 0.22})`; ctx.beginPath(); ctx.ellipse(ex, ey, rx, ry, 0, 0, 7); ctx.fill();
     }
   }
 }
@@ -326,16 +379,32 @@ function terraces(ctx, world, tx0, ty0, size, u) {
     const v = world.g[y * W + x];
     if (v !== G.TUFA && v !== G.POOL) continue;
     const n = (k) => noise(x, y, 300 + k);
-    const k = n(20) < 0.45 ? 1 : n(20) < 0.8 ? 2 : 0;
+    const k = n(20) < 0.32 ? 1 : n(20) < 0.48 ? 2 : 0;
     for (let r = 0; r < k; r++) {
       const cx = (x + 0.1 + n(r) * 0.8) * u, cy = (y + 0.2 + r * 0.45 + n(r + 4) * 0.2) * u, rw = u * (0.45 + n(r + 8) * 0.7), rh = u * (0.12 + n(r + 9) * 0.14), rot = (n(r + 10) - 0.5) * 0.6;
       const a0 = 0.25 + n(r + 11) * 0.4, a1 = Math.PI - 0.25 - n(r + 12) * 0.4;
       ctx.beginPath(); ctx.ellipse(cx, cy + u * 0.03, rw, rh, rot, a0, a1); ctx.strokeStyle = 'rgba(90,70,40,0.28)'; ctx.lineWidth = u * 0.08; ctx.stroke();
-      ctx.beginPath(); ctx.ellipse(cx, cy, rw, rh, rot, a0, a1); ctx.strokeStyle = 'rgba(255,250,235,0.6)'; ctx.lineWidth = u * 0.04; ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(cx, cy, rw, rh, rot, a0, a1); ctx.strokeStyle = `rgba(255,250,235,${0.35 + n(r + 13) * 0.25})`; ctx.lineWidth = u * (0.025 + n(r + 14) * 0.025); ctx.stroke();
     }
-    if (n(12) < 0.45) { ctx.fillStyle = 'rgba(176,96,40,0.22)'; ctx.fillRect((x + n(13)) * u, (y + 0.1) * u, u * 0.06, u * (0.5 + n(14) * 0.5)); }
-    if (n(15) < 0.3) { ctx.fillStyle = 'rgba(40,140,120,0.28)'; ctx.beginPath(); ctx.ellipse((x + n(16)) * u, (y + n(17)) * u, u * 0.3, u * 0.14, 0, 0, 7); ctx.fill(); }
   }
+}
+
+// The culvert headwall where Hot Springs Creek comes out from under the road (1886 on): cut stone with an arch,
+// hanging below the road's south edge, the creek spilling out of it.
+function culvert(ctx, u) {
+  const cx = (CREEK[0] + CREEK[1] + 1) / 2, top = CULVERT_Y + 0.86;
+  const name = 'ground-culvert', a = aspectOf(name), wT = 2.4;
+  const sp = paintedAt(name, wT * u, wT * a * u);
+  if (sp) { ctx.drawImage(sp, (cx - wT / 2) * u, top * u); return; }
+  const x0 = (cx - 1.35) * u, w = 2.7 * u, y0 = top * u, h = u * 0.55;
+  ctx.fillStyle = 'rgba(20,16,10,0.35)'; ctx.fillRect(x0 + u * 0.05, y0 + h, w, u * 0.12);
+  ctx.fillStyle = '#9a9284'; ctx.fillRect(x0, y0, w, h);
+  ctx.fillStyle = '#c8c0b0'; ctx.fillRect(x0 - u * 0.05, y0 - u * 0.04, w + u * 0.1, u * 0.12);
+  ctx.strokeStyle = 'rgba(60,52,40,0.45)'; ctx.lineWidth = Math.max(1, u * 0.02);
+  for (let r = 1; r < 3; r++) { ctx.beginPath(); ctx.moveTo(x0, y0 + r * h / 3); ctx.lineTo(x0 + w, y0 + r * h / 3); ctx.stroke(); }
+  for (let r = 0; r < 3; r++) for (let i = 1; i < 8; i++) { const bx = x0 + (i + (r % 2) * 0.5) * w / 8; ctx.beginPath(); ctx.moveTo(bx, y0 + r * h / 3); ctx.lineTo(bx, y0 + (r + 1) * h / 3); ctx.stroke(); }
+  ctx.fillStyle = '#1c2220'; ctx.beginPath(); ctx.moveTo(cx * u - u * 0.75, y0 + h); ctx.lineTo(cx * u - u * 0.75, y0 + h * 0.55); ctx.ellipse(cx * u, y0 + h * 0.55, u * 0.75, h * 0.42, 0, Math.PI, 0); ctx.lineTo(cx * u + u * 0.75, y0 + h); ctx.fill();
+  ctx.fillStyle = 'rgba(230,245,240,0.6)'; ctx.beginPath(); ctx.ellipse(cx * u, y0 + h + u * 0.05, u * 0.7, u * 0.08, 0, 0, 7); ctx.fill();
 }
 
 // Hot-spring pools on the tufa: a cream rim, turquoise water deepening to the centre, a glint.
@@ -345,6 +414,9 @@ export function drawPool(ctx, x, y, u, ch = 1, kind = 'soak', at = null) {
   if (ch >= 3 && kind === 'soak' && at) {
     // From 1886 the soaking pool is built: one stone-rimmed basin across its tiles, steaming turquoise water.
     const pool = (dx, dy) => at(x + dx, y + dy) === G.POOL;
+    // The painted basin is drawn whole from its top-left tile (both chunks it straddles include that tile).
+    const pa = aspectOf('ground-soakpool'), bw = 2.3, sp = paintedAt('ground-soakpool', bw * u, bw * pa * u);
+    if (sp) { if (!pool(-1, 0) && !pool(0, -1)) ctx.drawImage(sp, (x + 1 - bw / 2) * u, (y + 1 - bw * pa / 2) * u); return; }
     ctx.fillStyle = '#3aa7a0'; ctx.fillRect(x * u, y * u, u, u);
     const gr = ctx.createLinearGradient(0, y * u, 0, (y + 1) * u); gr.addColorStop(0, 'rgba(20,90,100,0.45)'); gr.addColorStop(1, 'rgba(120,220,200,0.2)');
     ctx.fillStyle = gr; ctx.fillRect(x * u, y * u, u, u);
@@ -360,6 +432,8 @@ export function drawPool(ctx, x, y, u, ch = 1, kind = 'soak', at = null) {
   }
   if (ch >= 3 && kind === 'hotspring' && !(x === 52 && y === 9)) {
     // A tufa-masonry spring box with an iron lid, weeping a little warm water.
+    const ba = aspectOf('ground-springbox'), bw = 1.05, sb = paintedAt('ground-springbox', bw * u, bw * ba * u);
+    if (sb) { ctx.fillStyle = 'rgba(40,30,20,0.28)'; ctx.beginPath(); ctx.ellipse(cx + u * 0.06, cy + u * 0.36, u * 0.48, u * 0.16, 0, 0, 7); ctx.fill(); ctx.drawImage(sb, cx - bw * u / 2, cy + u * 0.45 - bw * ba * u); return; }
     ctx.fillStyle = 'rgba(40,30,20,0.35)'; ctx.fillRect(cx - u * 0.36, cy - u * 0.2, u * 0.76, u * 0.62);
     ctx.fillStyle = '#b8ae98'; ctx.fillRect(cx - u * 0.4, cy - u * 0.3, u * 0.8, u * 0.6);
     ctx.fillStyle = '#d8d0bc'; ctx.fillRect(cx - u * 0.4, cy - u * 0.3, u * 0.8, u * 0.12);

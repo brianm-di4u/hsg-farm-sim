@@ -60,6 +60,7 @@ function touchWanted() {
 function applySettings() {
   const s = app.settings;
   document.documentElement.style.fontSize = 16 * s.text + 'px';
+  document.documentElement.classList.toggle('text-l', s.text >= 1.25);
   document.body.classList.toggle('hc', !!s.contrast);
   scene.R.reduced = reducedMotion();
   setVolume(s.volume, s.mute);

@@ -3,7 +3,7 @@
 ## 1. Vision
 An original top-down farming and life sim on one piece of land in the Hot Springs valley, played across
 six chapters from 1807 to 2026. Each chapter is a new generation of the fictional Vale family on the same
-creek-bottom farm beside Gulpha Creek. The valley is redrawn in each era's palette; the town grows from
+creek-bottom farm beside Hot Springs Creek (arched over past Bathhouse Row from the 1880s). The valley is redrawn in each era's palette; the town grows from
 health-seeker huts to Bathhouse Row to a restored national-park downtown; crops, tools, buyers and
 neighbors change with it. Every chapter ends with a short, sourced history card.
 

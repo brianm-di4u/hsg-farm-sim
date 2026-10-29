@@ -59,7 +59,10 @@ def toon(name, col=(1, 1, 1), levels=(0.6, 0.82, 0.97)):
 
 M = {
     'grey': toon('grey'),
-    'eye': toon('eye', (0.10, 0.07, 0.06), (1, 1, 1)),
+    'eye': toon('eye', (0.07, 0.05, 0.045), (1, 1, 1)),
+    # Cheeks sit in the skin layer, a little darker and rosier than the skin, so the game's skin tint carries them
+    # (a fixed pink blush read as watery eyes on darker skin).
+    'cheek': toon('cheek', (0.88, 0.76, 0.76)),
     'shoe': toon('shoe', (0.24, 0.16, 0.11)),
     'white': toon('white', (0.96, 0.95, 0.92)),
     'mouth': toon('mouth', (0.45, 0.22, 0.2), (1, 1, 1)),
@@ -139,9 +142,10 @@ tag(mesh_obj('headball', sphere(0.25, (1.0, 0.94, 0.95), 32, 20), headp), 'skin'
 for sx in (-1, 1):
     tag(mesh_obj(f'ear{sx}', sphere(0.055, (0.5, 0.8, 1.0)), headp, (sx * 0.245, 0.02, -0.01)), 'skin')
     tag(mesh_obj(f'eye{sx}', sphere(0.05, (0.85, 0.5, 1.3), 14, 10), headp, (sx * 0.092, -0.214, -0.012), 'eye', True), 'fixed')
-    tag(mesh_obj(f'glint{sx}', sphere(0.016, (1, 0.5, 1), 8, 6), headp, (sx * 0.092 + 0.014, -0.238, 0.012), 'white', True), 'fixed')
+    # A small catch-light: a bigger one blurs into a grey ring when the cell is drawn at tile size.
+    tag(mesh_obj(f'glint{sx}', sphere(0.0105, (1, 0.5, 1), 8, 6), headp, (sx * 0.092 + 0.016, -0.238, 0.02), 'white', True), 'fixed')
     o = mesh_obj(f'brow{sx}', capsule(0.014, 0.05), headp, (sx * 0.06, -0.222, 0.075)); o.rotation_euler = (0, math.radians(90 + sx * 12), 0); tag(o, 'hair')
-    tag(mesh_obj(f'cheek{sx}', sphere(0.035, (1, 0.4, 0.7), 12, 8), headp, (sx * 0.14, -0.2, -0.075), 'mouth'), 'fixed')
+    tag(mesh_obj(f'cheek{sx}', sphere(0.032, (1, 0.4, 0.6), 12, 8), headp, (sx * 0.152, -0.196, -0.1), 'cheek'), 'skin')
 tag(mesh_obj('nose', sphere(0.032, (1, 0.8, 0.8), 12, 8), headp, (0, -0.24, -0.04)), 'skin')
 # hair: a cap over the top and back of the head; the long variant adds a low bun and side locks
 hair_cut = lambda c: c.z > 0.13 or (c.y > 0.0 and c.z > -0.12) or c.y > 0.13

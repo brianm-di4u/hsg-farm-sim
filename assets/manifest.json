@@ -327,19 +327,19 @@
   "file": "chars-dress.webp",
   "w": 2688,
   "h": 960,
-  "bytes": 124272
+  "bytes": 123564
  },
  "chars-overlay": {
   "file": "chars-overlay.webp",
   "w": 2688,
   "h": 1920,
-  "bytes": 293632
+  "bytes": 293794
  },
  "chars-trousers": {
   "file": "chars-trousers.webp",
   "w": 2688,
   "h": 960,
-  "bytes": 130518
+  "bytes": 128172
  },
  "crop-beans": {
   "file": "crop-beans.webp",
@@ -578,6 +578,24 @@
   "w": 200,
   "h": 200,
   "bytes": 13456
+ },
+ "ground-culvert": {
+  "file": "ground-culvert.webp",
+  "w": 512,
+  "h": 261,
+  "bytes": 36304
+ },
+ "ground-soakpool": {
+  "file": "ground-soakpool.webp",
+  "w": 448,
+  "h": 347,
+  "bytes": 30332
+ },
+ "ground-springbox": {
+  "file": "ground-springbox.webp",
+  "w": 256,
+  "h": 220,
+  "bytes": 19452
  },
  "icon-acorn": {
   "file": "icon-acorn.webp",

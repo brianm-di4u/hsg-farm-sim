@@ -51,8 +51,9 @@ The **state is one serializable object** (`S`), owned by `sim.js`. Rendering and
   water, deep water, rock, floor, tufa, hot pool), `soil` state (untilled / tilled / watered), and an
   `obj` id for blocking or interactive objects (tree, stump, rock, outcrop, fence, building part, bin,
   bed, sign, chest, sprinkler, crop).
-- **Regions** (fixed layout, redrawn per era): the farm (west, 18 × 14 tillable field), Gulpha Creek
-  (runs north–south between farm and town; a footbridge), the town strip (center; main street running
+- **Regions** (fixed layout, redrawn per era): the farm (west, 18 × 14 tillable field), Hot Springs Creek
+  (runs north–south between farm and town; a footbridge; from 1886 it runs in a stone arch past the Row and
+  comes out of a culvert south of the main road, as the real creek was arched over in 1882–84), the town strip (center; main street running
   north–south with era buildings both sides), the springs (east slope: steaming pools, tufa, a jug
   spring), the north ridge (forest, novaculite outcrops, the heritage quarry site), the south bottoms
   (creek mouth; from Chapter 4 a lake fills it).

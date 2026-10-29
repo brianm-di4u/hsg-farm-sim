@@ -6,12 +6,12 @@ import { PEOPLE, CHAPTERS, QUESTS, ITEMS } from '../sim/data.js';
 import { palette, LIGHT, NIGHT, SIGN_FONT, rgba, mix, shade } from './palette.js';
 import { cached, drawGround, drawBuilding, signText, personSprite, animalSprite, treeSprite, objSprite, cropSprite, soilSprite, iconCanvas, clearArt } from './art.js';
 import { ART, img as artImg } from './assets.js';
-import { bakeTerrain, terrainReady, drawPool, pattern } from './terrain.js';
+import { bakeTerrain, terrainReady, drawPool, pattern, mouthAt } from './terrain.js';
 import * as PA from './painted.js';
 import { noise } from '../sim/rng.js';
 
 const CHUNK = 16;
-export const R = {
+export const R = { signs: [],
   canvas: null, ctx: null, dpr: 1, cssW: 0, cssH: 0, ts: 40, u: 40, cam: { x: 0, y: 0 }, chunks: new Map(),
   cu: 40, fallback: new Set(), particles: [], pops: [], night: null, useT: -1e9, artFlushT: 0, reduced: false, mobile: false, offsetY: 0, frames: 0, chunkBakes: 0, lastT: 0, hover: null,
 };
@@ -56,14 +56,19 @@ function chunkCanvas(gm, cx, cy, P) {
   ctx.translate(-cx * CHUNK * u, -cy * CHUNK * u);
   const g = gm.world.g;
   const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? -1 : g[y * W + x]);
+  const lakeBelow = (x, y) => y + 1 < H && x >= 0 && x < W && gm.world.lake[(y + 1) * W + x] === 1;
   if (painted) {
     bakeTerrain(ctx, gm.world, cx * CHUNK, cy * CHUNK, CHUNK, u, P, { snow });
     for (let y = cy * CHUNK - 1; y < Math.min(H, (cy + 1) * CHUNK + 1); y++) for (let x = cx * CHUNK - 1; x < Math.min(W, (cx + 1) * CHUNK + 1); x++) {
       const v = at(x, y);
       if (v === G.POOL) drawPool(ctx, x, y, u, S.ch, gm.world.special[x + ',' + y], at);
       else if (v === G.BRIDGE || v === G.DOCK || v === G.RAIL || v === G.QUARRY) tileOverlay(ctx, v, x, y, u, P, at);
-      else if (v === G.SAND && (x === 22 || x === 23) && at(x, y - 1) === G.WATER) { const wv = at(x, y + 1); if (wv === G.WATER || wv === G.DEEP) { ctx.fillStyle = shade(P.water, -0.1); ctx.fillRect(x * u, y * u, u, u); tileOverlay(ctx, G.BRIDGE, x, y, u, P, (xx, yy) => (yy === y && (xx === 22 || xx === 23) ? G.BRIDGE : G.GRASS)); } }
-      else if (v === G.STREET && (at(x, y + 1) === G.WATER || at(x, y + 1) === G.DEEP)) boatRamp(ctx, x, y, u, P);
+      // The creek mouth (terrain draws it as water): a timber footbridge across it in every era.
+      else if (mouthAt(gm.world, x, y)) tileOverlay(ctx, G.BRIDGE, x, y, u, P, (xx, yy) => (yy === y && mouthAt(gm.world, xx, yy) ? G.BRIDGE : G.GRASS), true);
+      else if (v === G.STREET && lakeBelow(x, y) && !(at(x - 1, y) === G.STREET && lakeBelow(x - 1, y))) {
+        let n = 1; while (at(x + n, y) === G.STREET && lakeBelow(x + n, y)) n++;
+        boatRamp(ctx, x, y, n, u, P);
+      }
     }
   } else {
     for (let y = cy * CHUNK; y < Math.min(H, (cy + 1) * CHUNK); y++) for (let x = cx * CHUNK; x < Math.min(W, (cx + 1) * CHUNK); x++) {
@@ -141,7 +146,7 @@ export function draw(gm, ui) {
   if (ART.dirty && (ART.pending === 0 || now - R.artFlushT > 600)) {
     ART.dirty = false; R.artFlushT = now;
     const mine = PA.buildingNames(S.ch);
-    if (ART.fresh.some((n) => n.startsWith('tex-') || mine.has(n))) R.chunks.clear();
+    if (ART.fresh.some((n) => n.startsWith('tex-') || n.startsWith('ground-') || mine.has(n))) R.chunks.clear();
     ART.fresh.length = 0;
   }
   // Chunks (baked at R.cu px per tile, drawn at R.u).
@@ -250,17 +255,24 @@ export function draw(gm, ui) {
     ctx.strokeStyle = 'rgba(20,16,12,0.85)'; ctx.strokeRect(t.x * u + u * 0.06, t.y * u + u * 0.06, u * 0.88, u * 0.88);
     ctx.strokeStyle = 'rgba(255,250,235,0.95)'; ctx.lineWidth = Math.max(1, u * 0.03); ctx.strokeRect(t.x * u + u * 0.06, t.y * u + u * 0.06, u * 0.88, u * 0.88);
   }
+  R.signs = [];
   for (const it of list) it.d();
   // Name tags for people near the player.
   ctx.font = `bold ${Math.round(u * 0.3)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  // Tags that would overlap stack upward instead.
+  // A tag that would cover a building's sign board or another tag moves to the nearest clear spot: above it,
+  // beside it or below it.
   const tags = [];
+  const hit = (x, y, w, h) => [...R.signs, ...tags].find((t) => x < t.x + t.w && t.x < x + w && y < t.y + t.h && t.y < y + h);
   for (const [id, n] of Object.entries(S.npcs)) {
     if (n.hidden || Math.hypot(n.x - pl.x, n.y - pl.y) > 3.2) continue;
     const name = PEOPLE[id].name.split(' ')[0];
     const w = ctx.measureText(name).width + u * 0.3, h = u * 0.38;
     let x = n.x * u - w / 2, y = (n.y - 2.38) * u;
-    for (let k = 0; k < 4 && tags.some((t) => x < t.x + t.w && t.x < x + w && y < t.y + t.h && t.y < y + h); k++) y -= h + u * 0.06;
+    for (let k = 0, o; k < 4 && (o = hit(x, y, w, h)); k++) {
+      const gap = u * 0.06, x0 = x, y0 = y;
+      const c = [[x0, o.y - h - gap], [o.x - w - gap, y0], [o.x + o.w + gap, y0], [x0, o.y + o.h + gap]].filter(([cx, cy]) => !hit(cx, cy, w, h));
+      [x, y] = c.length ? c.sort((a, b) => Math.hypot(a[0] - x0, a[1] - y0) - Math.hypot(b[0] - x0, b[1] - y0))[0] : [x0, o.y - h - gap];
+    }
     tags.push({ x, y, w, h });
     ctx.fillStyle = 'rgba(16,14,12,0.82)'; ctx.fillRect(x, y, w, h);
     ctx.fillStyle = '#ffffff'; ctx.fillText(name, x + w / 2, y + h / 2 + u * 0.01);
@@ -341,7 +353,9 @@ function buildingLabel(ctx, b, sp, u, P) {
   const mw = Math.min(sp.w * 0.62, u * 4.2), lh = Math.ceil(u * 0.82 * 0.6);
   // Rendered once per label and size: text drawing every frame is costly on phones.
   const c = cached(`lbl|${b.label}|${P.ch}|${u}`, mw + 4, lh + 4, (g) => signText(g, b.label, (mw + 4) / 2, (lh + 4) / 2, mw, u * 0.82, fg, bg, style));
-  ctx.drawImage(c, Math.round(sp.x + sp.w / 2 - c.width / 2), Math.round(cy - c.height / 2));
+  const lx = Math.round(sp.x + sp.w / 2 - c.width / 2), ly = Math.round(cy - c.height / 2);
+  ctx.drawImage(c, lx, ly);
+  R.signs.push({ x: lx, y: ly, w: c.width, h: c.height });
 }
 // Sun: shadows swing from west (morning) to east (evening), always falling a little south; faint under cloud.
 function sunShadow(S) {
@@ -440,19 +454,35 @@ function drawSoil(ctx, S, sx0, sy0, sx1, sy1, u) {
   }
 }
 // Bridges, docks, rails and quarry pits on top of the painted terrain, styled by era.
-function boatRamp(ctx, x, y, u, P) {
-  const px = x * u, py = (y + 0.85) * u;
-  const gr = ctx.createLinearGradient(0, py, 0, py + u * 0.9);
-  gr.addColorStop(0, P.ch >= 5 ? '#b8b4aa' : '#9a8a70'); gr.addColorStop(1, 'rgba(120,140,140,0)');
-  ctx.fillStyle = gr; ctx.fillRect(px + u * 0.05, py, u * 0.9, u * 0.9);
-  ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fillRect(px + u * 0.05, py + u * 0.55, u * 0.9, Math.max(1, u * 0.03));
+// A boat ramp where a road meets the lake: one slab sloping down from the road end into the water, grooved for
+// grip, edged with kerbs, darkening as it goes under and fading into the lake below a foam line.
+function boatRamp(ctx, x, y, n, u, P) {
+  const x0 = (x + 0.06) * u, x1 = (x + n - 0.06) * u, top = (y + 0.92) * u, wl = (y + 1.35) * u, bot = (y + 1.95) * u;
+  const slab = P.ch >= 5 ? '#b4afa4' : '#a08e72', inset = u * 0.22;
+  const shape = () => { ctx.beginPath(); ctx.moveTo(x0, top); ctx.lineTo(x1, top); ctx.lineTo(x1 - inset, bot); ctx.lineTo(x0 + inset, bot); ctx.closePath(); };
+  ctx.save();
+  // A shadow only above the waterline; under it the slab just shows through the water, fading with depth.
+  ctx.save(); ctx.beginPath(); ctx.rect(x0 - u, top, x1 - x0 + 2 * u, wl - top); ctx.clip();
+  ctx.fillStyle = 'rgba(20,30,34,0.35)'; ctx.translate(u * 0.06, u * 0.05); shape(); ctx.fill(); ctx.restore();
+  const gr = ctx.createLinearGradient(0, top, 0, bot);
+  gr.addColorStop(0, slab); gr.addColorStop(0.38, shade(slab, -0.12)); gr.addColorStop(0.42, rgba(mix(slab, P.water, 0.6), 0.6)); gr.addColorStop(1, rgba(P.water, 0));
+  ctx.fillStyle = gr; shape(); ctx.fill();
+  ctx.clip();
+  ctx.strokeStyle = rgba('#2a2620', 0.28); ctx.lineWidth = Math.max(1, u * 0.025);
+  for (let yy = top + u * 0.09; yy < wl; yy += u * 0.09) { ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(x1, yy); ctx.stroke(); }
+  ctx.restore();
+  ctx.fillStyle = shade(slab, -0.3);
+  ctx.beginPath(); ctx.moveTo(x0, top); ctx.lineTo(x0 + u * 0.1, top); ctx.lineTo(x0 + inset + u * 0.06, wl + u * 0.1); ctx.lineTo(x0 + inset * 0.5, wl + u * 0.1); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x1, top); ctx.lineTo(x1 - u * 0.1, top); ctx.lineTo(x1 - inset - u * 0.06, wl + u * 0.1); ctx.lineTo(x1 - inset * 0.5, wl + u * 0.1); ctx.fill();
+  ctx.strokeStyle = 'rgba(240,250,250,0.7)'; ctx.lineWidth = Math.max(1, u * 0.04); ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(x0 + inset * 0.6, wl); ctx.quadraticCurveTo((x0 + x1) / 2, wl + u * 0.06, x1 - inset * 0.6, wl); ctx.stroke();
 }
-function tileOverlay(ctx, v, x, y, u, P, at) {
+function tileOverlay(ctx, v, x, y, u, P, at, wood = false) {
   const px = x * u, py = y * u;
   if (v === G.BRIDGE) {
     const left = at(x - 1, y) !== G.BRIDGE, right = at(x + 1, y) !== G.BRIDGE;
-    const concrete = P.ch >= 4;
-    const deck = concrete ? '#b8b2a6' : P.ch === 1 ? '#8a6a44' : '#9a7a52';
+    const concrete = P.ch >= 4 && !wood;
+    const deck = concrete ? '#b8b2a6' : P.ch === 1 ? '#8a6a44' : wood && P.ch >= 4 ? '#8e7050' : '#9a7a52';
     const x0 = px - (left ? u * 0.18 : 0), w = u + (left ? u * 0.18 : 0) + (right ? u * 0.18 : 0);
     ctx.fillStyle = 'rgba(0,0,0,0.3)'; ctx.fillRect(x0, py + u * 0.86, w, u * 0.16);
     ctx.fillStyle = deck; ctx.fillRect(x0, py + u * 0.06, w, u * 0.84);

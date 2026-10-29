@@ -218,5 +218,26 @@ SIL Open Font License 1.1 (license text copied beside each file as `vendor/fonts
 | Alegreya | 400, 700 | @fontsource/alegreya@5.2.5 | body text, chapters 1–3 |
 | Nunito Sans | 400, 700 | @fontsource/nunito-sans@5.2.5 | body text, chapters 4–6 |
 
-No other third-party code or art is used: painted images are generated for this game (see VISUAL-REPORT.md),
-characters are rendered from `art-src/blender/characters.py`.
+No other third-party code or art is used: painted images are generated for this game and characters are rendered
+in Blender (see the next section).
+
+## Art provenance
+
+| Art | Count | Made with | Record |
+|---|---|---|---|
+| Painted images in `assets/` (buildings, terrain textures, trees, props, vehicles, crops, animals, lamps, item icons, title and era panoramas, the spring boxes, soaking basin and creek culvert) | 225 WebP files | The image generation tool of the OpenAI Codex CLI (session model GPT-6.1 Sol), 14 prompts, 2026-10-29 | Every prompt, verbatim, in `art-src/PROMPTS.md`; per-image packing settings in `art-src/art.json` |
+| Characters (three layered atlases) | 3 | Blender 5.2, rendered from a script (background mode) | `art-src/blender/characters.py` and `characters.blend` |
+| Packing | — | `tools/pack-art.mjs` (keys out the white background, trims, resizes, makes textures seamless, encodes WebP) | `art-src/art.json` |
+
+- **Style references.** The first prompt (the style pilot) used none. Every later prompt names earlier generated
+  images from `art-src/` (mostly the approved pilot) as its style reference; `PROMPTS.md` shows which.
+- **No photographs.** No photographs or third-party images were given to the image generator, as style references
+  or as image-to-image inputs. The user's `/Sample Images/` reference photos (git-ignored) were not used for this
+  game's art at all. Benchmark screenshots of other games (`benchmarks/`, git-ignored) were shown only to the
+  reviewing agents that scored the work, never to the image generator.
+- **No logos, real people or text.** Every prompt asked for no text, lettering, logos or signatures and blank sign
+  boards (the game draws the words). People in the game are fictional and drawn by the Blender pipeline.
+- **License.** The generated images, the Blender renders and their sources ship under this repository's MIT
+  license (`LICENSE`), like the code. The fonts above keep their own OFL license.
+- **Sources kept locally.** The generated source PNGs are not in git (`art-src/**/*.png`); the packed files in
+  `assets/` are the shipped output and can be regenerated only from the prompts, not byte-for-byte.

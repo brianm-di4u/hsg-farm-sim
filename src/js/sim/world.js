@@ -10,6 +10,10 @@ export const groundBlocks = (g) => BLOCKING.has(g);
 export const isWater = (g) => g === G.WATER || g === G.DEEP;
 
 export const CREEK = [22, 23];
+// Hot Springs Creek runs in a stone arch past Bathhouse Row from 1886 (enclosed 1882–84): from chapter 3 the creek
+// north of the main road is covered and comes out of a culvert headwall just south of it.
+export const CULVERT_Y = 13;
+export const culverted = (ch) => ch >= 3;
 export const FIELD = { x0: 2, y0: 15, x1: 20, y1: 31 };
 export const HOUSE = { x: 2, y: 8, w: 6, h: 4 };
 export const BIN = { x: 8, y: 12 };
@@ -78,6 +82,12 @@ export function buildWorld(seed, ch, opts = {}) {
     else if (y >= 33 && lakeMask(x, y + 1)) set(x, y, G.SAND);
   }
   for (let y = 0; y < H; y++) for (const x of CREEK) if (lake[y * W + x] === 0 && y >= 30 && hasLake) lake[y * W + x] = 0;
+  // Narrow inlets that the lake's noise cuts through the shore row become shore, so the shoreline reads as one line.
+  if (hasLake) for (let x = 0; x < W; x++) {
+    if (!lake[33 * W + x] || lake[33 * W + x - 1] || CREEK.includes(x)) continue;
+    let n = 0; while (x + n < W && lake[33 * W + x + n]) n++;
+    if (n <= 3 && x > 0 && x + n < W) for (let i = 0; i < n; i++) { set(x + i, 33, G.SAND); lake[33 * W + x + i] = 0; }
+  }
   // Springs: tufa slope, hot pools, soak pool.
   for (let y = 7; y <= 19; y++) for (let x = 50; x <= 57; x++) set(x, y, G.TUFA);
   const special = {};
@@ -92,6 +102,7 @@ export function buildWorld(seed, ch, opts = {}) {
   for (let x = 4; x <= 21; x++) set(x, 13, G.PATH);
   for (let y = 12; y <= 13; y++) set(4, y, G.PATH);
   for (const x of CREEK) { set(x, 13, G.BRIDGE); set(x, 27, G.BRIDGE); }
+  if (culverted(ch)) for (const x of CREEK) { for (let y = 4; y < CULVERT_Y; y++) set(x, y, y <= 6 ? G.FOREST : G.GRASS); set(x, CULVERT_Y, G.STREET); }
   set(21, 27, G.PATH); set(20, 27, G.PATH);
   for (let x = 24; x <= 50; x++) { set(x, 13, road); if (ch > 1) set(x, 14, road); }
   if (ch > 1) {
@@ -136,7 +147,7 @@ export function buildWorld(seed, ch, opts = {}) {
     street: { x: 37, y: 17 }, springs: { x: 52, y: 11 }, soak: { x: 54, y: 17 }, coldspring: { x: 8, y: 4 },
     ridge: { x: 30, y: 4 }, quarry: { x: 42, y: 5 }, creek: { x: 21, y: 18 }, farmGate: { x: 21, y: 13 },
     trail: { x: 33, y: 6 }, promenade: { x: 47, y: 14 }, trough: { x: TROUGH.x, y: TROUGH.y + 1 },
-    lake: hasLake ? { x: 30, y: 33 } : { x: 21, y: 36 }, ballfield: { x: 44, y: 35 }, fund: { x: 36, y: 13 },
+    lake: hasLake ? { x: 34, y: 33 } : { x: 21, y: 36 }, ballfield: { x: 44, y: 35 }, fund: { x: 36, y: 13 },
     stand: { x: 19, y: 14 }, market: places.market || { x: 41, y: 20 },
   });
   if (ch === 6) places.lake = { x: 31, y: 37 };
@@ -176,6 +187,7 @@ export function naturalObjects(world, seed, ch, keepFarm) {
   for (const b of world.buildings) for (let y = b.y - 1; y <= b.y + b.h; y++) for (let x = b.x - 1; x <= b.x + b.w; x++) occupied.add(x + ',' + y);
   for (const f of world.fixed) occupied.add(f.x + ',' + f.y);
   for (const p of Object.values(world.places)) { occupied.add(p.x + ',' + p.y); occupied.add(p.x + ',' + (p.y - 1)); }
+  if (culverted(ch)) for (const x of CREEK) for (let y = 4; y < CULVERT_Y; y++) occupied.add(x + ',' + y); // the covered creek stays clear
   const free = (x, y) => !occupied.has(x + ',' + y) && (g[y * w + x] === G.GRASS || g[y * w + x] === G.FOREST);
   const inFarm = (x, y) => x <= 21 && y >= 7 && y <= 33;
   for (let y = 1; y < H; y++) for (let x = 0; x < W; x++) {

@@ -144,6 +144,7 @@ Art-direction research for the farming game. Each row cites a URL. **[inferred]*
 | Ornamental electric | 1914 | Fifteen ornamental electric standards along the Row; 20 five-globe cluster lights by 1929; the 1930s lamps still stand | CLI |
 | Sodium vapour | 1960s–2000s | **[inferred]** Typical US practice; no Hot Springs date found. High-pressure sodium is orange-pink, ~#FFB46B | [Wikipedia: Sodium-vapor lamp](https://en.wikipedia.org/wiki/Sodium-vapor_lamp) |
 | LED | 2010s–2026 | No Hot Springs or Entergy conversion date found. The 2017 Park Ave project used historic-style fixtures. **[inferred]** Neutral-white LED in 2026 | [Sentinel-Record via PressReader](https://www.pressreader.com/usa/the-sentinel-record/20171118/281522226384562) |
+| Centre lines | 1948–1971 | The 1948 federal manual (MUTCD) made white the centre-line colour, with yellow only recommended for no-passing and multi-lane double lines; the 1961 edition made yellow mandatory for those two cases; the 1971 edition made all centre lines between opposing traffic yellow. So a 1955 town street gets white broken centre lines (game fix, 2026-10-29) | [Wikipedia: MUTCD](https://en.wikipedia.org/wiki/Manual_on_Uniform_Traffic_Control_Devices); [AARoads wiki: MUTCD](https://wiki.aaroads.com/wiki/MUTCD) |
 
 ---
 

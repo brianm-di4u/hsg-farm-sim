@@ -1,8 +1,97 @@
 # Valley of Vapors — visual enhancement report
 
 The vector prototype became a painted, lit, era-specific top-down farming game. The simulation, saves, quests
-and balance are unchanged (the only sim-side edit moves the 1807 trade-camp fire's drawing position off the
-spot where people stand). Plan: `VISUAL-PLAN.md`. Nothing is committed.
+and balance are unchanged (the only sim-side edit in the main pass moves the 1807 trade-camp fire's drawing
+position off the spot where people stand; the map edits of the fix pass are listed below). Plan:
+`VISUAL-PLAN.md`. Nothing is committed.
+
+## Fix pass after the coordinator's review (2026-10-29)
+
+The coordinator's review (`--milestone coord-review`, 88/88 passing) found eight problems. All eight are fixed in
+`repos/hsg-farm-sim`; the shots are in `screenshots/coord-fix/`.
+
+1. **The creek now reaches the lake.** **Correction:** the main pass reported that the creek mouth "blends into
+   the lake". It did not. The 1931 and 1955 lake shots showed the creek stopping at a straight edge above the
+   shore, a flat pale plank box on dry clay, a boat ramp drawn as two see-through squares, and the player
+   standing in a two-tile notch of water.
+   - The walkable shore tiles across the creek mouth are now drawn as water. The creek bed fades into the lake's
+     texture and tint over its last four tiles, so there is no edge.
+   - A timber footbridge, styled by era, spans the mouth over the water. Before, it was a concrete-coloured box
+     from 1931.
+   - Each boat ramp is one grooved slab. It runs from the road end into the water, darkening below a foam
+     waterline. Ramps are drawn only where a road meets the lake.
+   - The two-tile inlet in the 1931–1955 shore row is now shore, and the lake visit point stands on the clay
+     shore, facing open water. *Map edit:* the shore row is tiles (30, 33) and (31, 33); the visit point
+     moved from (30, 33), a water tile, to (34, 33).
+2. **Hot Springs Creek, arched over from 1886.**
+   - The farm's creek is Hot Springs Creek in MECHANICS.md, the PRD, REPORT.md, the plan and the About screen.
+     Gulpha Creek runs east of Hot Springs Mountain (`research/visual-eras.md` §1.1).
+   - From chapter 3 (1886), the creek north of the main road is covered, as the real creek was arched over past
+     the Row in 1882–84. Those tiles are now grass, and the road crosses on brick.
+   - The creek comes out of a painted stone culvert headwall south of the road. *Map edit:* tiles x 22–23,
+     y 4–13, chapters 3–6 only. No natural objects are placed on the covered creek, and the seeded layout
+     elsewhere is unchanged.
+   - Chapters 1–2 keep the open creek.
+   - The 1807 intro no longer says the farm's creek is Calfait (Gulpha) Creek. Ada passes the creek where the
+     explorers camped and follows the warm stream up from the springs. The Calfait fact card is unchanged.
+3. **Tufa without seams, and painted spring works.**
+   - The straight-edged light and dark bands came from the grey porous patches. They were filled at full
+     resolution, with polygonal edges and thin rectangular rust streaks.
+   - The grey patches, rust stain and algae runs are now painted into a layer at an eighth of the resolution,
+     with the grey laid at three thresholds, and scaled up. Everything fades out.
+   - The terrace lips are fewer and vary in strength.
+   - The spring boxes and the soaking basin are painted sprites (`ground-springbox`, `ground-soakpool`),
+     replacing grey code squares and a turquoise rectangle. The code versions remain only as fallbacks.
+4. **Name tags no longer cover building signs.** Each sign board's rectangle is recorded as it is drawn. A tag
+   that would overlap a sign or another tag moves to the nearest clear spot: above, beside or below it. In the
+   1807 trade-camp scene the tags now sit side by side under TRADE. In 1886 Hattie's tag sits below BATHS.
+5. **The phone HUD stays at two rows at 150% text.** At text sizes of 125% and up, phones cap the date and
+   money chips in px. The weather keeps its icon, and its word moves to a visually hidden span that screen
+   readers still read.
+6. **Chapter 1 Ada stands out.** She now wears a madder-red linsey shirt and a straw sunbonnet; before, she was
+   brown on brown. She reads in rain, snow and fog and is distinct from Margaux (blue shirt, kerchief) and
+   Josiah. Two parts of the shared face rig made the eyes look teary on everyone with darker skin. A pink
+   blush was fixed under each eye, and a large white catch-light blurred into a grey ring at tile size. The
+   cheeks now sit in the skin layer, so each person's skin tint carries them; the catch-light is smaller and
+   the iris darker. The three atlases were re-rendered in Blender 5.2.3 (`characters.py`) and repacked
+   (530 KB).
+7. **1955 centre lines are white.** The 1948 federal manual made white the centre-line colour. Yellow centre
+   lines between opposing traffic became the rule only in the 1971 edition. Sources are in
+   `research/visual-eras.md` §4.
+8. **Art provenance.**
+   - SAMPLES.md has a new "Art provenance" section: tool, counts, style references, license, and what was not
+     used.
+   - `art-src/PROMPTS.md` holds all 14 image-generation prompts verbatim, extracted from the session that made
+     the art.
+   - No photographs went to the generator. The `/Sample Images/` photos were not used for this game's art at
+     all, as style references or as image-to-image inputs.
+   - The style references were the game's own generated pilot images.
+   - The About screen and the plan point to the new section.
+
+New art: three Codex paintings (`prop-springbox`, `prop-soakpool`, `prop-culvert` → `assets/ground-*.webp`,
+85 KB). That brings `assets/` to 225 images (9.35 MB).
+
+**Tests (fix pass).**
+- `npm run build`, then `node shared/test-harness/run.mjs . --milestone coord-fix --gpu --file-url`: **88/88
+  passed** (48 desktop, 40 mobile; 166 screenshots). Contact sheets are in `screenshots/coord-fix/sheets`, and
+  70 before/after sheets against `coord-review` are in `screenshots/coord-fix/before-after`.
+- Software GL, `--milestone coord-fix-sw`: **87/88**. The one failure was the mobile perf budget: 51.5, 53.9
+  and 47.7 fps in chapters 1, 3 and 4, against a floor of 55. The machine was at 90% CPU at the time, with
+  about 170 Chrome and Node processes from other sessions.
+  - Script time stayed at 2.0–2.3 ms per frame.
+  - Re-run alone: once at 53.8 fps in chapter 3 (CPU 47% after), then **passing** at 58.3–59.8 fps with
+    0.9–1.4 ms of script per frame (CPU 54%).
+  - Treat it as load, not a regression. If the coordinator sees it on an idle machine, the tufa bake (three
+    low-resolution field passes) and the per-frame tag placement are the new costs to look at first.
+- `tools/check-file-url.mjs`: 225/225 images and 7/7 fonts at both viewports.
+- `tools/check-facts.mjs`: 84 facts, 0 problems.
+- `tools/balance.mjs 6`: unchanged from HEAD (93.3 days; energy 73.3%; forage 58.3%). An early version of the
+  culvert edit kept trees off the whole creek line. That shifted the seeded tree layout and the days to 91.2,
+  so the exclusion now covers only the covered tiles.
+- The changed screens were inspected full size (74, 75, 73, 86, 87, 31, 21, 22, 54 desktop; 48, 58, 31
+  mobile). Close-ups the suite doesn't frame are in `screenshots/coord-fix/extra/`: the creek mouth in 1931
+  and 1955, the 1955 boat ramp, the culvert in 1886 snow, the 2026 soaking basin, and Ada's face before and
+  after.
 
 ## What changed
 
@@ -53,12 +142,13 @@ layer drawn on top of it was rebuilt.
 - **Springs:**
   - The tufa is cream travertine with grey porous patches, irregular rimstone lips, rust streaks and
     blue-green algae mats fanning downslope. This is how the 1902 survey describes it (`research/visual-eras.md` §2).
-  - From 1886 the springs are capped with stone spring boxes, leaving one open display spring.
+  - From 1886 the springs are capped with painted stone spring boxes, leaving one open display spring.
   - Steam rises from pools and bathhouse vents, and over the creek on cold mornings.
 - **Water:**
   - The lake shore is smooth and wandering, with a sand bank (raw red clay in 1931), a foam line and darker
     deep water.
-  - The creek mouth blends into the lake instead of meeting it at a hard tile edge.
+  - The creek runs under a timber footbridge into the lake and fades into the lake water (fixed in the fix pass;
+    the main pass claimed this but the shots showed a hard edge).
   - Glints and flow lines are animated.
 - **Light** (one quarter-resolution overlay):
   - Each era has a tint.
@@ -89,7 +179,7 @@ layer drawn on top of it was rebuilt.
   - The era wipe is a soft-edged sweep between the two eras' paintings.
   - The phone HUD stays at two rows in every theme.
 - **About screen** now credits the painted art and fonts, and says plainly that the map condenses the valley
-  (see the research note on Gulpha Creek below).
+  (see the research note on Gulpha Creek below; the fix pass renamed the farm's creek Hot Springs Creek).
 
 ## Review scores (independent adversarial reviewer, same benchmarks each round)
 
@@ -143,9 +233,9 @@ inspected, plus full frames of the night, weather, springs, lake and dialogue sc
 | Suite | What it covers | Status |
 |---|---|---|
 | 13 original test files (82 tests) | All 38 acceptance criteria, unchanged | pass |
-| `art.test.mjs` (new, 6 tests) | All 222 painted assets load with no failures; the painted terrain, people and buildings are what gets drawn; `?art=0` falls back to vector art; a 16-shot era, season, weather and night tour; no painted object falls back to placeholder art | pass |
+| `art.test.mjs` (new, 6 tests) | All painted assets (222 then, 225 after the fix pass) load with no failures; the painted terrain, people and buildings are what gets drawn; `?art=0` falls back to vector art; a 16-shot era, season, weather and night tour; no painted object falls back to placeholder art | pass |
 | `perf.test.mjs` (updated) | fps and script time while walking in four chapters; heap; no rebakes while standing still (the wait now lets background prefetch finish) | pass |
-| `tools/check-file-url.mjs` (new) | The built game from file:// at both viewports: 222/222 images, 7/7 fonts, painted terrain and people, no errors, no requests | pass |
+| `tools/check-file-url.mjs` (new) | The built game from file:// at both viewports: 222/222 images (225/225 after the fix pass), 7/7 fonts, painted terrain and people, no errors, no requests | pass |
 | `tools/check-facts.mjs` | 84 facts, 143 texts, 0 problems | pass |
 | `tools/balance.mjs 6` | Same results as before the pass: 93.3 days, best crop ÷ median 1.5, energy 73.3%, forage 58.3%, 0 broke days | pass |
 
@@ -205,7 +295,7 @@ From the M4 review, still open or only partly fixed (MAJOR unless noted):
   parked in the lots, not moving.
 - **No tool-specific animation.** The swing frames are generic, and the tool icon arcs over them.
 - **The UI frames are themed by colour, not material.** There are no wood, hide or brass frames per era.
-- **MINOR:** the spring boxes from 1886 are drawn in code; small source lines on cards (0.86 rem); the cow idles
+- **MINOR:** small source lines on cards (0.86 rem); the cow idles
   at one spot in the pen.
 
 Not reviewed after the last fixes: the icon, shadow and texture changes listed under the review table were
@@ -275,7 +365,8 @@ Still unsourced anywhere:
 - **Source:** `src/js/render/` `assets.js` (loader), `terrain.js` (painted terrain), `painted.js` (sprite
   mapping and placement), `sprites.js` (character compositor). Plus edits to `scene.js`, `art.js`,
   `palette.js`, `ui.js`, `main.js` and `styles/main.css`.
-- **Art sources:** `art-src/art.json` (packing spec) and `art-src/blender/characters.py` + `.blend`. Raw PNGs
+- **Art sources:** `art-src/art.json` (packing spec), `art-src/PROMPTS.md` (every image prompt) and
+  `art-src/blender/characters.py` + `.blend`. Raw PNGs
   are git-ignored and `assets/` holds the packed WebP.
 - **Tools:**
   - `tools/pack-art.mjs`
