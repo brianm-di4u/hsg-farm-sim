@@ -67,6 +67,11 @@ function resizePixel(c) {
   // UI type: the pixel body font (DotGothic16) has a 16-unit em, so a 16 px root puts its pixel on whole device pixels at
   // 1x, 2x and 3x; fractional ratios round to the nearest whole multiple. The stylesheet keeps text at 1rem or 2rem.
   document.documentElement.style.fontSize = (16 * Math.max(1, Math.round(dpr)) / dpr) + 'px';
+  // Body text is the game's own 5x7 face (8 dots per em, 7 above the baseline, 2 below). One dot is a whole number of
+  // device px: 2 below 2x (the art's pixel on desktop), round(1.6 x ratio) from 2x up, so phone text keeps about the
+  // size it had. The line is 10 dots below 2x and 11 from 2x up, so every baseline falls on a whole device pixel.
+  const dot = (dpr < 2 ? 2 : Math.round(1.6 * dpr)) / dpr, rs = document.documentElement.style;
+  rs.setProperty('--px-fs', 8 * dot + 'px'); rs.setProperty('--px-lh', (dpr < 2 ? 10 : 11) * dot + 'px');
   if (T !== R.u || R.ts !== T * k / dpr) { R.ts = T * k / dpr; R.u = R.cu = T; R.chunks.clear(); R.bakedKey = null; clearArt(); }
   R.offsetY = R.mobile ? -R.cssH * 0.1 : 0;
   R.night = null;
@@ -209,7 +214,7 @@ export function addFx(kind, x, y, delay = 0) {
     const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.4, sp = v * (0.4 + Math.random() * 0.8);
     P.push({ x: cx, y: cy - 0.1, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 26 + Math.random() * 10, col: cols[i % cols.length], s: s * (0.6 + Math.random() * 0.8), round: kind !== 'chip', ground: cy + 0.1 + Math.random() * 0.2, spark: kind === 'spark' });
   }
-  if (kind === 'dirt') for (let i = 0; i < (PX.on ? 5 : 3); i++) P.push({ x: cx + (Math.random() - 0.5) * (PX.on ? 0.7 : 0.4), y: cy, vx: (Math.random() - 0.5) * 0.01, vy: -0.006, life: PX.on ? 54 : 40, max: PX.on ? 54 : 40, col: i % 2 ? '#c8a87a' : '#b89870', s: PX.on ? 0.26 : 0.22, dust: true });
+  if (kind === 'dirt') for (let i = 0; i < (PX.on ? 5 : 3); i++) P.push({ x: cx + (Math.random() - 0.5) * (PX.on ? 0.7 : 0.4), y: cy + (PX.on ? (Math.random() - 0.5) * 0.3 : 0), vx: (Math.random() - 0.5) * (PX.on ? 0.016 : 0.01), vy: PX.on ? -0.004 - Math.random() * 0.006 : -0.006, life: PX.on ? 54 : 40, max: PX.on ? 54 : 40, col: i % 2 ? '#c8a87a' : '#b89870', s: PX.on ? 0.15 : 0.22, dust: true });
 }
 // Hearts rising over a neighbour whose friendship just grew.
 export function addHearts(x, y) {
@@ -480,10 +485,10 @@ function toolSwing(ctx, S, pl, since, u) {
 }
 // Pixel style: the tool in five held poses that match the body's use frames (wind-up behind the head, top, strike,
 // impact with the head on the target tile, recover), a full tile long, so the arc and the contact read.
-const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15], [0.32, -0.5, 0.2], [0.3, -0.45, 0.45]];
+const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15], [0.36, -0.42, -0.3], [0.38, -0.3, -0.45]];
 // The body through the same five poses, in art px: up on the toes for the wind-up (the whole figure rises), then the
 // upper body drops onto the hips at the strike and impact (a crouch), feet planted.
-const SWING_BODY = [-1, -1, 0, 3, 1, 0, 0]; // frames 5-6: the tool lowered to rest, body upright
+const SWING_BODY = [-1, -1, 0, 3, 1, 0, 0]; // frames 5-6: the hoe brought upright to rest beside the body, blade on the ground
 function pxCrouch(ctx, c, x, y, dy) {
   if (dy <= 0) { ctx.drawImage(c, x, y + dy); return; }
   const cut = Math.round(c.height * 0.62); // the hips
@@ -929,15 +934,15 @@ function drawPxParticle(ctx, p, u, dt) {
     ctx.fillRect(X - r, Y, 2, 1); ctx.fillRect(X + r - 1, Y, 2, 1); ctx.fillRect(X - (r >> 1), Y - 1, r, 1); ctx.fillRect(X - (r >> 1), Y + 1, r, 1);
   } else if (p.dust) { // an opaque puff that thins out through ordered-dither steps (no translucent smear)
     const t = 1 - p.life / p.max, r = Math.max(1, Math.round(p.s * u * (0.6 + t * 1.4))), lvl = t < 0.3 ? 0 : t < 0.65 ? 1 : 2;
-    const c = cached(`pxdust|${r}|${lvl}|${p.col}`, r * 2, r, (g) => {
+    const c = cached(`pxdust|${r}|${lvl}|${p.col}`, r * 2, r * 2, (g) => { // a round puff, a little wider than tall
       g.fillStyle = p.col;
-      for (let y = 0; y < r; y++) for (let x = 0; x < r * 2; x++) {
-        const ex = (x + 0.5 - r) / r, ey = (y + 0.5 - r / 2) / (r / 2);
+      for (let y = 0; y < r * 2; y++) for (let x = 0; x < r * 2; x++) {
+        const ex = (x + 0.5 - r) / r, ey = (y + 0.5 - r) / (r * 0.8);
         if (ex * ex + ey * ey > 1) continue;
         if (lvl === 0 || (lvl === 1 && (x + y) % 2 === 0) || (lvl === 2 && x % 2 === 0 && y % 2 === 0)) g.fillRect(x, y, 1, 1);
       }
     });
-    ctx.globalAlpha = 1; ctx.drawImage(c, X - r, Y - (r >> 1));
+    ctx.globalAlpha = 1; ctx.drawImage(c, X - r, Y - r);
   } else if (p.heart) {
     if (!pxHeartC) { pxHeartC = document.createElement('canvas'); pxHeartC.width = 9; pxHeartC.height = 8; const g = pxHeartC.getContext('2d'); PX_HEART.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') { g.fillStyle = '#5a1a26'; g.fillRect(x, y, 3, 3); } })); PX_HEART.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') { g.fillStyle = '#e8506a'; g.fillRect(x + 1, y + 1, 1, 1); } })); }
     const t = 1 - p.life / p.max;
@@ -1162,7 +1167,7 @@ function townsfolk(gm, now) {
       const r = rows[i % rows.length], h = (k) => noise(i, S.ch, 900 + k);
       const woman = h(1) < 0.45, dress = woman && S.ch < 5;
       list.push({ id: `folk${S.ch}-${i}`, x: 0, y: 0, y0: r[0] + 0.55 + h(3) * 0.3, x0: r[1] + 0.5, x1: r[2] + 0.5, off: h(2) * 2, speed: 1.3 + h(5) * 0.7, step: 0,
-        look: { shirt: F.shirts[Math.floor(h(6) * F.shirts.length)], pants: F.pants[Math.floor(h(7) * F.pants.length)], hat: woman && S.ch <= 3 ? 'bonnet' : F.hats[Math.floor(h(8) * F.hats.length)], hair: HAIR[Math.floor(h(9) * HAIR.length)], skin: Math.floor(h(10) * 5), dress, ponytail: woman && S.ch >= 5, apron: dress && h(11) < 0.4 ? '#e8e0cc' : undefined } });
+        look: { shirt: F.shirts[Math.floor(h(6) * F.shirts.length)], pants: F.pants[Math.floor(h(7) * F.pants.length)], hat: woman && S.ch <= 3 ? (h(12) < 0.5 ? 'bonnet' : h(12) < 0.75 ? 'scarf' : 'none') : F.hats[Math.floor(h(8) * F.hats.length)], hair: HAIR[Math.floor(h(9) * HAIR.length)], skin: Math.floor(h(10) * 5), dress, ponytail: woman && S.ch >= 5, apron: dress && h(11) < 0.4 ? '#e8e0cc' : undefined } });
     }
     R.folk = { key, list };
   }

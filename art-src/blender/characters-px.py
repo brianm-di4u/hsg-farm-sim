@@ -175,8 +175,21 @@ for sx, side in ((1, 'L'), (-1, 'R')):
 tag(mesh_obj('skirt', cone(0.29, 0.16, 0.5, 28, -0.5), hips, (0, 0, 0.08)), 'skirt')  # pixel style: to the ankle
 
 # ------------------------------------------------------------------ overlays (hats, beard, glasses)
+HATS = []
 def hatobj(name, bm, loc=(0, 0, 0), mat='grey'):
-    return tag(mesh_obj(name, bm, headp, loc, mat), 'hat-' + name.split('_')[0])
+    o = tag(mesh_obj(name, bm, headp, loc, mat), 'hat-' + name.split('_')[0])
+    HATS.append(o)
+    return o
+# Pixel style: headwear seen in profile or from behind is drawn smaller than in the front views (a front view needs the
+# oversized silhouette to read; side and back views of the same hat became discs bigger than the body). Per part:
+# uniform scale, or (x, y, z) where y is the depth toward the face.
+HAT_SIDE = {'brim': 0.82, 'fedora': 0.85, 'cap_d': 0.95, 'cap_v': 0.8, 'helmet': 0.92, 'bonnet_s': 0.92, 'bonnet_f': (0.8, 0.5, 0.8),
+            'scarf': 0.95, 'toque': 0.85, 'capfur': 0.9}
+def hat_scale(o, direction):
+    if direction == 'down':
+        return (1, 1, 1)
+    f = HAT_SIDE.get(o.name, HAT_SIDE.get(o.name.split('_')[0], 1))
+    return f if isinstance(f, tuple) else (f, f, f)
 # brimmed farm hat (straw/felt)
 hatobj('brim_b', cone(0.32, 0.32, 0.03, 32), (0, 0, 0.14))  # slouch: a wide brim (0.4 swallowed head and shoulders)
 hatobj('brim_c', cone(0.21, 0.19, 0.12, 28), (0, 0, 0.16))  # and a low crown
@@ -244,6 +257,8 @@ def pose(direction, kind, k):
     """idle 0-1, walk 0-5 (a six-step cycle: passing poses at 0 and 3), use 0-4."""
     reset_pose()
     root.rotation_euler.z = DIRS[direction]
+    for o in HATS:
+        o.scale = hat_scale(o, direction)
     if direction == 'left':  # pixel style: no forward nod in profile, or tall headwear tips forward and the figure reads as leaning
         headp.rotation_euler.x = 0
     sL, eL = ARM['L']; sR, eR = ARM['R']; hL, kL = LEG['L']; hR, kR = LEG['R']

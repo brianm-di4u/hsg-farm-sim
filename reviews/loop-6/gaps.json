@@ -1,0 +1,192 @@
+[
+  {
+    "id": "G-npc-side-back-views",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 5,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R08",
+      "desktop/R06",
+      "desktop/R19"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Rebake each NPC hat per facing, clamped to <=1.2x head width, so head outline and shoulder line show from side and back; match the front view's head:body ratio. Test: skin or hair visible below the brim in every side/back frame.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-depth-sort",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R15-player",
+      "strips/R14",
+      "desktop/R08"
+    ],
+    "fix": "Sort actors and props by foot Y; always draw ground decals (tilled soil, paths) in a pass under actors.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-dither-over-sprites",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "crops/R05-player",
+      "desktop/R05"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Mask light dither off actor sprites; light sprites with one palette-ramp step plus a 1-art-px warm rim on the lamp side; keep dither on ground and walls.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-walk-side-hat",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R13",
+      "strips/R13-mobile"
+    ],
+    "fix": "Clamp the side-facing hat to head + 2 art px brim so shoulders and torso show; add a 1-px hat bob lagging the hip settle by one frame.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-evening-dusk-light",
+    "category": "lighting",
+    "expectedGain": 0.3,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R06",
+      "desktop/R07"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Street lamps on from 18:30 with the dithered pool; 2-3 band on-grid warm evening tint; prop shadows 2x long at evening.",
+    "priority": 0.45,
+    "selected": true
+  },
+  {
+    "id": "G-actor-shadows",
+    "category": "lighting",
+    "expectedGain": 0.3,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "crops/R03-player",
+      "desktop/R17"
+    ],
+    "fix": "Give every actor the same dark contact ellipse props use (1 art px tall per 4 px wide).",
+    "priority": 0.45,
+    "selected": true
+  },
+  {
+    "id": "G-label-overlap",
+    "category": "readability",
+    "expectedGain": 0.3,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "desktop/R16"
+    ],
+    "fix": "Stack tags vertically when within 8 art px of each other; hide the tag of an NPC fully occluded by the player.",
+    "priority": 0.45,
+    "selected": true
+  },
+  {
+    "id": "G-hat-silhouettes",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R03-player",
+      "crops/R05-player",
+      "crops/R04-player"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Hand-pixel front hat silhouettes at 1x: slouch with a wide thin dark brim breaking the head outline; fedora with crown notch and 1-px band; bonnet brim tunnel framing the face on both sides.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-ground-cluster-scale",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R03",
+      "crops/R15-player",
+      "desktop/R07"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Redraw grass and dirt tiles at 1 art px with 2-3 tones and deliberate clumps, halving colour changes per tile; lengthen the water lattice period at least 2x.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-sparse-farm-lake",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R03",
+      "desktop/R07",
+      "desktop/R17"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": ">=6 dressing clusters per field screen (stumps, rock groups, tall grass, fence run); reeds, lily pads, a moored boat and birds at the lake; a distinct 1931 farmyard layout.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-touch-ui-fixes",
+    "category": "ui",
+    "expectedGain": 0.3,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R12",
+      "desktop/R16"
+    ],
+    "fix": "Hide key-hint chips on coarse pointers; inset slot digits on a 1-px dark corner plate and shrink icons 1 art px so no icon touches its digit.",
+    "priority": 0.3,
+    "selected": false
+  },
+  {
+    "id": "G-hoe-impact",
+    "category": "animation",
+    "expectedGain": 0.3,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14"
+    ],
+    "fix": "Dust puffs 2 ramp steps lighter than soil rising 4-8 art px above the tile edge; 1-px forward lean and 2-frame hit-stop at the strike; hoe vertical by frame 7.",
+    "priority": 0.225,
+    "selected": false
+  }
+]

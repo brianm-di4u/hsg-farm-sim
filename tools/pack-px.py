@@ -75,7 +75,7 @@ def width_tiles(name, sizes):
 class A:  # the option bag pixelize.run() expects
     def __init__(self, **k):
         self.__dict__.update(dict(width=32, pitch=None, palette=None, colors=18, snap=None, outline='selout', key='none',
-                                  key_thresh=28, cleanup=1, smooth=3, sheet=None))
+                                  key_thresh=28, key_holes=True, cleanup=1, smooth=3, sheet=None))
         self.__dict__.update(k)
 
 
@@ -220,10 +220,10 @@ def main():
             cols, rows = sheets[name]
             wt = width_tiles(name, sizes) or 1.08
             cw, chh = src.width // cols, src.height // rows
-            args = A(width=max(4, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key', 'line_weight')})
+            args = A(width=max(4, round(wt * T)), key_holes=not name.startswith('animal-'), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key', 'line_weight')})
             pal = PZ.sheet_palette(src, args)
             if is_gen:  # one scale for every stage: crop each cell to the union of the stages' bounding boxes
-                keyed = [[PZ.key_background(np.asarray(src.crop((c * cw, r * chh, (c + 1) * cw, (r + 1) * chh)).convert('RGBA')).copy(), args.key_thresh) for c in range(cols)] for r in range(rows)]
+                keyed = [[PZ.key_background(np.asarray(src.crop((c * cw, r * chh, (c + 1) * cw, (r + 1) * chh)).convert('RGBA')).copy(), args.key_thresh, args.key_holes) for c in range(cols)] for r in range(rows)]
                 boxes = [np.where(k[..., 3] > 0) for row in keyed for k in row]
                 y0 = min(b[0].min() for b in boxes if len(b[0])); y1 = max(b[0].max() for b in boxes if len(b[0]))
                 x0 = min(b[1].min() for b in boxes if len(b[1])); x1 = max(b[1].max() for b in boxes if len(b[1]))
@@ -243,7 +243,7 @@ def main():
             if wt is None:
                 skipped += 1
                 continue
-            args = A(width=max(3, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key', 'line_weight')})
+            args = A(width=max(3, round(wt * T)), key_holes=not name.startswith('animal-'), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key', 'line_weight')})
             out = PZ.run(src, args)
             if name.startswith('icon-'):
                 out = drop_strays(out)

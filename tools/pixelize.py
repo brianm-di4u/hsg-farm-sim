@@ -108,7 +108,7 @@ def kmeans_palette(lab, k, iters=12, seed=1):
 
 
 # ---------- background, grid ----------
-def key_background(rgba, thresh=28):
+def key_background(rgba, thresh=28, holes=True):
     """Flood-fill near-white from the borders to transparent (enclosed whites survive)."""
     h, w = rgba.shape[:2]
     rgb = rgba[..., :3].astype(np.int32)
@@ -124,7 +124,7 @@ def key_background(rgba, thresh=28):
     # Enclosed near-white regions bigger than 0.4% of the image are openings (a dogtrot breezeway, an arcade),
     # not paint: generated art draws highlights small, so a large pure-white hole is background seen through.
     hole = near & ~bg
-    if hole.any():
+    if holes and hole.any():  # holes=False: white paint (an animal's coat) is never an opening
         seen = np.zeros_like(hole)
         lim = hole.size * 0.004
         for y0, x0 in zip(*np.where(hole)):
@@ -287,7 +287,7 @@ def sheet_palette(img, a):
     """One adaptive palette for a whole sprite sheet, so every frame shares its colours."""
     rgba = np.asarray(img.convert('RGBA')).copy()
     if a.key == 'auto' and (rgba[..., 3] == 255).all():
-        rgba = key_background(rgba, a.key_thresh)
+        rgba = key_background(rgba, a.key_thresh, getattr(a, 'key_holes', True))
     small = np.asarray(Image.fromarray(rgba, 'RGBA').resize((max(1, rgba.shape[1] // 4), max(1, rgba.shape[0] // 4)), Image.Resampling.BOX))
     px = small.reshape(-1, 4)
     px = px[px[:, 3] > 127][:, :3]
@@ -297,7 +297,7 @@ def sheet_palette(img, a):
 def run(img, a, pal=None):
     rgba = np.asarray(img.convert('RGBA')).copy()
     if a.key == 'auto' and (rgba[..., 3] == 255).all():
-        rgba = key_background(rgba, a.key_thresh)
+        rgba = key_background(rgba, a.key_thresh, getattr(a, 'key_holes', True))
     if getattr(a, 'trim', True):
         rgba = trim(rgba)
     width = a.width

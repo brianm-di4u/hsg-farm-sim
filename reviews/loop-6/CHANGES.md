@@ -1,0 +1,13 @@
+- **Hats:** smaller and more distinct per kind, re-rendered in Blender:
+  - the slouch brim is a third narrower, so it no longer swallows the head and shoulders;
+  - the fedora has a narrower, pinched crown and a smaller brim;
+  - the cap visor is shorter;
+  - the sun bonnet is deeper and projects forward to frame the face.
+- **Walk:** the upper body settles onto the hips at each step (2 art px at contact, then 1, then 0 at the passing pose), feet planted. This also separates the walk's repeated poses, so all six steps differ.
+- **Occlusion:** a lamp post in front of the player simply stands in front (thin, opaque) instead of laying a checker across the face. Trees, tall crops and the player's silhouette behind a building keep the pixel checker.
+- **Night light:** lamp and window light now falls off through a 4×4 ordered dither instead of hard concentric rings.
+- **Hoe:** after the strike the hoe comes back upright beside the body with the blade on the ground. The impact dust is several small round puffs at different heights, rising.
+- **Text:**
+  - Phones now use the game's own 5×7 pixel face too, sized so each font dot is a whole number of device px (3 px at 2×). Line heights put every baseline on a whole pixel. The gaps after narrow letters and the soft edges are gone.
+  - Titles and the wordmark are exact multiples.
+- **HUD:** the journal, pack and menu buttons show pixel-art icons (an open book, a satchel, three bars) instead of system emoji.
