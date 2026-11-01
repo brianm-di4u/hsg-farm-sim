@@ -138,13 +138,14 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
   // Lighter and darker meadow patches, drawn at an eighth of the resolution and scaled up: soft edges with no
   // blur filter (a filter pass over the whole chunk is the costliest thing a bake can do).
   {
-    const q = 8, span = size + 2 * M, pc = lowres(Math.ceil(span * u / q)), pg = pc.getContext('2d');
+    const q = PX.on ? 2 : 8, span = size + 2 * M, pc = lowres(Math.ceil(span * u / q)), pg = pc.getContext('2d');
     pg.setTransform(1, 0, 0, 1, 0, 0); pg.clearRect(0, 0, pc.width, pc.height); pg.translate(-x0 * u / q, -y0 * u / q);
     const a = fieldRegion(x0, y0, n, u / q, (px, py) => vnoise(px * 0.23, py * 0.23, 41) * 0.8 + vnoise(px * 0.9, py * 0.9, 42) * 0.2 - 0.6);
     pg.globalAlpha = 0.22; pg.fillStyle = shade(P.grass, -0.4); pg.fill(a.fill);
     const b = fieldRegion(x0, y0, n, u / q, (px, py) => vnoise(px * 0.2 + 9, py * 0.2, 47) * 0.8 + vnoise(px * 0.8, py * 0.8, 48) * 0.2 - 0.62);
     pg.globalAlpha = 0.18; pg.fillStyle = shade(P.grass, 0.4); pg.fill(b.fill);
-    ctx.save(); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(pc, x0 * u, y0 * u, pc.width * q, pc.height * q); ctx.restore();
+    // Pixel style: at 2 art px per cell and unsmoothed, so the patches have crisp edges in 2x2 steps (no blurred blobs).
+    ctx.save(); if (PX.on) ctx.imageSmoothingEnabled = false; else ctx.imageSmoothingQuality = 'high'; ctx.drawImage(pc, x0 * u, y0 * u, pc.width * q, pc.height * q); ctx.restore();
   }
 
   // Farm field: from 1871 the field is worked land, so it reads as mown rows inside a darker margin.

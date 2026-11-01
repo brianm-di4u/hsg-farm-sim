@@ -86,6 +86,12 @@ export function ramp(col) {
   const [h, s, l] = hsl(col);
   return [hex(turn(h, 250, 14), s * 1.08 + 0.04, l * 0.64), col, hex(turn(h, 55, 10), s * 0.92, l + (1 - l) * 0.3)];
 }
+// Skin takes a gentler ramp: the general hue shift turns a skin shadow into a saturated red-brown smear down the
+// side of the face.
+function skinRamp(col) {
+  const [h, s, l] = hsl(col);
+  return [hex((h + 356) % 360, s * 0.85, l * 0.8), col, hex(turn(h, 55, 6), s * 0.9, l + (1 - l) * 0.22)];
+}
 const PX_OUTLINE = '#22160f';
 let pxTmp = null;
 // A layer's outline shade: well below its shadow, hue-turned the same way (research/pixel-tradeoffs.md §10: a
@@ -129,7 +135,15 @@ export function composePx(imgs, look, skinHex, face, frame, cw, ch, perDir = 7) 
     const oc = tint ? outlineOf(tint) : PX_OUTLINE;
     for (let s = 0; s < n; s++) for (const [dx, dy] of [[2, 1], [0, 1], [1, 2], [1, 0]]) fillMask(g, im, row + s, col, oc, cw, ch, dx, dy);
   }
-  for (const [im, row, n, tint] of parts) { const rp = tint ? ramp(tint) : null; for (let s = 0; s < n; s++) fillMask(g, im, row + s, col, rp ? rp[s] : null, cw, ch); }
+  for (const [im, row, n, tint] of parts) { const rp = !tint ? null : im === base && row === 0 ? skinRamp(tint) : ramp(tint); for (let s = 0; s < n; s++) fillMask(g, im, row + s, col, rp ? rp[s] : null, cw, ch); }
+  // Headwear sits on the brow: the face window (skin and eyes below the brow line, rows 13-16) is redrawn over the
+  // hat, then beard and glasses over the face again.
+  if (perDir === 13 && look.hat && HAT_ROW[look.hat] != null) {
+    const sk = skinRamp(skinHex);
+    for (let s = 0; s < 3; s++) fillMask(g, base, 13 + s, col, sk[s], cw, ch);
+    fillMask(g, base, 16, col, null, cw, ch);
+    for (const [im, row, n, tint] of parts) if (row === 24 || row === 27) { const rp = ramp(tint); for (let s = 0; s < n; s++) fillMask(g, im, row + s, col, rp[s], cw, ch); }
+  }
   const o = c;
   if (face === 'right') {
     const m = document.createElement('canvas'); m.width = o.width; m.height = o.height;

@@ -14,7 +14,8 @@ The Blender atlases (art-src/blender/characters.py) hold one row per layer in so
    shadow and highlight, see src/js/render/sprites.js) and outlines the silhouette at runtime.
    The `fixed` layer (eyes, shoes, mouth) keeps its own colours, quantized to a few.
 
-Rows per atlas: skin, hair, shirt, legs x 3 shades (12 rows) + fixed (1 row) for `trousers` and `dress`;
+Rows per atlas: skin, hair, shirt, legs x 3 shades (12 rows) + fixed (1 row) + the face window (skin x 3, eyes;
+see face_window) for `trousers` and `dress`;
 10 overlays (hats, beard, glasses) x 3 shades for `overlay`. Cell size: round(cell * T) wide, x 1.5 tall.
 Writes assets/px/<T>/chars-<atlas>.png and merges assets/px/manifest.json.
 """
@@ -100,7 +101,7 @@ def base_atlas(name, cw, chh):
     wts = np.ones(nlab)
     wts[3:6] = WEIGHT['hair']
     wts[12:] = WEIGHT['fixed']
-    rows = np.zeros(((len(BASE) - 1) * 3 + 1, chh, cw * COLS, 4), np.uint8)
+    rows = np.zeros(((len(BASE) - 1) * 3 + 1 + 4, chh, cw * COLS, 4), np.uint8)
     for c in range(COLS):
         alpha = np.stack([cell(at, r, c)[..., 3] for r in range(len(BASE))])
         top = alpha.argmax(0)
@@ -118,6 +119,9 @@ def base_atlas(name, cw, chh):
                 lab[m] = r * 3 + (g > th[r][0]).astype(int) + (g > th[r][1]).astype(int)
         red = reduce_labels(lab, wts, nlab, cw, chh)
         red = stamp_face(red, lab, pal, cw, chh)
+        win = face_window(red, pal, chh)
+        for l in range(3):  # face-window skin rows (13-15)
+            rows[13 + l, :, c * cw:(c + 1) * cw][win & (red == l)] = (255, 255, 255, 255)
         for l in range(12):
             m = red == l
             rows[l, :, c * cw:(c + 1) * cw][m] = (255, 255, 255, 255)
@@ -127,6 +131,10 @@ def base_atlas(name, cw, chh):
             blk = rows[12, :, c * cw:(c + 1) * cw]
             blk[fm, :3] = col
             blk[fm, 3] = 255
+            wm = fm & win  # face-window eyes (row 16), in their own colours
+            blk = rows[16, :, c * cw:(c + 1) * cw]
+            blk[wm, :3] = (pal[red[wm] - 12] * 255).round().astype(np.uint8)
+            blk[wm, 3] = 255
     return rows.reshape(-1, cw * COLS, 4)
 
 
@@ -172,6 +180,20 @@ def stamp_face(red, lab, pal, cw, chh):
         cx, cy = int(mx * sx), int(round(my * sy - h / 2))
         out[max(0, cy):cy + h, max(0, cx):cx + w] = 12 + eye
     return out
+
+
+def face_window(red, pal, chh):
+    """The face below the brow line: skin and eye pixels from 3 rows above the eyes to 4 rows below them. The game
+    redraws it over any headwear, so a cap, bonnet or toque never hides the eyes (a 16-bit convention: hats sit on
+    the brow, the face always reads). Empty in back views, which have no eyes."""
+    eye = 12 + int(pal.mean(1).argmin())
+    ys = np.where(((red == eye) & (np.arange(chh)[:, None] < chh * 0.62)).any(1))[0]
+    win = np.zeros(red.shape, bool)
+    if not len(ys):
+        return win
+    y0, y1 = max(0, ys[0] - 3), min(chh, ys[-1] + 5)
+    win[y0:y1] = (red[y0:y1] <= 2) | (red[y0:y1] == eye)
+    return win
 
 
 def overlay_atlas(cw, chh):

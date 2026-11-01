@@ -1,0 +1,219 @@
+[
+  {
+    "id": "G-regression-pixel",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered pixel since loop 2",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-regression-ui",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered ui since loop 2",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-ui-pixel-consistency",
+    "category": "ui",
+    "expectedGain": 0.75,
+    "severity": 4,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R01",
+      "desktop/R18"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "Render the bitmap body face at integer 2x on desktop with font smoothing off; redraw the logo as pixel lettering on the 2-device-px grid; Hen shop row uses the hen sprite; slot counts in a corner badge clear of icon art.",
+    "priority": 1.125,
+    "selected": true
+  },
+  {
+    "id": "G-faces-under-headwear",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 5,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R07-player",
+      "crops/R11-npcs",
+      "desktop/R19"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Stop headwear at the brow row in front/three-quarter views; always composite an eye row plus nose or mouth pixel above the hat layer; Hattie white cap over visible skin 4; pinched fedora crown. Test: every named NPC shows >= 2 eye pixels in front view.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-sprite-overlap",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "S",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R19",
+      "desktop/R06",
+      "desktop/R08"
+    ],
+    "fix": "Townsfolk keep >= 1 tile from the player and named NPCs, never spawn within 3 tiles of the camera centre, and y-sort behind lamp posts.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-overlay-crowding",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R04",
+      "crops/R16-npcs",
+      "crops/R11-npcs"
+    ],
+    "fix": "Phone goals panel on one line (heading + one objective, ellipsis); name-tag collision pass offsetting >= 2 px from other tags and sign boards; hide tags of off-screen or occluded NPCs.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-fog-offgrid",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R08"
+    ],
+    "fix": "Render field fog and wisps at art resolution, 3-4 alpha bands with 4x4 ordered dither, wisps >= 1 art px; match the on-grid spring steam.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-night-pool-clip",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "mobile/R05"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Clip lamp pools by radius not ground type; shrink the player disc to a subtle 2-band lantern or remove it; cool moonlight fill so walls keep 2 value steps.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-hoe-tool-mechanics",
+    "category": "animation",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14",
+      "strips/R13"
+    ],
+    "fix": "Four authored body frames with hands on the handle (raise, overhead, strike with 1-px crouch, recover); 2-frame hit-stop; on-grid soil puff; tile turns tilled on impact; remove trailing chip; 1-px walk bob with visible arms; re-shoot R14 on a cleared tile and R13 without occlusion.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-ground-checker",
+    "category": "pixel",
+    "expectedGain": 0.75,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R15-pen",
+      "crops/R07-player",
+      "desktop/R04"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Post-pass merging isolated 1-art-px cells into their majority neighbour on grass, cobble and water textures. Test: < 5% of ground pixels in single-pixel clusters.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-face-smear-hair-noise",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R16-npcs",
+      "crops/R11-npcs",
+      "desktop/R11"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Hand-clean head layers per hair style: 3-step hue-shifted ramp, closed 1-px dark outline, delete orphan right-cheek cluster; grey beard for Josiah; rebuild dialogue portraits from the cleaned heads.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-weather-grades",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R06",
+      "desktop/R09",
+      "desktop/R10"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Keep existing grades; add warm key and purple shadows at dusk, darker wet road tone and 2-frame on-grid puddle ripples in rain, cool blue shadow tone in snow, one-sun-direction sprite drop shadows.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-farm-and-shore-composition",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R03",
+      "desktop/R07",
+      "desktop/R17"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Authored ground decals on farm lawns (>= 1 per 4 tiles); per-era farmyard layouts; dock posts; clip path and bridge tiles at the shoreline (removes ghost rectangles); 2-3 water tile variants to break the repeat.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-townsfolk-variants",
+    "category": "authenticity",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R08",
+      "desktop/R06"
+    ],
+    "fix": ">= 4 outfit and body variants per era, men and women mixed, seasonal outerwear; 1955 small fedoras instead of discs; every variant shows a face in front view.",
+    "priority": 0.25,
+    "selected": false
+  }
+]

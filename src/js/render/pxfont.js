@@ -56,14 +56,14 @@ export function pxText(ctx, text, x, y, color, scale = 1) {
 }
 // A code-made canvas with the text and a 1-px dark outline around every glyph pixel (readable on any ground).
 const labels = new Map();
-export function pxLabel(text, color = '#ffffff', outline = '#141010') {
-  const k = `${text}|${color}|${outline}`;
+export function pxLabel(text, color = '#ffffff', outline = '#141010', s = 1) {
+  const k = `${text}|${color}|${outline}|${s}`;
   let c = labels.get(k);
   if (c) return c;
-  c = document.createElement('canvas'); c.width = pxTextWidth(text) + 2; c.height = PX_FONT_H + 2;
+  c = document.createElement('canvas'); c.width = (pxTextWidth(text) + 2) * s; c.height = (PX_FONT_H + 2) * s;
   const g = c.getContext('2d');
-  for (const [dx, dy] of [[0, 1], [2, 1], [1, 0], [1, 2]]) pxText(g, text, dx, dy, outline);
-  pxText(g, text, 1, 1, color);
+  for (const [dx, dy] of [[0, 1], [2, 1], [1, 0], [1, 2]]) pxText(g, text, dx * s, dy * s, outline, s);
+  pxText(g, text, s, s, color, s);
   labels.set(k, c);
   return c;
 }
@@ -85,20 +85,20 @@ const S5 = {
 const g5 = (ch) => S5[ch] || S5[ch.toUpperCase()] || S5[' '];
 export const PX_SMALL_H = 5;
 export function pxSmallWidth(text) { let w = 0; for (const ch of text) w += g5(ch)[0].length + 1; return Math.max(0, w - 1); }
-export function pxSmall(ctx, text, x, y, color) {
+export function pxSmall(ctx, text, x, y, color, scale = 1) {
   ctx.fillStyle = color; x = Math.round(x); y = Math.round(y);
-  for (const ch of text) { const g = g5(ch); for (let r = 0; r < 5; r++) for (let c = 0; c < g[r].length; c++) if (g[r][c] === '#') ctx.fillRect(x + c, y + r, 1, 1); x += g[0].length + 1; }
+  for (const ch of text) { const g = g5(ch); for (let r = 0; r < 5; r++) for (let c = 0; c < g[r].length; c++) if (g[r][c] === '#') ctx.fillRect(x + c * scale, y + r * scale, scale, scale); x += (g[0].length + 1) * scale; }
 }
 // The compact font with a 1-px dark outline (name tags over people).
 const smallLabels = new Map();
-export function pxSmallLabel(text, color = '#ffffff', outline = '#141010') {
-  const k = `${text}|${color}|${outline}`;
+export function pxSmallLabel(text, color = '#ffffff', outline = '#141010', s = 1) {
+  const k = `${text}|${color}|${outline}|${s}`;
   let c = smallLabels.get(k);
   if (c) return c;
-  c = document.createElement('canvas'); c.width = pxSmallWidth(text) + 2; c.height = PX_SMALL_H + 2;
+  c = document.createElement('canvas'); c.width = (pxSmallWidth(text) + 2) * s; c.height = (PX_SMALL_H + 2) * s;
   const g = c.getContext('2d');
-  for (const [dx, dy] of [[0, 1], [2, 1], [1, 0], [1, 2], [0, 0], [2, 2], [0, 2], [2, 0]]) pxSmall(g, text, dx, dy, outline);
-  pxSmall(g, text, 1, 1, color);
+  for (const [dx, dy] of [[0, 1], [2, 1], [1, 0], [1, 2], [0, 0], [2, 2], [0, 2], [2, 0]]) pxSmall(g, text, dx * s, dy * s, outline, s);
+  pxSmall(g, text, s, s, color, s);
   smallLabels.set(k, c);
   return c;
 }

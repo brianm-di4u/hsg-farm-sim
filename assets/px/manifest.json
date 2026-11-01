@@ -516,7 +516,7 @@
     32
    ],
    "file": "px/16/chars-dress.png",
-   "h": 416,
+   "h": 544,
    "perDir": 13,
    "w": 819
   },
@@ -536,7 +536,7 @@
     32
    ],
    "file": "px/16/chars-trousers.png",
-   "h": 416,
+   "h": 544,
    "perDir": 13,
    "w": 819
   },
@@ -3025,7 +3025,7 @@
     63
    ],
    "file": "px/32/chars-dress.png",
-   "h": 819,
+   "h": 1071,
    "perDir": 13,
    "w": 1638
   },
@@ -3045,7 +3045,7 @@
     63
    ],
    "file": "px/32/chars-trousers.png",
-   "h": 819,
+   "h": 1071,
    "perDir": 13,
    "w": 1638
   },
@@ -3382,7 +3382,7 @@
   "icon-hoe": {
    "file": "px/32/icon-hoe.png",
    "h": 37,
-   "w": 34
+   "w": 29
   },
   "icon-hops": {
    "file": "px/32/icon-hops.png",
@@ -3391,7 +3391,7 @@
   },
   "icon-hotwater": {
    "file": "px/32/icon-hotwater.png",
-   "h": 70,
+   "h": 65,
    "w": 34
   },
   "icon-hut": {

@@ -530,7 +530,7 @@ function compact() {
     goalsDone: sim.goalsDone(S), canTurn: sim.goalsDone(S), fishing: S.fishing ? { ...S.fishing } : null, animals: S.animals.length, trough: S.trough, penOut: S.penOut,
     almanac: S.almanac.length, almanacIds: S.almanac, chapterEarned: S.chapterEarned, houseStyle: S.houseStyle, flags: S.flags, summary: S.summary, finished: S.finished,
     places: gm.world.places, buildings: gm.world.buildings.map((b) => ({ id: b.id, type: b.type, x: b.x, y: b.y, w: b.w, h: b.h, front: b.front, label: b.label })),
-    chunkBakes: scene.R.chunkBakes, bakeMs: +(scene.R.bakeMs || 0).toFixed(1), bakeLog: (scene.R.bakeLog || []).slice(), artLoaded: ART.loaded, artPending: ART.pending, artFailed: ART.failed.slice(), artTotal: allNames().length, vectorFallback: [...scene.R.fallback],
+    chunkBakes: scene.R.chunkBakes, bakeMs: +(scene.R.bakeMs || 0).toFixed(1), bakeLog: (scene.R.bakeLog || []).slice(), crispLog: (scene.R.crispLog || []).slice(), artLoaded: ART.loaded, artPending: ART.pending, artFailed: ART.failed.slice(), artTotal: allNames().length, vectorFallback: [...scene.R.fallback],
     painted: { terrain: terrainReady(), people: PA.peopleReady(), buildings: gm.world.buildings.filter((b) => PA.buildingSprite(S.ch, b, scene.R.u)).length }, frames: scene.R.frames, particles: scene.R.particles.length, frameMs: +(app.frameMs || 0).toFixed(2), srText: document.getElementById('sr').textContent, cam: { ...scene.R.cam }, autoPath: S.autoPath ? S.autoPath.length : 0,
   };
 }

@@ -78,3 +78,14 @@ Readback of loaded images is impossible under file://, so all pixel processing h
   - **New pipeline:** Codex generates pixel art → `pixelize.py` → `pack-px.py`. The generated sources keep every tier open.
   - **Prompts:** recorded in `art-src/px-prompts/`.
 
+- **2026-11-01, after loop 2 (45.5): the default tile tier changes from 16 to 32 art px per tile.**
+  - **Evidence: a blind A/B tier study** (`reviews/tier-study/brief.md`).
+    - The same nine captures were rendered at 16 and 32 px per tile, with the two sides randomized per image.
+    - Two independent panelists judged them: a Claude subagent and Codex.
+    - Both preferred the 32 px side: 8 of 9 images and 9 of 9.
+    - Mean scores (16 → 32 px): pixel 6.2 → 7.3 and 5.5 → 6.9; characters 5.7 → 6.3 and 5.1 → 5.8; environment 6.3 → 7.5 and 6.2 → 7.5; readability 7.0 → 6.8 and 6.4 → 6.8.
+  - **Root cause:** generated pixel art is drawn at a pitch of about 47 art px per tile. Reducing it to 16 px/tile erases thin structure: wagon spokes, window bars, faces. At 32 px the reduction is only about 1.5×.
+  - **Performance:** at 32 px (`benchmarks/perf-t32.json`) desktop runs 320–1090 fps and the 6× phone 74–116 fps (p95 ≤ 50 ms). The 4× phone snow town measured p95 85 ms once; it is re-measured in loop 3.
+  - **Risk both panelists named:** bitmap labels shrink with the finer grid. Code-drawn pixel elements (signs, name tags, badges, fences, weather) now scale by a whole-number `PX.S` (2 at 32 px), so they keep their screen size.
+  - **Still available:** `?tile=16` remains for A/B. The research table's "T16 default" is overruled by this measurement, as its own text allows.
+

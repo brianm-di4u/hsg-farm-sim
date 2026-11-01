@@ -1,0 +1,6 @@
+# Loop 3 hard gates
+
+- **Tests (on the final build, after the T32 bake fix):** the pixel suite passed 88/88. The painted suite passed 86/88 on the captured build; both failures were the load-sensitive performance readings taken while the GPU capture was running, and the performance test re-run alone on the final build passed 2/2.
+- **Pixel integrity:** pass in all 26 captures. The repeat capture of R04 differed by 0.000/255.
+- **Performance** (`perf.json`, T32): desktop GPU 619–1514 fps. Phone 4×: 84–158 fps, p95 ≤ 25.5 ms. Phone 6×: 43–67 fps (floor 24). Heap ≤ 22 MB. All are inside `research/pixel-budget.md`. The worst single frames were 308 ms on the 6× phone lake (logged; the p95 rule applies at 4× only) and 76 ms on the 4× phone lake.
+- **Fix made during the loop:** at T32 the first perf pass failed the 6× floor (8.4 fps in the snow town). The cause was a chunk cache smaller than the map, so walking re-baked chunks, and snow-variant art arriving after load cleared the cache. The pixel style now caches the whole map, bakes it in one pass when the scene key changes, and ignores snow-variant arrivals. A pixel diff of the captures before and after the fix differed by at most 0.05/255 (particle randomness).

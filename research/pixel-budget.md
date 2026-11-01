@@ -35,7 +35,10 @@ Profiles:
    (and the edge-cleaning pass over them) grow with the square of the tile size. They land on the main thread as
    260–560 ms stalls on the phone proxy. **A move to 24 or 32 px tiles requires time-sliced chunk baking**: baking all
    chunks behind the chapter wipe, cleaning edges in slices, or a worker. Until then **T16 is the only tier inside
-   budget.**
+   budget.** *Update after loop 2:* the pixel style now caches and pre-bakes the whole map on quiet frames after a
+   scene starts, so first-visit bakes no longer land on walking frames. At **T32** (`benchmarks/perf-t32.json`):
+   desktop 320–1090 fps; phone 6× 74–116 fps, p95 ≤ 50 ms; phone 4× 51–95 fps, with p95 ≤ 42 ms except one
+   85 ms reading in the snow town (re-measured each loop). T32 became the default after the blind tier study.
 4. **Memory:** heap 9.5–19.6 MB in every run (budget 40). **Download:** pixel assets are 1.5 MB at T16, 1.7 MB at T24
    and 1.9 MB at T32 (budget 4 MB).
 

@@ -11,7 +11,11 @@ const off = /[?&]art=0\b/.test(query) || gfx === 'simple';
 // one canvas pixel per art pixel, `PX.T` pixels to a tile (`?tile=24` / `32` for the larger tiers), and the
 // browser scales it up by a whole number with no smoothing.
 const styleQ = (query.match(/[?&]style=(\w+)/) || [])[1];
-export const PX = { on: styleQ ? styleQ === 'pixel' : gfx === 'pixel', T: [16, 24, 32].includes(+(query.match(/[?&]tile=(\d+)/) || [])[1]) ? +query.match(/[?&]tile=(\d+)/)[1] : 16 };
+// T = art px per tile: 32 by default (chosen in the blind tier study, VISUAL-PLAN-PX.md "Pivots"); ?tile=16|24 for A/B.
+// S = whole-number scale for code-drawn pixel elements (bitmap text, fences, badges) so they keep their screen size.
+const tileQ = +(query.match(/[?&]tile=(\d+)/) || [])[1];
+const T = [16, 24, 32].includes(tileQ) ? tileQ : 32;
+export const PX = { on: styleQ ? styleQ === 'pixel' : gfx === 'pixel', T, S: T >= 24 ? 2 : 1 };
 
 // The pixel style draws the pixel-art set for its tile size (assets/px/<T>/, packed by tools/pack-px.py) and falls
 // back to the painted image for anything not yet in it.

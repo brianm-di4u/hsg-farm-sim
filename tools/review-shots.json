@@ -269,7 +269,7 @@
   },
   {
    "id": "R14",
-   "title": "Hoe swing on the field, tilling a tile (strip)",
+   "title": "Hoe swing on the field, tilling a cleared tile (strip)",
    "cats": [
     "animation"
    ],
@@ -287,6 +287,20 @@
     [
      "face",
      "down"
+    ],
+    [
+     "selectItem",
+     "scythe"
+    ],
+    [
+     "use"
+    ],
+    [
+     "use"
+    ],
+    [
+     "selectItem",
+     "hoe"
     ]
    ]
   },

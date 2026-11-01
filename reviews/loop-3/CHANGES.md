@@ -1,0 +1,27 @@
+- **Pixel density doubled: 32 art px per tile** (was 16), chosen in a blind A/B tier study (`reviews/tier-study/brief.md`, `VISUAL-PLAN-PX.md` "Pivots").
+  - The same generated art is packed at the new size. Characters are 42×63 cells instead of 21×32.
+  - The view is unchanged: 1280×800 desktop still shows 20 tiles across (2 device px per art px). The 390×844 phone shows about 12 tiles (2 device px per art px).
+  - Code-drawn pixel elements (signs, name tags, badges, fences, target brackets, rain, snow) keep their screen size through a whole-number scale.
+- **Characters:**
+  - Skirts reach the ankle.
+  - Hat silhouettes are exaggerated per kind: wide slouch brim, tall fedora crown, long cap visor whose dome covers the hair, deeper bonnet, big scarf knot, bushy fur-cap tail.
+  - Heads no longer nod forward in profile, which made tall headwear (the chef's toque) tip and the figure look like it was leaning.
+- **Townsfolk:** render-only passers-by in era clothing walk the long street rows of every town from 1871 on.
+- **Street furniture** beside the lamp posts, by era: barrels and hitching rails in 1871, benches in 1886–2026, planters, a hydrant in 1955, bikes and a café umbrella in 2026.
+- **Ground:** terrain textures have clusters of at least 2×2 art px, fewer colours and a narrower lightness range.
+- **Props:** the pixelizer's majority vote favours dark line colours on small props (spokes, rails, poles). Enclosed white openings (the dogtrot breezeway, an arcade) are keyed out instead of showing as white rectangles.
+- **Light:**
+  - Night darkness is capped at 75%, so facades stay readable.
+  - Every sign board is lit edge to edge at night, its glow at least as wide as the board.
+  - Fog keeps a clear pocket round the player.
+- **Seasons:** no flowering shrubs beside buildings in winter or snow.
+- **Text:**
+  - Name tags use the compact 3×5 font with an outline.
+  - Livestock in the shop uses the animal sprites as icons.
+- **Phone HUD:** less padding, smaller buttons, and the goals panel on one line where it fits.
+- **Captures:**
+  - Every frame is taken after a 1.5 s warm-up of ambient motion (steam, chimney smoke) on a stepped clock, then the clock is pinned.
+  - Player close-ups sit beside a period reference image from `research/refs`.
+  - R14 (the hoe) is shot on the field facing a tillable tile.
+  - R02 is in clear weather.
+  - New: R19, the restored 2026 Row by day.

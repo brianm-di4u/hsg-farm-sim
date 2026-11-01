@@ -3,7 +3,7 @@
 // rendered by the installed Chrome (headless, ANGLE/D3D11) from file://. Also writes nearest-neighbour close-ups,
 // 8-frame motion strips, an index (shots.json) for the review brief, and runs the pixel-integrity check.
 //
-//   node games/farm-sim/tools/shots-gpu.mjs <out=review-loop-0> [--only=R04,R10] [--viewports=desktop,mobile]
+//   node games/farm-sim/tools/shots-gpu.mjs <out> [--only=R04,R10] [--viewports=desktop,mobile]
 //        [--query=style=pixel] [--no-crops] [--no-strips] [--verify] [--max-bad=0.004]
 //
 // Output: games/farm-sim/screenshots/<out>/<viewport>/<id>.png, crops/<id>-<name>.png, strips/<id>.png, shots.json.
@@ -21,7 +21,8 @@ const require = createRequire(path.resolve(ROOT, 'shared', 'test-harness', 'pack
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);
 const opt = (k, d) => { const a = args.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : d; };
-const out = args.find((a) => !a.startsWith('--')) || 'review-loop-0';
+const out = args.find((a) => !a.startsWith('--'));
+if (!out) { console.error('usage: node games/farm-sim/tools/shots-gpu.mjs <out> [--only=R04,R10] [--viewports=desktop,mobile] [--query=style=pixel]'); process.exit(1); }
 const ONLY = opt('only', '') ? opt('only', '').split(',') : null;
 const VPS = opt('viewports', 'desktop,mobile').split(',');
 const QUERY = opt('query', 'style=pixel'), MAXBAD = +opt('max-bad', '0.004');
@@ -179,7 +180,7 @@ for (const vp of VPS) {
         await page.evaluate(() => window.__game.act('render'));
         await frames(page, 1);
         const st2 = await page.evaluate(() => window.__game.getState());
-        const r = tileRect(st2, dpr, st2.player.x - 1.25, st2.player.y - 2.0, 2.5, 2.5);
+        const r = tileRect(st2, dpr, st2.player.x - 1.25, st2.player.y - 2.0, 2.5, s.strip.act === 'use' ? 3.2 : 2.5); // a tool strip shows the target tile below the feet
         shots.push(await crop(await page.screenshot(), r.x, r.y, r.w, r.h, vp === 'desktop' ? 2 : 1));
       }
       if (s.strip.key) await page.keyboard.up(s.strip.key);

@@ -102,15 +102,49 @@ def snow_variant(rgba):
 
 def seamless_dither(ix):
     """Make an index image tile seamlessly without blending colours: each pixel takes the original or a half-offset
-    copy (whose edges are the original's continuous middle), choosing the copy more often near the edges, through
-    a 4x4 Bayer threshold. Every output pixel is still one of the palette's colours."""
+    copy (whose edges are the original's continuous middle), choosing the copy more often near the edges. The
+    choice follows a smooth random field, so the hand-over is ragged blobs, never a checker pattern. Every output
+    pixel is still one of the palette's colours."""
     h, w = ix.shape
     off = np.roll(np.roll(ix, h // 2, 0), w // 2, 1)
     yy, xx = np.mgrid[0:h, 0:w]
     edge = np.minimum(np.minimum(xx, w - 1 - xx) / (w / 4), np.minimum(yy, h - 1 - yy) / (h / 4)).clip(0, 1)
-    bayer = np.array([[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]]) / 16 + 1 / 32
-    keep = edge > bayer[yy % 4, xx % 4]
+    rng = np.random.default_rng(5)
+    field = np.asarray(Image.fromarray((rng.random((6, 6)) * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC)) / 255
+    keep = edge > field * 0.9 + 0.05
     return np.where(keep, ix, off)
+
+
+def drop_strays(rgba, keep=0.3):
+    """Clear opaque parts (8-connected) smaller than `keep` x the largest, then trim: an icon held in the hand
+    (the hoe, drawn with a loose clod beside it) must not carry a floating piece through the swing."""
+    a = rgba[..., 3] > 0
+    lab = np.zeros(a.shape, np.int32)
+    sizes = []
+    for y0, x0 in zip(*np.where(a)):
+        if lab[y0, x0]:
+            continue
+        sizes.append(0)
+        n = len(sizes)
+        st = [(y0, x0)]
+        lab[y0, x0] = n
+        while st:
+            y, x = st.pop()
+            sizes[-1] += 1
+            for yy in (y - 1, y, y + 1):
+                for xx in (x - 1, x, x + 1):
+                    if 0 <= yy < a.shape[0] and 0 <= xx < a.shape[1] and a[yy, xx] and not lab[yy, xx]:
+                        lab[yy, xx] = n
+                        st.append((yy, xx))
+    if len(sizes) < 2:
+        return rgba
+    big = max(sizes)
+    out = rgba.copy()
+    for n, sz in enumerate(sizes, 1):
+        if sz < big * keep:
+            out[lab == n] = 0
+    ys, xs = np.where(out[..., 3] > 0)
+    return out[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
 
 
 def write_inline(T):
@@ -166,7 +200,10 @@ def main():
             if is_gen:  # ground stays calm so actors read on it: fewer colours, a light median, lightness range halved,
                 o.update(colors=6, smooth=3)  # and every cluster at least 2x2 art px (packed at half size, then doubled)
             ix, pal = PZ.pixelize(rgba, px // 2 if is_gen else px, None, o['colors'], smooth=o['smooth'])
-            if is_gen:
+            if is_gen:  # seams are made at half size, so the hand-over keeps the 2x2 clusters too
+                hp = px // 2
+                ix = ix[:hp, :hp] if ix.shape[0] >= hp else np.pad(ix, ((0, hp - ix.shape[0]), (0, hp - ix.shape[1])), mode='wrap')
+                ix = seamless_dither(ix)
                 ix = np.kron(ix, np.ones((2, 2), ix.dtype))
                 if ix.shape[0] < px:
                     ix = np.pad(ix, ((0, px - ix.shape[0]), (0, px - ix.shape[1])), mode='wrap')
@@ -175,8 +212,6 @@ def main():
                 lab[:, 1:] = lab[:, 1:] * 0.9
                 pal = PZ.oklab_to_rgb(lab)
             ix = ix[:px, :px] if ix.shape[0] >= px else np.pad(ix, ((0, px - ix.shape[0]), (0, 0)), mode='wrap')
-            if is_gen:  # generated "seamless" tiles rarely wrap exactly: a dithered cross-fade makes them
-                ix = seamless_dither(ix)
             out = PZ.to_rgba(ix, pal)
         elif name.startswith('vista-'):
             ix, pal = PZ.pixelize(np.asarray(src.convert('RGBA')).copy(), o.get('w', 480), None, o['colors'], smooth=o['smooth'])
@@ -210,6 +245,8 @@ def main():
                 continue
             args = A(width=max(3, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key', 'line_weight')})
             out = PZ.run(src, args)
+            if name.startswith('icon-'):
+                out = drop_strays(out)
         PZ.save_png(out, os.path.join(out_dir, name + '.png'))
         mt[name] = {'file': f'px/{T}/{name}.png', 'w': int(out.shape[1]), 'h': int(out.shape[0])}
         done += 1

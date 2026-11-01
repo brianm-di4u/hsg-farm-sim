@@ -149,6 +149,60 @@
       },
       "calibration": null,
       "date": "2026-11-01"
+    },
+    {
+      "loop": 3,
+      "scores": {
+        "pixel": 5.5,
+        "characters": 4.5,
+        "environment": 6,
+        "lighting": 5.5,
+        "animation": 5,
+        "ui": 5.5,
+        "readability": 6,
+        "authenticity": 6.5
+      },
+      "total": 44.5,
+      "stalls": 1,
+      "verdict": "continue",
+      "critics": {
+        "critic-claude": {
+          "pixel": 6,
+          "characters": 4.5,
+          "environment": 6,
+          "lighting": 5,
+          "animation": 4.5,
+          "ui": 5,
+          "readability": 6,
+          "authenticity": 6.5
+        },
+        "critic-codex": {
+          "pixel": 5,
+          "characters": 4.5,
+          "environment": 6,
+          "lighting": 5.5,
+          "animation": 5,
+          "ui": 6.5,
+          "readability": 6.5,
+          "authenticity": 6.5
+        },
+        "advocate": {
+          "pixel": 5.5,
+          "characters": 4.5,
+          "environment": 6,
+          "lighting": 5.5,
+          "animation": 5,
+          "ui": 5.5,
+          "readability": 6,
+          "authenticity": 6.5
+        }
+      },
+      "calibration": {
+        "pixel": 8,
+        "environment": 7.5,
+        "lighting": 6.5
+      },
+      "date": "2026-11-01"
     }
   ]
 }

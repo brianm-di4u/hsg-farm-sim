@@ -67,7 +67,7 @@ function resizePixel(c) {
   // UI type: the pixel body font (DotGothic16) has a 16-unit em, so a 16 px root puts its pixel on whole device pixels at
   // 1x, 2x and 3x; fractional ratios round to the nearest whole multiple. The stylesheet keeps text at 1rem or 2rem.
   document.documentElement.style.fontSize = (16 * Math.max(1, Math.round(dpr)) / dpr) + 'px';
-  if (T !== R.u || R.ts !== T * k / dpr) { R.ts = T * k / dpr; R.u = R.cu = T; R.chunks.clear(); clearArt(); }
+  if (T !== R.u || R.ts !== T * k / dpr) { R.ts = T * k / dpr; R.u = R.cu = T; R.chunks.clear(); R.bakedKey = null; clearArt(); }
   R.offsetY = R.mobile ? -R.cssH * 0.1 : 0;
   R.night = null;
 }
@@ -119,14 +119,14 @@ function chunkCanvas(gm, cx, cy, P) {
     else drawBuilding(ctx, b, u, P);
   }
   ctx.restore();
-  if (PX.on && painted) crispify(c);
+  if (PX.on && painted) { const t1 = performance.now(); crispify(c); (R.crispLog || (R.crispLog = [])).push(Math.round(performance.now() - t1)); if (R.crispLog.length > 20) R.crispLog.shift(); }
   R.chunks.set(k, c);
   R.chunkBakes++; R.bakedFrame = R.frames;
   R.bakeMs = Math.max(R.bakeMs || 0, performance.now() - t0);
   (R.bakeLog || (R.bakeLog = [])).push(Math.round(performance.now() - t0)); if (R.bakeLog.length > 20) R.bakeLog.shift();
   return c;
 }
-export function invalidateChunks() { R.chunks.clear(); }
+export function invalidateChunks() { R.chunks.clear(); R.bakedKey = null; }
 // Pixel style: the terrain bake fills smooth paths, whose anti-aliased edges leave one-off blend colours between
 // materials. A colour that is rare in the chunk AND lies on the line between two frequent neighbouring colours is
 // such a blend: it takes the nearer of the two, so edges become hard pixel steps. Rare colours that aren't blends
@@ -237,8 +237,16 @@ export function draw(gm, ui) {
   if (ART.dirty && (ART.pending === 0 || now - R.artFlushT > 600)) {
     ART.dirty = false; R.artFlushT = now;
     const mine = PA.buildingNames(S.ch);
-    if (ART.fresh.some((n) => n.startsWith('tex-') || n.startsWith('prop-') || mine.has(n))) R.chunks.clear();
+    // (A building's snow-day variant never lives in a chunk, so its arrival needn't rebake.)
+    if (ART.fresh.some((n) => n.startsWith('tex-') || n.startsWith('prop-') || (mine.has(n) && !n.endsWith('-snow')))) { R.chunks.clear(); R.bakedKey = null; }
     ART.fresh.length = 0;
+  }
+  // Pixel style: when the chapter, season, house or weather changes (or textures arrive), the whole map's 12 chunks
+  // are baked in one go: a single pause at a scene change (behind the chapter card or the wipe), so walking never
+  // bakes. At 32 px per tile a chunk is 512 x 512, too costly to meet for the first time mid-walk on a phone.
+  if (PX.on && terrainReady()) {
+    const key = `${S.ch}|${P.sea}|${S.houseStyle || ''}|${S.weather === 'snow' ? 1 : 0}|${R.cu}`;
+    if (key !== R.bakedKey) { R.bakedKey = key; for (let cy = 0; cy * CHUNK < H; cy++) for (let cx = 0; cx * CHUNK < W; cx++) chunkCanvas(gm, cx, cy, P); }
   }
   // Chunks (baked at R.cu px per tile, drawn at R.u).
   const cs = CHUNK * u;
@@ -341,9 +349,11 @@ export function draw(gm, ui) {
     const frame = pxPeople && since < 300 ? 'use' + Math.min(4, Math.floor(since / 60)) : since < 110 ? 'use0' : since < 300 ? 'use1' : pl.moving && !R.reduced ? walkFrame(pl.walk / 7) : idleFrame(0);
     const sp = PA.personSprite('player' + S.ch, look, pl.face, frame, u);
     const swing = since < 300 && !R.reduced && sim.selected(S);
-    const behind = pl.face === 'up';
+    const behind = pl.face === 'up' || (PX.on && pl.face === 'down' && since < 120); // facing down, the wind-up is raised behind the head
     if (swing && behind) toolSwing(ctx, S, pl, since, u);
-    if (sp) { ctx.drawImage(sp.c, pl.x * u + sp.ox, pl.y * u + sp.oy); R.playerSprite = { c: sp.c, x: pl.x * u + sp.ox, y: pl.y * u + sp.oy }; }
+    if (sp && PX.on && swing && since < 300) pxCrouch(ctx, sp.c, pl.x * u + sp.ox, pl.y * u + sp.oy, SWING_BODY[Math.min(4, Math.floor(since / 60))]);
+    else if (sp) ctx.drawImage(sp.c, pl.x * u + sp.ox, pl.y * u + sp.oy);
+    if (sp) R.playerSprite = { c: sp.c, x: pl.x * u + sp.ox, y: pl.y * u + sp.oy };
     else ctx.drawImage(personSprite('player' + S.ch, look, pl.face, pl.moving && !R.reduced ? (Math.floor(pl.walk / 8) % 2) : 0, u), (pl.x - 0.5) * u, (pl.y - 1.5) * u);
     if (swing && !behind) toolSwing(ctx, S, pl, since, u);
   } });
@@ -367,11 +377,11 @@ export function draw(gm, ui) {
   if (ui.showTarget) {
     const t = ui.targetOverride || sim.target(gm);
     if (PX.on) { // corner brackets on whole pixels: light inner line, dark outer line
-      const x0 = t.x * u, y0 = t.y * u, L = Math.max(3, u >> 2);
-      for (const [col, o] of [['rgba(20,16,12,0.85)', 0], ['rgba(255,250,235,0.95)', 1]]) {
+      const x0 = t.x * u, y0 = t.y * u, L = Math.max(3, u >> 2), q = PX.S;
+      for (const [col, o] of [['rgba(20,16,12,0.85)', 0], ['rgba(255,250,235,0.95)', q]]) {
         ctx.fillStyle = col;
-        for (const [cx, cy, sx, sy] of [[x0 + o, y0 + o, 1, 1], [x0 + u - 1 - o, y0 + o, -1, 1], [x0 + o, y0 + u - 1 - o, 1, -1], [x0 + u - 1 - o, y0 + u - 1 - o, -1, -1]]) {
-          ctx.fillRect(sx > 0 ? cx : cx - L + 1, cy, L, 1); ctx.fillRect(cx, sy > 0 ? cy : cy - L + 1, 1, L);
+        for (const [cx, cy, sx, sy] of [[x0 + o, y0 + o, 1, 1], [x0 + u - q - o, y0 + o, -1, 1], [x0 + o, y0 + u - q - o, 1, -1], [x0 + u - q - o, y0 + u - q - o, -1, -1]]) {
+          ctx.fillRect(sx > 0 ? cx : cx - L + q, cy, L, q); ctx.fillRect(cx, sy > 0 ? cy : cy - L + q, q, L);
         }
       }
     } else {
@@ -395,7 +405,7 @@ export function draw(gm, ui) {
     let x = n.x * u - w / 2, y = (n.y - 2.38) * u;
     for (let k = 0; k < 4 && tags.some((t) => x < t.x + t.w && t.x < x + w && y < t.y + t.h && t.y < y + h); k++) y -= h + u * 0.06;
     tags.push({ x, y, w, h });
-    if (PX.on) { const l = pxSmallLabel(name.toUpperCase()); ctx.drawImage(l, Math.round(n.x * u - l.width / 2), Math.round((n.y - 2.05) * u + (y - (n.y - 2.38) * u) * 0.5)); continue; }
+    if (PX.on) { const l = pxSmallLabel(name.toUpperCase(), undefined, undefined, PX.S); ctx.drawImage(l, Math.round(n.x * u - l.width / 2), Math.round((n.y - 2.05) * u + (y - (n.y - 2.38) * u) * 0.5)); continue; }
     ctx.fillStyle = 'rgba(16,14,12,0.82)'; ctx.fillRect(x, y, w, h);
     ctx.fillStyle = '#ffffff'; ctx.fillText(name, x + w / 2, y + h / 2 + u * 0.01);
   }
@@ -422,7 +432,7 @@ export function draw(gm, ui) {
     ctx.save(); ctx.translate((p.x) * u, (p.y - 0.9 - lift) * u); ctx.scale(sc, sc); ctx.translate(-p.x * u, -(p.y - 0.9 - lift) * u);
     ctx.globalAlpha = a;
     ctx.drawImage(PA.iconSprite(p.item, Math.round(u * 0.6)) || iconCanvas(p.item, Math.round(u * 0.6)), (p.x - 0.3) * u, (p.y - 1.2 - lift) * u);
-    if (p.n > 1 && PX.on) { const l = pxLabel('×' + p.n); ctx.drawImage(l, (p.x + 0.35) * u - l.width / 2, (p.y - 0.75 - lift) * u - l.height / 2); }
+    if (p.n > 1 && PX.on) { const l = pxLabel('×' + p.n, undefined, undefined, PX.S); ctx.drawImage(l, (p.x + 0.35) * u - l.width / 2, (p.y - 0.75 - lift) * u - l.height / 2); }
     else if (p.n > 1) { ctx.font = `bold ${Math.round(u * 0.3)}px system-ui, sans-serif`; ctx.fillStyle = '#fff'; ctx.strokeStyle = '#000'; ctx.lineWidth = u * 0.06; ctx.strokeText('×' + p.n, (p.x + 0.35) * u, (p.y - 0.75 - lift) * u); ctx.fillText('×' + p.n, (p.x + 0.35) * u, (p.y - 0.75 - lift) * u); }
     ctx.globalAlpha = 1;
     ctx.restore();
@@ -469,12 +479,21 @@ function toolSwing(ctx, S, pl, since, u) {
 // Pixel style: the tool in five held poses that match the body's use frames (wind-up behind the head, top, strike,
 // impact with the head on the target tile, recover), a full tile long, so the arc and the contact read.
 const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15]];
+// The body through the same five poses, in art px: up on the toes for the wind-up (the whole figure rises), then the
+// upper body drops onto the hips at the strike and impact (a crouch), feet planted.
+const SWING_BODY = [-1, -1, 0, 3, 1];
+function pxCrouch(ctx, c, x, y, dy) {
+  if (dy <= 0) { ctx.drawImage(c, x, y + dy); return; }
+  const cut = Math.round(c.height * 0.62); // the hips
+  ctx.drawImage(c, 0, cut, c.width, c.height - cut, x, y + cut, c.width, c.height - cut);
+  ctx.drawImage(c, 0, 0, c.width, cut, x, y + dy, c.width, cut);
+}
 function pxToolSwing(ctx, it, pl, since, u) {
   const f = Math.max(0, Math.min(4, Math.floor(since / 60))), [dx, dy, ang] = SWING[f];
   const side = pl.face === 'left' ? -1 : 1, s = u;
   const ic = PA.iconSprite(it.id, s) || iconCanvas(it.id, s);
   const down = pl.face === 'down', up = pl.face === 'up';
-  const hx = Math.round(pl.x * u + (down || up ? (up ? -0.1 : 0.1) : dx * side) * u), hy = Math.round((pl.y + (down ? dy * 0.6 + 0.15 : up ? dy * 0.6 - 0.2 : dy * 0.85)) * u);
+  const hx = Math.round(pl.x * u + (down || up ? (up ? -0.34 : 0.34) : dx * side) * u), hy = Math.round((pl.y + (down ? dy * 0.6 + 0.15 : up ? dy * 0.6 - 0.2 : dy * 0.85)) * u) + SWING_BODY[f];
   ctx.save(); ctx.translate(hx, hy); ctx.rotate(down || up ? ang * 0.5 : ang * side); if (side < 0) ctx.scale(-1, 1);
   ctx.drawImage(ic, -Math.round(s * 0.2), -Math.round(s * 0.85));
   ctx.restore();
@@ -489,8 +508,8 @@ function fireFlicker(ctx, l, u, now) {
 function buildingLabel(ctx, b, sp, u, P) {
   const [fg, bg] = LABEL_STYLE[P.ch] || LABEL_STYLE[1];
   if (PX.on) { // a small sign board over the door: the era's colours, a 1-px darker frame, 3x5 bitmap capitals
-    const text = b.label.toUpperCase(), tw = pxSmallWidth(text), w = tw + 4, h = PX_SMALL_H + 4;
-    const c = cached(`pxlbl|${text}|${P.ch}`, w, h, (g) => { g.fillStyle = shade(bg, -0.35); g.fillRect(0, 0, w, h); g.fillStyle = bg; g.fillRect(1, 1, w - 2, h - 2); pxSmall(g, text, 2, 2, fg); });
+    const S2 = PX.S, text = b.label.toUpperCase(), tw = pxSmallWidth(text) * S2, w = tw + 4 * S2, h = (PX_SMALL_H + 4) * S2;
+    const c = cached(`pxlbl|${text}|${P.ch}|${S2}`, w, h, (g) => { g.fillStyle = shade(bg, -0.35); g.fillRect(0, 0, w, h); g.fillStyle = bg; g.fillRect(S2, S2, w - 2 * S2, h - 2 * S2); pxSmall(g, text, 2 * S2, 2 * S2, fg, S2); });
     ctx.drawImage(c, Math.round(sp.x + sp.w / 2 - c.width / 2), Math.round(sp.y + sp.h * 0.62 - c.height / 2));
     return;
   }
@@ -604,20 +623,24 @@ const FENCE_WOOD = { 1: ['#3e2a1a', '#6e4c2e', '#9a7048'], 2: ['#3e2a1a', '#7451
 function pxFence(ctx, x, y, u, ch) {
   const [ink, mid, hi] = FENCE_WOOD[ch] || FENCE_WOOD[2], at = R.fenceAt || (() => false);
   const X = x * u, Y = y * u, cx = X + (u >> 1), base = Y + Math.round(u * 0.9), postH = Math.round(u * 0.7), r1 = base - Math.round(u * 0.55), r2 = base - Math.round(u * 0.3);
-  const rail = (x0, x1, yy) => { ctx.fillStyle = ink; ctx.fillRect(x0, yy - 1, x1 - x0, 4); ctx.fillStyle = mid; ctx.fillRect(x0, yy, x1 - x0, 2); ctx.fillStyle = hi; ctx.fillRect(x0, yy, x1 - x0, 1); };
+  const q = PX.S; // line widths keep their screen size at the larger tiers
+  const rail = (x0, x1, yy) => { ctx.fillStyle = ink; ctx.fillRect(x0, yy - q, x1 - x0, 4 * q); ctx.fillStyle = mid; ctx.fillRect(x0, yy, x1 - x0, 2 * q); ctx.fillStyle = hi; ctx.fillRect(x0, yy, x1 - x0, q); };
   if (at(x - 1, y)) { rail(X, cx, r1); rail(X, cx, r2); }
   if (at(x + 1, y)) { rail(cx, X + u, r1); rail(cx, X + u, r2); }
-  if (at(x, y - 1)) { ctx.fillStyle = ink; ctx.fillRect(cx - 2, Y - Math.round(u * 0.3), 4, base - postH - Y + Math.round(u * 0.3) + 1); ctx.fillStyle = mid; ctx.fillRect(cx - 1, Y - Math.round(u * 0.3), 2, base - postH - Y + Math.round(u * 0.3)); }
-  ctx.fillStyle = ink; ctx.fillRect(cx - 2, base - postH - 1, 5, postH + 1);
-  ctx.fillStyle = mid; ctx.fillRect(cx - 1, base - postH, 3, postH - 1);
-  ctx.fillStyle = hi; ctx.fillRect(cx - 1, base - postH, 1, postH - 1);
+  if (at(x, y - 1)) { const top = Y - Math.round(u * 0.3); ctx.fillStyle = ink; ctx.fillRect(cx - 2 * q, top, 4 * q, base - postH - top + q); ctx.fillStyle = mid; ctx.fillRect(cx - q, top, 2 * q, base - postH - top); }
+  ctx.fillStyle = ink; ctx.fillRect(cx - 2 * q, base - postH - q, 5 * q, postH + q);
+  ctx.fillStyle = mid; ctx.fillRect(cx - q, base - postH, 3 * q, postH - q);
+  ctx.fillStyle = hi; ctx.fillRect(cx - q, base - postH, q, postH - q);
 }
 // Tilled soil: painted soil in one world-anchored pattern fill, dry and watered, with a darker rim where it
 // meets untilled ground and a droplet mark on watered tiles (a shape, not just a colour).
 function drawSoil(ctx, S, sx0, sy0, sx1, sy1, u) {
   const dry = pattern(ctx, 'tex-soil', u), wet = pattern(ctx, 'tex-soil-wet', u);
   const tiles = [];
+  // A tile the hoe is still swinging at stays untilled until the impact frame (its soil puff is still queued).
+  const pend = R.fxQueue && R.fxQueue.length ? new Set(R.fxQueue.filter((q) => q.kind === 'dirt').map((q) => q.x + ',' + q.y)) : null;
   for (const [k, st] of Object.entries(S.soil)) {
+    if (pend && pend.has(k)) continue;
     const [x, y] = k.split(',').map(Number);
     if (x < sx0 - 1 || x > sx1 || y < sy0 - 1 || y > sy1) continue;
     tiles.push([x, y, st]);
@@ -626,15 +649,19 @@ function drawSoil(ctx, S, sx0, sy0, sx1, sy1, u) {
   const pd = new Path2D(), pw = new Path2D();
   for (const [x, y, st] of tiles) (st === 2 ? pw : pd).rect(x * u, y * u, u, u);
   ctx.fillStyle = dry; ctx.fill(pd); ctx.fillStyle = wet; ctx.fill(pw);
-  const has = (x, y) => S.soil[x + ',' + y] != null;
-  const e = Math.max(1, u * 0.07);
+  const has = (x, y) => S.soil[x + ',' + y] != null && !(pend && pend.has(x + ',' + y));
+  const e = PX.on ? PX.S : Math.max(1, u * 0.07);
   for (const [x, y, st] of tiles) {
-    ctx.fillStyle = 'rgba(30,18,8,0.35)';
+    ctx.fillStyle = PX.on ? (st === 2 ? '#3a2616' : '#4e3420') : 'rgba(30,18,8,0.35)'; // pixel style: a solid rim colour, never a blend
     if (!has(x, y - 1)) ctx.fillRect(x * u, y * u, u, e);
     if (!has(x, y + 1)) ctx.fillRect(x * u, (y + 1) * u - e * 1.6, u, e * 1.6);
     if (!has(x - 1, y)) ctx.fillRect(x * u, y * u, e, u);
     if (!has(x + 1, y)) ctx.fillRect((x + 1) * u - e, y * u, e, u);
-    if (st === 2) {
+    if (st === 2 && PX.on) { // a 3x4 pixel droplet with a dark rim
+      const q = PX.S, dx = x * u + Math.round(u * 0.78), dy = y * u + Math.round(u * 0.1);
+      ctx.fillStyle = '#2c5a78'; ctx.fillRect(dx, dy, 3 * q, 4 * q);
+      ctx.fillStyle = '#96cdeb'; ctx.fillRect(dx + q, dy, q, 3 * q); ctx.fillStyle = '#e6f6ff'; ctx.fillRect(dx + q, dy + q, q, q);
+    } else if (st === 2) {
       ctx.fillStyle = 'rgba(150,205,235,0.9)';
       ctx.beginPath(); ctx.moveTo(x * u + u * 0.82, y * u + u * 0.1); ctx.quadraticCurveTo(x * u + u * 0.92, y * u + u * 0.28, x * u + u * 0.82, y * u + u * 0.31); ctx.quadraticCurveTo(x * u + u * 0.72, y * u + u * 0.28, x * u + u * 0.82, y * u + u * 0.1); ctx.fill();
     }
@@ -703,10 +730,10 @@ function star(ctx, s) {
 }
 function bubble(ctx, x, y, text, u, col) {
   if (PX.on) { // a square speech badge with a 1-px outline and a bitmap glyph
-    const w = pxTextWidth(text) + 6, h = PX_FONT_H + 4, bx = Math.round(x - w / 2), by = Math.round(y - h / 2);
-    ctx.fillStyle = '#1a1612'; ctx.fillRect(bx - 1, by - 1, w + 2, h + 2); ctx.fillStyle = col; ctx.fillRect(bx, by, w, h);
-    ctx.fillRect(Math.round(x) - 1, by + h + 1, 2, 2); ctx.fillStyle = '#1a1612'; ctx.fillRect(Math.round(x) - 1, by + h + 3, 2, 1);
-    pxText(ctx, text, bx + 3, by + 2, '#1a1612');
+    const S2 = PX.S, w = (pxTextWidth(text) + 6) * S2, h = (PX_FONT_H + 4) * S2, bx = Math.round(x - w / 2), by = Math.round(y - h / 2);
+    ctx.fillStyle = '#1a1612'; ctx.fillRect(bx - S2, by - S2, w + 2 * S2, h + 2 * S2); ctx.fillStyle = col; ctx.fillRect(bx, by, w, h);
+    ctx.fillRect(Math.round(x) - S2, by + h + S2, 2 * S2, 2 * S2); ctx.fillStyle = '#1a1612'; ctx.fillRect(Math.round(x) - S2, by + h + 3 * S2, 2 * S2, S2);
+    pxText(ctx, text, bx + 3 * S2, by + 2 * S2, '#1a1612', S2);
     return;
   }
   ctx.fillStyle = col; ctx.strokeStyle = '#1a1612'; ctx.lineWidth = Math.max(2, u * 0.05);
@@ -734,9 +761,9 @@ function weather(ctx, S, now, dt) {
       const sp = rain ? 0.9 : 0.1;
       const x = (noise(i, 1) * w + (R.reduced ? 0 : now * 0.05 * (rain ? 0.3 : 0.4) + (rain ? 0 : Math.sin(now / 900 + i) * 12 * R.dpr))) % w;
       const y = (noise(i, 2) * h + (R.reduced ? 0 : now * sp)) % h;
-      if (rain && PX.on) { const X = Math.round(x), Y = Math.round(y); ctx.fillRect(X, Y, 1, 3); ctx.fillRect(X - 1, Y + 3, 1, 2); } // a slanted 1-px streak
+      if (rain && PX.on) { const X = Math.round(x), Y = Math.round(y), q = PX.S; ctx.fillRect(X, Y, q, 3 * q); ctx.fillRect(X - q, Y + 3 * q, q, 2 * q); } // a slanted 1-px streak
       else if (rain) { ctx.moveTo(x, y); ctx.lineTo(x - 4 * R.dpr, y + 18 * R.dpr); }
-      else if (PX.on) { const r = noise(i, 3) < 0.5 ? 1 : 2; ctx.fillRect(Math.round(x), Math.round(y), r, r); } // flakes are 1-2 px squares
+      else if (PX.on) { const r = (noise(i, 3) < 0.5 ? 1 : 2) * PX.S; ctx.fillRect(Math.round(x), Math.round(y), r, r); } // flakes are 1-2 px squares (x the pixel scale)
       else { const r = (1.4 + noise(i, 3) * 1.6) * R.dpr; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
     }
     if (rain) {
@@ -870,13 +897,21 @@ function drawPxParticle(ctx, p, u, dt) {
     const t = 1 - p.life / p.max, r = Math.round(u * (0.15 + t * 0.45));
     ctx.globalAlpha = (1 - t) * 0.8; ctx.fillStyle = p.col;
     ctx.fillRect(X - r, Y, 2, 1); ctx.fillRect(X + r - 1, Y, 2, 1); ctx.fillRect(X - (r >> 1), Y - 1, r, 1); ctx.fillRect(X - (r >> 1), Y + 1, r, 1);
-  } else if (p.dust) {
-    const t = 1 - p.life / p.max, r = Math.max(1, Math.round(p.s * u * (0.6 + t * 1.4)));
-    ctx.globalAlpha = (1 - t) * 0.4; ctx.fillStyle = p.col; ctx.fillRect(X - r, Y - (r >> 1), r * 2, r);
+  } else if (p.dust) { // an opaque puff that thins out through ordered-dither steps (no translucent smear)
+    const t = 1 - p.life / p.max, r = Math.max(1, Math.round(p.s * u * (0.6 + t * 1.4))), lvl = t < 0.3 ? 0 : t < 0.65 ? 1 : 2;
+    const c = cached(`pxdust|${r}|${lvl}|${p.col}`, r * 2, r, (g) => {
+      g.fillStyle = p.col;
+      for (let y = 0; y < r; y++) for (let x = 0; x < r * 2; x++) {
+        const ex = (x + 0.5 - r) / r, ey = (y + 0.5 - r / 2) / (r / 2);
+        if (ex * ex + ey * ey > 1) continue;
+        if (lvl === 0 || (lvl === 1 && (x + y) % 2 === 0) || (lvl === 2 && x % 2 === 0 && y % 2 === 0)) g.fillRect(x, y, 1, 1);
+      }
+    });
+    ctx.globalAlpha = 1; ctx.drawImage(c, X - r, Y - (r >> 1));
   } else if (p.heart) {
     if (!pxHeartC) { pxHeartC = document.createElement('canvas'); pxHeartC.width = 9; pxHeartC.height = 8; const g = pxHeartC.getContext('2d'); PX_HEART.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') { g.fillStyle = '#5a1a26'; g.fillRect(x, y, 3, 3); } })); PX_HEART.forEach((row, y) => [...row].forEach((ch, x) => { if (ch === '#') { g.fillStyle = '#e8506a'; g.fillRect(x + 1, y + 1, 1, 1); } })); }
     const t = 1 - p.life / p.max;
-    ctx.globalAlpha = Math.min(1, (1 - t) * 2.5); ctx.drawImage(pxHeartC, Math.round((p.x + Math.sin(t * 9 + p.s * 40) * 0.08) * u) - 4, Y - 4);
+    ctx.globalAlpha = Math.min(1, (1 - t) * 2.5); ctx.drawImage(pxHeartC, Math.round((p.x + Math.sin(t * 9 + p.s * 40) * 0.08) * u) - 4 * PX.S, Y - 4 * PX.S, 9 * PX.S, 8 * PX.S);
   } else {
     p.vy += 0.0055 * dt;
     if (p.ground && p.y > p.ground && p.vy > 0) { p.y = p.ground; p.vy *= -0.35; p.vx *= 0.6; }
@@ -1041,10 +1076,10 @@ function nightPass(gm, P, cam, now) {
     const sp = PA.buildingSprite(S.ch, b, u); if (!sp) continue;
     const neon = NEON[S.ch] && NEON[S.ch][b.id];
     // Pixel style: the lit area is at least as wide as the sign board, so the whole name stays readable at night.
-    const boardR = PX.on ? (pxSmallWidth(b.label.toUpperCase()) + 10) / 2 / u + 0.2 : 0;
+    const boardR = PX.on ? ((pxSmallWidth(b.label.toUpperCase()) + 10) * PX.S) / 2 / u + 0.2 : 0;
     cut((sp.x + sp.w / 2) / u, (sp.y + sp.h * (PX.on ? 0.62 : b.w >= 10 ? 0.5 : 0.56)) / u, Math.max(boardR, neon ? (PX.on ? 1.2 : 1.7) : (PX.on ? 0.8 : 1.1)), neon ? 0.75 : 0.5, neon || '#ffe2b0', neon ? 0.8 : 0.35);
     if (PX.on) { // and the board itself is fully lit (a sign lamp), edge to edge
-      const bw = pxSmallWidth(b.label.toUpperCase()) + 4, bh = PX_SMALL_H + 4, bx = Math.round(sp.x + sp.w / 2 - bw / 2 - cam.x * u), by = Math.round(sp.y + sp.h * 0.62 - bh / 2 - cam.y * u);
+      const bw = (pxSmallWidth(b.label.toUpperCase()) + 4) * PX.S, bh = (PX_SMALL_H + 4) * PX.S, bx = Math.round(sp.x + sp.w / 2 - bw / 2 - cam.x * u), by = Math.round(sp.y + sp.h * 0.62 - bh / 2 - cam.y * u);
       n.fillStyle = 'rgba(0,0,0,0.9)'; n.fillRect(bx, by, bw, bh);
     }
   }
