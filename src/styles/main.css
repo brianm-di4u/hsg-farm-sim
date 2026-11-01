@@ -236,6 +236,13 @@ body.hc .toast { background: #000; }
   --disp-deco: "Silkscreen", "Pixelify Sans", sans-serif; --disp-mid: "Jersey 10", "Pixelify Sans", sans-serif; --disp-modern: "Micro 5", "Pixelify Sans", sans-serif;
   --r: 0px;
 }
+/* Below 2 device px per CSS px, DotGothic16's 1/16-em dots are a single device pixel and come out anti-aliased:
+   there the body face is the game's own 5x7 set, whose 1/8-em dots are 2 device px (the art's pixel). From 2x up,
+   DotGothic16 is already crisp and sets narrower, which phones need. */
+@media (max-resolution: 1.99dppx) {
+  :root.px { --font-body-serif: "Vapors Pixel", DotGothic16, sans-serif; --font-body-sans: "Vapors Pixel", DotGothic16, sans-serif;
+    --font-serif-victorian: "Vapors Pixel", DotGothic16, sans-serif; --font-sans: "Vapors Pixel", DotGothic16, sans-serif; }
+}
 .px .panel-s, .px .hbtn, .px .hotbar, .px .panel, .px .title-menu, .px .dialog .portrait {
   border: 8px solid transparent; border-image: var(--px-frame) 4 fill / 8px stretch; border-radius: 0;
   background: var(--ui-bg); background-clip: padding-box; /* the frame's fill colour, as a real background (contrast checks read it) */
@@ -250,11 +257,23 @@ body.hc .toast { background: #000; }
 .px .pad .knob, .px .tbtn { border-radius: 0; clip-path: polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%); }
 /* Pixel fonts are crisp only at whole multiples of their pixel unit (the root size, set by scene.js per device
    pixel ratio): body text at 1rem, titles at 2rem, nothing in between. */
-.px #app, .px #app * { font-size: 1rem !important; font-weight: 400 !important; }
+.px #app, .px #app * { font-size: 1rem !important; font-weight: 400 !important; line-height: 1.25 !important; }
+/* A 1.25 line keeps every baseline on a whole pixel (Vapors Pixel: 8 dots per em, so 1rem is 2 device px a dot). */
 .px #app h1, .px #app .title-logo, .px #app .h-big { font-size: 2rem !important; }
 /* Era display faces only at title size (2rem); small headings, the date and money use Silkscreen (8 px grid: crisp
    at 16 px) or the body face, so they stay legible. */
 .px .h-quest b, .px .panel h3 { font-family: Silkscreen, DotGothic16, sans-serif; letter-spacing: 0; }
+.px button, .px input, .px select, .px textarea { font-family: var(--font-body-sans); } /* form controls don't inherit fonts */
+/* The title wordmark in the game's own pixel face: 3rem = 6 device px per dot on desktop, no smooth shadow. */
+.px #app .title-wrap h1 { font-family: "Vapors Pixel", DotGothic16, sans-serif; /* at every density: 3rem is whole device px a dot */ font-size: 3rem !important; line-height: 1.25 !important; text-shadow: 4px 4px 0 #5a3418; }
+.px #app .title-wrap .sub { font-family: Silkscreen, DotGothic16, sans-serif; letter-spacing: 0; text-shadow: 2px 2px 0 rgba(0,0,0,.7); }
+.px .h-quest { max-width: 30rem; }
+/* List icons at their native pixel size (whole device pixels), centred in the 40 px cell, never resampled. */
+.px .li img, .px .li .ic-seed { width: 40px; height: 40px; object-fit: none; }
+/* Slot numbers on solid corner chips, so a digit never sits on the icon's pixels. */
+.px .slot .k, .px .slot .n { background: #18140f; color: #f4ecd8; padding: 0 2px; line-height: 1 !important; }
+.px .slot .k { left: 0; top: 0; }
+.px .slot .n { right: 0; bottom: 0; } /* the 5x7 face sets wider than a proportional one: goals keep one line each */
 .px .h-date, .px .h-money, .px .dialog .who { font-family: var(--font-body-sans); }
 .px #app .panel h2, .px #app .dialog .who { font-size: 2rem !important; }
 /* Phone: a compact pixel HUD (the frames are thick, so padding goes; the goals panel keeps one line). */
@@ -263,7 +282,9 @@ body.hc .toast { background: #000; }
   .px .panel-s, .px .hud-l { padding: 0 4px; }
   .px .h-quest { padding: 0 4px; }
   .px .h-quest b { display: inline; margin-right: 8px; }
-  .px .h-quest .q:nth-child(2) { display: inline; }
+  .px .h-quest .q:nth-child(2) { display: inline; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .px .h-quest { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .px .h-quest .q-long { display: none; } /* the phone keeps the count ("0/5") and the first goal on one line */
   .px .hbtn { width: 40px; height: 40px; }
   .px .h-energy .bar { min-width: 48px; }
 }

@@ -52,5 +52,10 @@ Profiles:
 | Phone 6× | ≥ 24 fps |
 | Everywhere | heap < 40 MB, pixel assets ≤ 4 MB per tier, ≤ 200 animated actors and ≤ 1000 particles on screen |
 
+**Measuring (from loop 4):** throttled frame times vary a lot from run to run on this machine (the same build and
+scene gave a 4× p95 from 18 to 122 ms). Each throttled scene is measured 3 times in one page
+(`perf-gpu.mjs --repeat=3`), and the gate uses the run with the median p95; every run's p95 is kept in
+`perf.json` (`runsP95`, in measuring order) so a slow first visit stays visible.
+
 The earlier provisional rule "worst frame ≤ 50 ms at 4×" failed even the unloaded base scene because of one-off
 spikes (GC, a first-visit bake), so it was replaced by the p95 rule above.

@@ -137,8 +137,9 @@ export function composePx(imgs, look, skinHex, face, frame, cw, ch, perDir = 7) 
   }
   for (const [im, row, n, tint] of parts) { const rp = !tint ? null : im === base && row === 0 ? skinRamp(tint) : ramp(tint); for (let s = 0; s < n; s++) fillMask(g, im, row + s, col, rp ? rp[s] : null, cw, ch); }
   // Headwear sits on the brow: the face window (skin and eyes below the brow line, rows 13-16) is redrawn over the
-  // hat, then beard and glasses over the face again.
-  if (perDir === 13 && look.hat && HAT_ROW[look.hat] != null) {
+  // hat, then beard and glasses over the face again. In profile a bonnet or headscarf wraps round the face and
+  // rightly hides it, so those keep the window to front views.
+  if (perDir === 13 && look.hat && HAT_ROW[look.hat] != null && !((look.hat === 'bonnet' || look.hat === 'scarf') && (face === 'left' || face === 'right'))) {
     const sk = skinRamp(skinHex);
     for (let s = 0; s < 3; s++) fillMask(g, base, 13 + s, col, sk[s], cw, ch);
     fillMask(g, base, 16, col, null, cw, ch);

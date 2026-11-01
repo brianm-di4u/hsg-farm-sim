@@ -22,7 +22,7 @@ The developer (the main session) writes CHANGES.md and inspects every capture be
 1. `node shared/tools/inline.mjs games/farm-sim`
 2. `HS_QUERY=style=pixel node shared/test-harness/run.mjs games/farm-sim --milestone px-loop-N` and the same without `HS_QUERY` (until the painted path is removed). Both must be all green: a hard gate.
 3. `node games/farm-sim/tools/shots-gpu.mjs review-loop-N --verify`, which also runs the pixel-integrity check (a hard gate).
-4. `node games/farm-sim/tools/perf-gpu.mjs --out=games/farm-sim/reviews/loop-N/perf.json`, then again with `--throttle=4 --viewports=mobile` and the **same** `--out`. The budget in `research/pixel-budget.md` is a hard gate.
+4. `node games/farm-sim/tools/perf-gpu.mjs --out=games/farm-sim/reviews/loop-N/perf.json`, then again with `--throttle=4 --viewports=mobile --repeat=3` and `--throttle=6 --viewports=mobile --repeat=3` and the **same** `--out`. The budget in `research/pixel-budget.md` is a hard gate.
 5. The developer opens every frame, close-up and strip, and writes `loop-N/CHANGES.md`.
 6. `node games/farm-sim/tools/review-prep.mjs N` writes `loop-N/brief.md`.
 7. Critics A and B in parallel (blind), then the advocate, then the judge (judge.md, with the final JSON block).

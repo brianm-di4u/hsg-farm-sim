@@ -1,0 +1,215 @@
+[
+  {
+    "id": "G-face-window-directions",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R19",
+      "desktop/R06",
+      "crops/R08-player",
+      "crops/R19-player",
+      "crops/R16-npcs",
+      "crops/R11-npcs"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Face window only on down and 3/4-down frames (facing half on side frames, never on back), clipped to the head mask; clear hat pixels inside it; give-way rule hides or offsets the whole sprite in one opaque draw (no alpha) and never hides a named NPC (Ezra). Test: zero skin pixels above the brow on back/side frames and no actor drawn with alpha < 1 in R04, R06, R08, R19.",
+    "priority": 1.5,
+    "selected": true
+  },
+  {
+    "id": "G-hoe-layering-and-settle",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Draw the tilled decal on the ground layer below actors; add 2 frames lowering the hoe instead of the 5->6 pop; emit a 3-4-frame opaque dust burst of 3-6 art-px clusters visible in frames 4-6; close the hands on the handle at the strike.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-ui-crisp-chips-and-overlaps",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "desktop/R02",
+      "desktop/R04",
+      "mobile/R11",
+      "desktop/R11",
+      "desktop/R01"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "Render slot numerals and stack counts from the 5x7 bitmap font or sprites with no sub-pixel or greyscale antialiasing (test: no fringe hues in chips), drawn above the icons; hide the hotbar under the phone dialogue; keep '(0/15)' on one line; pixel-sprite hearts; backing plate for the title subtitle.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-soft-overlays",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS1",
+    "evidence": [
+      "desktop/R03",
+      "desktop/R13",
+      "desktop/R07",
+      "desktop/R05"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Re-bake meadow tint and deep-water patches with hard 2-art-px edges and at most 2 tone steps (test: under 25 colours in a 260x190 meadow region of R03); replace translucent path/water and ramp slabs with opaque tiles; quantize window glows, sign halos and lamp-post glow to 2-3 ordered-dither bands. Also worth about +0.5 lighting.",
+    "priority": 0.375,
+    "selected": true
+  },
+  {
+    "id": "G-hat-silhouettes-side-back",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "strips/R13",
+      "crops/R17-player",
+      "crops/R19-player",
+      "crops/R06-player",
+      "crops/R11-npcs",
+      "crops/R16-npcs"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Redraw side and back frames with brim overhang of at most 2-3 art px so shoulders and arms show; pinched fedora crown (Ray), curved bill (Sam), June's ponytail, Walt's knickers and white stockings, Josiah's fur-cap tail.",
+    "priority": 0.375,
+    "selected": true
+  },
+  {
+    "id": "G-townsfolk-variety-and-shadows",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R10",
+      "desktop/R19"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "At least 6 townsfolk variants per era (sex, hat, coat, height) replacing the cloned bonnet women; path-constrain townsfolk to streets; add a 1-2-tone opaque contact-shadow ellipse under every person and the player.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-walk-secondary",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R13",
+      "strips/R13-mobile"
+    ],
+    "benchmark": "Rubric animation 7 descriptor",
+    "fix": "Arm swing visible in all four directions (after G-hat-silhouettes-side-back), a 1-art-px body and hat bob on contact frames, 1-px torso rotation on passing frames.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-light-falloff-and-grades",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "desktop/R06",
+      "desktop/R07",
+      "desktop/R09"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Replace the three concentric lamp rings with irregular dithered falloff that also lifts nearby sprites and facades; per-era warm-to-cool dusk and evening palette grades (18:20 lake must read as evening); pixel puddles or wet sheen on roads in rain. Rain darkening and full-frame fog already exist.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-farm-dressing",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R02",
+      "desktop/R17",
+      "desktop/R07",
+      "crops/R15-pen"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Break farm meadows with worn paths, stumps, rocks, bushes, work areas and era junk so no more than 30% of a farm frame is bare camo; distinct farmyard layout per era; dock posts, shadow and varied lake surface; re-key the goat's green patch.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-human-costume",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "L",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R02-player",
+      "crops/R04-player",
+      "crops/R03-player",
+      "crops/R17-player"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Per-person garment construction (seams, folds, deep sun-bonnet brim for Nora), signature props from research/refs/characters.md, and distinct per-era clothing so 1871 and 1931 men do not share a shirt and trousers; test that named people are identifiable in greyscale without labels.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-row-architecture",
+    "category": "authenticity",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R05",
+      "desktop/R06",
+      "desktop/R19"
+    ],
+    "fix": "One consistent Quapaw with its dome from 1922 on; Ozark as Spanish Colonial Revival with twin towers; distinct 1910s-20s brick and stucco bathhouses in the 1931 Row.",
+    "priority": 0.25,
+    "selected": false
+  },
+  {
+    "id": "G-asset-family-shading",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "L",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R15-pen",
+      "crops/R03-field",
+      "crops/R04-player"
+    ],
+    "benchmark": "chained-5.jpg; stardew-1.jpg",
+    "fix": "Give people 3-4-step hue-shifted ramps; reduce crop micro-highlights and animal speckle to clustered 3-4-tone shading on a per-era master palette (12 colours or fewer per sprite); one selective-outline rule (darkest ramp shade) across people, animals, props and buildings.",
+    "priority": 0.188,
+    "selected": false
+  }
+]

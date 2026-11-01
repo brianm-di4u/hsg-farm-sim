@@ -274,7 +274,7 @@ export function draw(gm, ui) {
     const sp = PA.lampSprite(l.k, u);
     // A lamp post standing in front of the player turns see-through, like trees, so it never hides them.
     const lampFront = l.post && l.y + 0.05 > pl.y && l.y - pl.y < 1.8 && Math.abs(l.x - pl.x) < 0.7;
-    if (sp) list.push({ y: l.y + 0.05, sil: l.k === 'fire' ? null : { c: sp.c, bx: l.x * u, by: (l.y + 0.05) * u, ox: sp.ox, oy: sp.oy }, d: () => { if (lampFront) ctx.globalAlpha = 0.45; ctx.drawImage(sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); ctx.globalAlpha = 1; if (l.k === 'fire') fireFlicker(ctx, l, u, now); } });
+    if (sp) list.push({ y: l.y + 0.05, sil: l.k === 'fire' ? null : { c: sp.c, bx: l.x * u, by: (l.y + 0.05) * u, ox: sp.ox, oy: sp.oy }, d: () => { if (lampFront) seeThrough(ctx, sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); else ctx.drawImage(sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); if (l.k === 'fire') fireFlicker(ctx, l, u, now); } });
     else if (l.post) list.push({ y: l.y, d: () => ctx.drawImage(objSprite({ t: 'lamp' }, P, u), (l.x - 0.5) * u, (l.y - 1.5) * u) });
   }
   // Pixel style, 1886 on: the springs as drawn props (stone spring boxes, the open display spring, the built soaking
@@ -309,8 +309,9 @@ export function draw(gm, ui) {
     list.push({ y: y + 0.9, d: () => {
       const st = sim.cropStage(c), sp = PA.cropSprite(c.id, st, u);
       const front = y + 0.9 > pl.y && y < pl.y + 1.2 && Math.abs(x + 0.5 - pl.x) < 0.8 && st >= 3;
-      if (front) ctx.globalAlpha = 0.5;
-      if (sp) ctx.drawImage(sp.c, (x + 0.5) * u + sp.ox, (y + 0.86) * u + sp.oy); else ctx.drawImage(cropSprite(c.id, st, u), x * u, (y - 0.4) * u);
+      if (front && !(PX.on && sp)) ctx.globalAlpha = 0.5;
+      if (sp && front && PX.on) seeThrough(ctx, sp.c, (x + 0.5) * u + sp.ox, (y + 0.86) * u + sp.oy);
+      else if (sp) ctx.drawImage(sp.c, (x + 0.5) * u + sp.ox, (y + 0.86) * u + sp.oy); else ctx.drawImage(cropSprite(c.id, st, u), x * u, (y - 0.4) * u);
       ctx.globalAlpha = 1;
       if (st === 4) ripeBadge(ctx, x, y, u, now);
     } });
@@ -392,7 +393,7 @@ export function draw(gm, ui) {
   }
   for (const it of list) it.d();
   // X-ray: a player hidden behind a building shows through as a faint copy (the Stardew / SNES convention).
-  if (R.playerHidden && R.playerSprite) { const p0 = R.playerSprite; ctx.globalAlpha = 0.45; ctx.drawImage(p0.c, p0.x, p0.y); ctx.globalAlpha = 1; }
+  if (R.playerHidden && R.playerSprite) { const p0 = R.playerSprite; seeThrough(ctx, p0.c, p0.x, p0.y); }
   R.playerHidden = false;
   // Name tags for people near the player.
   ctx.font = `bold ${Math.round(u * 0.3)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -542,6 +543,24 @@ function tintSilhouette(c, col) {
   if (!t) { t = document.createElement('canvas'); t.width = c.width; t.height = c.height; const g = t.getContext('2d'); g.drawImage(c, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = col; g.fillRect(0, 0, t.width, t.height); m.set(c, t); }
   return t;
 }
+// Pixel style see-through: half the sprite's pixels in a checkerboard, drawn opaque (the 16-bit way to show what is
+// behind; a 45% alpha blend makes off-palette ghost colours over the pixel art).
+const halfC = new WeakMap();
+function ditherHalf(c) {
+  let d = halfC.get(c);
+  if (!d) {
+    d = document.createElement('canvas'); d.width = c.width; d.height = c.height;
+    const g = d.getContext('2d'); g.drawImage(c, 0, 0); g.globalCompositeOperation = 'destination-out'; g.fillStyle = '#000';
+    for (let y = 0; y < d.height; y++) for (let x = y & 1; x < d.width; x += 2) g.fillRect(x, y, 1, 1);
+    halfC.set(c, d);
+  }
+  return d;
+}
+// Draw a sprite see-through: dithered in the pixel style, at 45% alpha in the painted one.
+function seeThrough(ctx, c, x, y) {
+  if (PX.on) { ctx.drawImage(ditherHalf(c), x, y); return; }
+  ctx.globalAlpha = 0.45; ctx.drawImage(c, x, y); ctx.globalAlpha = 1;
+}
 function silShadow(ctx, it, u, sun) {
   const m = ctx.getTransform();
   ctx.setTransform(1, 0, -sun.sx * 0.85, -sun.sy * 0.85, m.e + it.bx, m.f + it.by);
@@ -553,7 +572,8 @@ function silShadow(ctx, it, u, sun) {
 function blobShadow(ctx, x, y, r, u, sun) {
   ctx.globalAlpha = Math.min(0.5, sun.a * 1.6);
   ctx.fillStyle = '#0c1410';
-  if (PX.on) { const e = pxEllipse(r * u, r * u * 0.38); ctx.drawImage(e, (x + sun.sx * 0.12) * u - e.width / 2, (y - 0.04) * u - e.height / 2); }
+  // Pixel style: wider and a little lower, so the contact shadow shows round the feet instead of hiding under them.
+  if (PX.on) { const e = pxEllipse(r * 1.4 * u, r * u * 0.42); ctx.drawImage(e, Math.round((x + sun.sx * 0.12) * u - e.width / 2), Math.round((y + 0.02) * u - e.height / 2)); }
   else { ctx.beginPath(); ctx.ellipse((x + sun.sx * 0.12) * u, (y - 0.04) * u, r * u, r * u * 0.38, 0, 0, 7); ctx.fill(); }
   ctx.globalAlpha = 1;
 }
@@ -605,7 +625,7 @@ function objEntry(ctx, o, x, y, P, u, pl) {
       // See-through when the player walks behind the canopy.
       const px = pl.x * u, py = (pl.y - 0.6) * u;
       const behind = pl.y < y + 0.92 && px > bx + sp.ox + u * 0.2 && px < bx + sp.ox + sp.c.width - u * 0.2 && py > by + sp.oy && py < by;
-      return { y: y + 0.95, sil: { c: sp.c, bx, by, ox: sp.ox, oy: sp.oy }, d: () => { if (behind) ctx.globalAlpha = 0.45; ctx.drawImage(sp.c, bx + sp.ox, by + sp.oy); ctx.globalAlpha = 1; } };
+      return { y: y + 0.95, sil: { c: sp.c, bx, by, ox: sp.ox, oy: sp.oy }, d: () => { if (behind) seeThrough(ctx, sp.c, bx + sp.ox, by + sp.oy); else ctx.drawImage(sp.c, bx + sp.ox, by + sp.oy); } };
     }
   } else if (o.t !== 'pen') {
     const sp = PA.propSprite(o.t, u, x, y);
@@ -953,6 +973,22 @@ function fogSprite() {
   }
   return fogC;
 }
+// Pixel style: the same fog banks at art resolution (one sprite pixel per art pixel), quantised to three alpha steps
+// through a 4x4 ordered dither, so the fog has pixel-art edges instead of a smooth blur over the scene.
+const pxFogC = new Map();
+function pxFogSprite(size) {
+  let c = pxFogC.get(size); if (c) return c;
+  const src = fogSprite(); c = document.createElement('canvas'); c.width = c.height = size;
+  const g = c.getContext('2d'); g.drawImage(src, 0, 0, size, size);
+  const im = g.getImageData(0, 0, size, size), d = im.data;
+  const B = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const i = (y * size + x) * 4, v = Math.min(3, (d[i + 3] / 255) / 0.5 * 3), lv = Math.floor(v) + (v % 1 > (B[(y & 3) * 4 + (x & 3)] + 0.5) / 16 ? 1 : 0);
+    d[i] = 240; d[i + 1] = 244; d[i + 2] = 246; d[i + 3] = Math.round(Math.min(3, lv) / 3 * 0.5 * 255);
+  }
+  g.putImageData(im, 0, 0); pxFogC.set(size, c);
+  return c;
+}
 // Pixel style: lamp pools are a few hard-edged rings of light rather than a smooth gradient over the pixel art.
 // `band` (default, after research/pixel-tradeoffs.md §10: Harvest Moon-style stepped light) leaves plain rings,
 // `dither` blends neighbouring rings with a 4x4 Bayer pattern, `smooth` keeps the painted style's gradients
@@ -1014,12 +1050,12 @@ function nightPass(gm, P, cam, now) {
   if (S.weather === 'rain') { n.fillStyle = PX.on ? 'rgba(34,46,70,0.32)' : 'rgba(40,52,72,0.2)'; n.fillRect(0, 0, w, h); }
   if (S.weather === 'snow') { n.fillStyle = 'rgba(214,226,240,0.12)'; n.fillRect(0, 0, w, h); }
   if (fog) {
-    const f = fogSprite(), fs = 256 * u / 64 / NS;
+    const fs = Math.round(256 * u / 64 / NS), f = PX.on ? pxFogSprite(fs) : fogSprite();
     // Pixel style: lighter fog layers, so the gameplay layer stays readable through it.
     for (const [sp, a, k] of PX.on ? [[0.006, 0.3, 0], [0.011, 0.2, 1]] : [[0.006, 0.55, 0], [0.011, 0.4, 1]]) {
       n.globalAlpha = a * fog;
       const ox = -(((cam.x * u / NS) * (1 + k * 0.3) + (R.reduced ? 0 : now * sp)) % fs) - fs, oy = -(((cam.y * u / NS) * (1 + k * 0.3)) % fs) - fs;
-      for (let y = oy; y < h; y += fs) for (let x = ox; x < w; x += fs) n.drawImage(f, x, y, fs, fs);
+      for (let y = oy; y < h; y += fs) for (let x = ox; x < w; x += fs) n.drawImage(f, PX.on ? Math.round(x) : x, PX.on ? Math.round(y) : y, fs, fs);
     }
     n.globalAlpha = 1;
     n.fillStyle = `rgba(232,238,240,${(PX.on ? 0.1 : 0.22) * fog})`; n.fillRect(0, 0, w, h);
@@ -1115,17 +1151,23 @@ function townsfolk(gm, now) {
     for (let i = 0; i < n; i++) {
       const r = rows[i % rows.length], h = (k) => noise(i, S.ch, 900 + k);
       const woman = h(1) < 0.45, dress = woman && S.ch < 5;
-      list.push({ id: `folk${S.ch}-${i}`, x: 0, y: r[0] + 0.55 + h(3) * 0.3, x0: r[1] + 0.5, x1: r[2] + 0.5, off: h(2) * 2, speed: 1.3 + h(5) * 0.7, step: 0,
+      list.push({ id: `folk${S.ch}-${i}`, x: 0, y: 0, y0: r[0] + 0.55 + h(3) * 0.3, x0: r[1] + 0.5, x1: r[2] + 0.5, off: h(2) * 2, speed: 1.3 + h(5) * 0.7, step: 0,
         look: { shirt: F.shirts[Math.floor(h(6) * F.shirts.length)], pants: F.pants[Math.floor(h(7) * F.pants.length)], hat: woman && S.ch <= 3 ? 'bonnet' : F.hats[Math.floor(h(8) * F.hats.length)], hair: HAIR[Math.floor(h(9) * HAIR.length)], skin: Math.floor(h(10) * 5), dress, ponytail: woman && S.ch >= 5, apron: dress && h(11) < 0.4 ? '#e8e0cc' : undefined } });
     }
     R.folk = { key, list };
   }
   // Positions are a function of the clock (tiles per second, back and forth), so pinned-clock captures repeat exactly.
+  const obs = [S.player, ...Object.values(S.npcs).filter((n) => n && !n.hidden && n.x != null)];
   for (const w of R.folk.list) {
     const len = w.x1 - w.x0, t = R.reduced ? w.off * len : (now / 1000) * w.speed + w.off * len, ph = ((t % (2 * len)) + 2 * len) % (2 * len);
     w.x = w.x0 + (ph < len ? ph : 2 * len - ph); w.face = ph < len ? 'right' : 'left'; w.step = t * 4.5;
+    // Passers-by give way: within 1.8 tiles of the player or a neighbour they drift up to 1.4 tiles to the far side,
+    // and one that would still overlap is not drawn (render-only walkers never stand in someone's sprite).
+    w.y = w.y0; w.hide = false;
+    for (const o of obs) { const dx = Math.abs(w.x - o.x), dy = w.y0 - o.y; if (dx < 1.8 && Math.abs(dy) < 1.6) w.y += (dy >= 0 ? 1 : -1) * 1.4 * (1 - dx / 1.8); }
+    for (const o of obs) if (Math.abs(w.x - o.x) < 0.95 && Math.abs(w.y - o.y) < 1.3) w.hide = true; // a figure is 1.5 tiles tall
   }
-  return R.folk.list;
+  return R.folk.list.filter((w) => !w.hide);
 }
 
 // ---------- complexity ladder (tools/perf-ladder.mjs) ----------

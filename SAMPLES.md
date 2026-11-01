@@ -238,4 +238,7 @@ bullet, ellipsis, arrows, ×, ✓) as WOFF2 (`vendor/fonts/*.woff2`; licence tex
 | Jersey 10 | `jersey-10.woff2` | 1955 display |
 | Micro 5 | `micro-5.woff2` | 2026 display |
 
-The 5×7 bitmap font for in-world text (`src/js/render/pxfont.js`) is original to this game.
+The 5×7 bitmap font for in-world text (`src/js/render/pxfont.js`) is original to this game. Since loop 4 the same
+glyphs also ship as a webfont, **Vapors Pixel** (`vendor/fonts/vapors-pixel.woff2`, built by `tools/build-pxfont.py`
+with true descenders and extra punctuation). It is the body face below 2 device px per CSS px, where DotGothic16's
+1-device-px dots come out anti-aliased, and the title wordmark at every density.

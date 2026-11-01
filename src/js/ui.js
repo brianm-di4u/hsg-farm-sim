@@ -69,7 +69,7 @@ export function hud(gm) {
     last.quest = sig;
     const open = goals.filter((q) => !S.quests[q.id].done);
     const done = goals.length - open.length;
-    qs('#h-quest').innerHTML = `<b>Chapter ${S.ch} goals · ${done}/${goals.length}</b>` + (open.length ? open.slice(0, 3).map((q) => `<div class="q">◇ ${esc(q.title)} <span class="muted">${esc(sim.progressText(gm, q))}</span></div>`).join('')
+    qs('#h-quest').innerHTML = `<b><span class="q-long">Chapter ${S.ch} goals · </span>${done}/${goals.length}</b>` + (open.length ? open.slice(0, 3).map((q) => `<div class="q">◇ ${esc(q.title)} <span class="muted">${esc(sim.progressText(gm, q))}</span></div>`).join('')
       : `<div class="q">✓ All goals done. Sleep to turn the era.</div>`);
   }
   hotbar(gm);
@@ -274,10 +274,12 @@ export function shopScreen(gm, tab = 'buy') {
   if (tab === 'buy') {
     body = `<ul class="list">${sim.shopList(S).map((e) => {
       const name = e.name || D.itemName(e.id);
-      const icon = e.id === 'animal' ? iconURL(D.ANIMALS[D.CHAPTERS[S.ch].animal].product) : e.id === 'brickhouse' ? iconURL('stone') : iconURL(e.id);
+      // Packed art where there is some (livestock shows the animal itself), the code-drawn icon otherwise.
+      const animal = D.CHAPTERS[S.ch].animal;
+      const ic = e.id === 'animal' ? PA.iconHtml(animal) || `<img alt="" src="${iconURL(D.ANIMALS[animal].product)}">` : icon(e.id === 'brickhouse' ? 'stone' : e.id);
       const crop = e.id.startsWith('seed:') ? D.CROPS[e.id.slice(5)] : null;
       const one = e.id === 'animal' || e.id === 'brickhouse';
-      return `<li class="li"><img alt="" src="${icon}"><div class="grow"><b>${esc(name)}</b>${crop ? `<div class="small muted">${crop.days} days · ${crop.seasons.map((s) => D.SEASON_NAME[s]).join('/')}${crop.regrow ? ` · regrows every ${crop.regrow}` : ''} · sells ${money(D.sellPrice(e.id.slice(5), S.ch))}</div>` : e.id === 'animal' ? `<div class="small muted">${S.animals.length}/${D.PEN_MAX} in the pen</div>` : ''}</div>
+      return `<li class="li">${ic}<div class="grow"><b>${esc(name)}</b>${crop ? `<div class="small muted">${crop.days} days · ${crop.seasons.map((s) => D.SEASON_NAME[s]).join('/')}${crop.regrow ? ` · regrows every ${crop.regrow}` : ''} · sells ${money(D.sellPrice(e.id.slice(5), S.ch))}</div>` : e.id === 'animal' ? `<div class="small muted">${S.animals.length}/${D.PEN_MAX} in the pen</div>` : ''}</div>
         <span class="price">${money(e.price)}</span><button class="btn sm" data-act="buy" data-arg="${e.id}|1" ${S.money >= e.price ? '' : 'disabled'}>Buy</button>${one ? '' : `<button class="btn sm" data-act="buy" data-arg="${e.id}|5" ${S.money >= e.price * 5 ? '' : 'disabled'}>×5</button>`}</li>`;
     }).join('')}</ul>`;
   } else {

@@ -144,6 +144,11 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
     pg.globalAlpha = 0.22; pg.fillStyle = shade(P.grass, -0.4); pg.fill(a.fill);
     const b = fieldRegion(x0, y0, n, u / q, (px, py) => vnoise(px * 0.2 + 9, py * 0.2, 47) * 0.8 + vnoise(px * 0.8, py * 0.8, 48) * 0.2 - 0.62);
     pg.globalAlpha = 0.18; pg.fillStyle = shade(P.grass, 0.4); pg.fill(b.fill);
+    if (PX.on) { // hard patch edges: the fill's anti-aliased rim cells become all or nothing (the canvas is code-made, so readable)
+      const im = pg.getImageData(0, 0, pc.width, pc.height), d = im.data;
+      for (let i = 3; i < d.length; i += 4) if (d[i]) { const k = d[i] >= 23 ? 0.22 : d[i] >= 12 ? 0.18 : 0; d[i] = Math.round(k * 255); }
+      pg.putImageData(im, 0, 0);
+    }
     // Pixel style: at 2 art px per cell and unsmoothed, so the patches have crisp edges in 2x2 steps (no blurred blobs).
     ctx.save(); if (PX.on) ctx.imageSmoothingEnabled = false; else ctx.imageSmoothingQuality = 'high'; ctx.drawImage(pc, x0 * u, y0 * u, pc.width * q, pc.height * q); ctx.restore();
   }
@@ -262,6 +267,7 @@ function fieldRows(ctx, world, u, P) {
 // darker clover and the odd pebble. Baked with the chunk; purely visual.
 const BLOOM = { sp: ['#f4f0e4', '#f2d24a', '#b67ad8', '#e88aa8'], su: ['#f2d24a', '#f4f0e4', '#e8803a'], fa: ['#d8a040', '#c8642a', '#9a4a2a'], wi: [] };
 function decals(ctx, world, tx0, ty0, size, u, P) {
+  if (PX.on) return pxDecals(ctx, world, tx0, ty0, size, u, P);
   const g = world.g, cols = BLOOM[P.sea] || [];
   for (let y = Math.max(0, ty0); y < Math.min(H, ty0 + size); y++) for (let x = Math.max(0, tx0); x < Math.min(W, tx0 + size); x++) {
     if (g[y * W + x] !== G.GRASS) continue;
@@ -301,6 +307,48 @@ function decals(ctx, world, tx0, ty0, size, u, P) {
         ctx.fillStyle = i % 2 ? '#d8d4ca' : '#9a968c'; ctx.beginPath(); ctx.ellipse(sx, sy, r, r * 0.72, 0, 0, 7); ctx.fill();
         ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.beginPath(); ctx.ellipse(sx - r * 0.3, sy - r * 0.3, r * 0.35, r * 0.2, 0, 0, 7); ctx.fill();
       }
+    }
+  }
+}
+// Pixel style: the same meadow things as hard-edged pixel stamps on the art grid (tiny anti-aliased ellipses
+// read as soft smudges at 32 px a tile): clover tufts, 5-pixel flowers with a dark stem pixel, pebbles with a
+// highlight, reed stalks and bank stones. Same noise, so they sit where the painted style puts them.
+function pxDecals(ctx, world, tx0, ty0, size, u, P) {
+  const g = world.g, cols = BLOOM[P.sea] || [], q = PX.S, dark = shade(P.grass, -0.3), darker = shade(P.grass, -0.5);
+  const at = (fx, fy) => [Math.round(fx * u), Math.round(fy * u)];
+  for (let y = Math.max(0, ty0); y < Math.min(H, ty0 + size); y++) for (let x = Math.max(0, tx0); x < Math.min(W, tx0 + size); x++) {
+    if (g[y * W + x] !== G.GRASS) continue;
+    const n = (k) => noise(x, y, 500 + k);
+    if (n(0) < 0.28) for (let i = 0; i < 3; i++) { // a tuft: three blades, the middle one taller
+      const [X, Y] = at(x + n(i + 1) * 0.85 + 0.05, y + n(i + 4) * 0.8 + 0.15);
+      ctx.fillStyle = darker; ctx.fillRect(X - q, Y - q, q, q); ctx.fillRect(X + q, Y - q, q, q); ctx.fillRect(X, Y - 2 * q, q, 2 * q);
+    }
+    if (cols.length && n(10) < (P.sea === 'sp' ? 0.2 : 0.12)) {
+      const fx = x + 0.2 + n(11) * 0.6, fy = y + 0.2 + n(12) * 0.6, col = cols[Math.floor(n(13) * cols.length)];
+      for (let i = 0; i < 4; i++) {
+        const [X, Y] = at(fx + (n(14 + i) - 0.5) * 0.4, fy + (n(18 + i) - 0.5) * 0.3);
+        if (P.sea === 'fa') { ctx.fillStyle = col; ctx.fillRect(X, Y, 2 * q, q); continue; } // a fallen leaf
+        ctx.fillStyle = darker; ctx.fillRect(X, Y + q, q, q); // stem
+        ctx.fillStyle = col; ctx.fillRect(X - q, Y - q, 3 * q, q); ctx.fillRect(X, Y - 2 * q, q, 3 * q);
+        ctx.fillStyle = '#f8e070'; ctx.fillRect(X, Y - q, q, q);
+      }
+    }
+    if (n(30) < 0.05) { const [X, Y] = at(x + n(31) * 0.8 + 0.1, y + n(32) * 0.8 + 0.1); ctx.fillStyle = '#5e5a52'; ctx.fillRect(X - q, Y, 4 * q, 2 * q); ctx.fillStyle = '#9a968c'; ctx.fillRect(X - q, Y - q, 4 * q, 2 * q); ctx.fillStyle = '#c4c0b6'; ctx.fillRect(X, Y - q, q, q); }
+    const wet = (dx, dy) => { const v = g[Math.max(0, Math.min(H - 1, y + dy)) * W + Math.max(0, Math.min(W - 1, x + dx))]; return (v === G.WATER || v === G.DEEP) && !world.lake[Math.max(0, Math.min(H - 1, y + dy)) * W + Math.max(0, Math.min(W - 1, x + dx))]; };
+    const side = wet(1, 0) ? 1 : wet(-1, 0) ? -1 : 0;
+    if (!side) continue;
+    const bx = side > 0 ? x + 0.82 : x + 0.18;
+    if (n(40) < 0.55 && P.sea !== 'wi') for (let i = 0; i < 7; i++) { // reed stalks, 1 art px wide, a cattail head out of spring
+      const [X, Y] = at(bx + (n(41 + i) - 0.5) * 0.3, y + 0.2 + n(48 + i) * 0.7), h = Math.round(u * (0.25 + n(55 + i) * 0.3)), lean = n(62 + i) < 0.5 ? -q : q;
+      ctx.fillStyle = i % 3 ? dark : (P.sea === 'fa' ? '#b08a4a' : '#7a8a3a');
+      ctx.fillRect(X, Y - (h >> 1), q, h >> 1); ctx.fillRect(X + lean, Y - h, q, (h >> 1) + q);
+      if (i === 2 && P.sea !== 'sp') { ctx.fillStyle = '#6a4a2a'; ctx.fillRect(X + lean, Y - h - 3 * q, q, 3 * q); }
+    }
+    for (let i = 0; i < 3; i++) if (n(70 + i) < 0.5) { // bank stones: dark base, body, one highlight pixel
+      const [X, Y] = at(bx + (n(73 + i) - 0.5) * 0.25, y + 0.15 + n(76 + i) * 0.7), r = Math.max(2, Math.round(u * (0.06 + n(79 + i) * 0.06)));
+      ctx.fillStyle = '#3e3a32'; ctx.fillRect(X - r, Y - (r >> 1) + q, 2 * r, r);
+      ctx.fillStyle = i % 2 ? '#d8d4ca' : '#9a968c'; ctx.fillRect(X - r + q, Y - (r >> 1), 2 * r - 2 * q, r);
+      ctx.fillStyle = i % 2 ? '#f4f2ec' : '#c4c0b6'; ctx.fillRect(X - r + 2 * q, Y - (r >> 1), q, q);
     }
   }
 }

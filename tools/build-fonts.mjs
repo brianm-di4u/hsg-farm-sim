@@ -18,7 +18,8 @@ const FACES = [
   ['Nunito Sans', 400, 'nunito-sans-latin-400-normal.woff2'],           // body, 1931–2026
   ['Nunito Sans', 700, 'nunito-sans-latin-700-normal.woff2'],
   // Pixel style (OFL, from github.com/google/fonts, subset to Latin-1 + a few symbols with fontTools)
-  ['DotGothic16', 400, 'dotgothic16.woff2'],                             // body (16 px grid: crisp at 1x, 2x, 3x)
+  ['Vapors Pixel', 400, 'vapors-pixel.woff2'],                           // body: the game's own 5x7 glyphs (tools/build-pxfont.py)
+  ['DotGothic16', 400, 'dotgothic16.woff2'],                             // symbols the 5x7 set lacks (16 px grid: crisp at 1x, 2x, 3x)
   ['Pixelify Sans', '400 700', 'pixelify-sans.woff2'],                   // fallback
   ['Jacquard 12', 400, 'jacquard-12.woff2'],                             // 1807, 1871 display
   ['Jacquarda Bastarda 9', 400, 'jacquarda-bastarda-9.woff2'],           // 1886 display

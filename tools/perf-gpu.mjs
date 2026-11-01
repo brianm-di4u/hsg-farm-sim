@@ -4,7 +4,7 @@
 // phone, 6 ≈ a low-end one). --software uses the harness's SwiftShader instead of the GPU.
 //
 //   node games/farm-sim/tools/perf-gpu.mjs [--viewports=desktop,mobile] [--throttle=4] [--query=style=pixel]
-//        [--software] [--out=games/farm-sim/reviews/loop-0/perf.json]
+//        [--software] [--only=snow,lake] [--repeat=3] [--out=games/farm-sim/reviews/loop-0/perf.json]
 //
 // Rows: { tier, viewport, scene, throttle, gpu, fps, p50, p95, worst, scriptMs, heapMB }. With --out, rows merge
 // into the file (same tier/viewport/scene/throttle/gpu replaced), so throttled and normal runs share one perf.json.
@@ -21,6 +21,9 @@ const args = process.argv.slice(2);
 const opt = (k, d) => { const a = args.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : d; };
 const VPS = opt('viewports', 'desktop,mobile').split(','), THROTTLE = +opt('throttle', '1'), OUT = opt('out', '');
 const QUERY = opt('query', 'style=pixel'), SOFT = args.includes('--software');
+// --only=snow,lake keeps the scenes whose name contains one of the words; --repeat=N measures each scene N times
+// and reports the run with the median p95 (throttled frame times vary a lot from run to run).
+const ONLY = opt('only', '') ? opt('only', '').split(',') : null, REPEAT = Math.max(1, +opt('repeat', '1'));
 const VIEW = { desktop: [{ width: 1280, height: 800 }, 1], mobile: [{ width: 390, height: 844 }, 3] };
 const SCENES = [
   ['1931 town, night, rain', { era: 4, at: 'town', time: 1290, weather: 'rain' }],
@@ -42,6 +45,9 @@ for (const vp of VPS) {
   await page.waitForFunction(() => !!window.__game);
   const tier = await page.evaluate(() => { const s = window.__game.getState(); return s.px ? 'T' + s.px.T : 'painted'; });
   for (const [name, sc] of SCENES) {
+    if (ONLY && !ONLY.some((w) => name.includes(w))) continue;
+    const runs = [];
+    for (let rep = 0; rep < REPEAT; rep++) {
     await page.evaluate((sc) => { window.__game.seed(7); window.__game.scene(sc); window.__game.act('closeAll'); window.__game.resume(); }, sc); // closeAll: a scene can open a quest card
     await page.waitForFunction(() => { const s = window.__game.getState(); return s.artPending === 0 && s.artLoaded >= s.artTotal; }, null, { timeout: 60000 }).catch(() => {});
     await page.waitForTimeout(800); // warm-up: first chunks, caches
@@ -65,9 +71,15 @@ for (const vp of VPS) {
     }));
     await page.keyboard.up('ArrowRight');
     await page.evaluate(() => window.__game.pause());
+    runs.push({ r, bake });
+    }
+    const inOrder = runs.map((x) => +x.r.p95.toFixed(1));
+    runs.sort((a, b) => a.r.p95 - b.r.p95);
+    const { r, bake } = runs[Math.floor((runs.length - 1) / 2)];
     const row = { tier, viewport: vp, scene: name, throttle: THROTTLE, gpu: !SOFT, fps: +r.fps.toFixed(1), p50: +r.p50.toFixed(1), p95: +r.p95.toFixed(1), worst: +r.worst.toFixed(0), scriptMs: +(+r.scriptMs).toFixed(2), heapMB: +r.heapMB.toFixed(1), bakeSettleMs: bake.settleMs, maxBakeMs: bake.maxBakeMs };
     rows.push(row);
-    console.log(`${tier} ${vp.padEnd(7)} ${THROTTLE}x ${SOFT ? 'sw ' : 'gpu'} ${name.padEnd(24)} ${String(row.fps).padStart(6)} fps  p95 ${row.p95} ms  worst ${row.worst} ms  script ${row.scriptMs} ms  heap ${row.heapMB} MB  bakes settle ${row.bakeSettleMs} ms (max ${row.maxBakeMs} ms)`);
+    if (REPEAT > 1) row.runsP95 = inOrder; // in measuring order
+    console.log(`${tier} ${vp.padEnd(7)} ${THROTTLE}x ${SOFT ? 'sw ' : 'gpu'} ${name.padEnd(24)} ${String(row.fps).padStart(6)} fps  p95 ${row.p95} ms${REPEAT > 1 ? ` (runs ${row.runsP95.join(', ')})` : ''}  worst ${row.worst} ms  script ${row.scriptMs} ms  heap ${row.heapMB} MB  bakes settle ${row.bakeSettleMs} ms (max ${row.maxBakeMs} ms)`);
   }
   await ctx.close();
 }

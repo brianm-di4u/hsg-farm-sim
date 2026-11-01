@@ -1,0 +1,24 @@
+- **Faces under headwear:** each character frame now carries a face window (skin and eyes below the brow line). It is drawn over any hat, so caps, bonnets, fedoras and toques sit on the brow and the eyes always show. Beards and glasses are redrawn on top.
+- **Skin shading:** skin has its own gentler ramp. The general hue shift had turned the shadow side of every face into a saturated red-brown smear.
+- **Hoe swing:**
+  - The figure rises for the wind-up, then the upper body drops onto the hips at the strike and impact (a crouch, feet planted).
+  - Facing down, the hoe is raised behind the head, then held beside the body instead of across the face.
+  - The tile stays grass until the blade lands. Then it turns to tilled soil with a puff of dust.
+  - The puff is opaque pixels thinning out through dither steps, not a translucent smear.
+  - The loose clod drawn beside the hoe icon is gone, so nothing floats beside the tool through the swing.
+- **Ground:**
+  - Grass texture seams are blended through ragged blobs at 2×2 clusters, not a 1-px checker.
+  - Meadow light and dark patches have crisp 2-px edges instead of blurred blobs.
+  - Grass tufts, flowers, pebbles, reeds and bank stones are hard-edged pixel stamps.
+  - Tilled soil has a solid rim colour and a pixel water droplet.
+- **Fog** is drawn at art resolution in three alpha steps with an ordered dither, at whole-pixel positions.
+- **Text and UI:**
+  - On screens below 2 device px per CSS px (the desktop captures), body text uses the game's own 5×7 pixel face. Each dot is 2 device px, the same as an art pixel. From 2× up (phones) DotGothic16 is already crisp and stays.
+  - Every line sits on whole pixels.
+  - Buttons use the pixel face too.
+  - The title wordmark is pixel lettering.
+  - Shop rows show the packed pixel icons (the hen is the hen sprite), at native size and never resampled.
+  - Slot numbers sit on solid corner chips.
+  - The phone goals panel is one line: the count and the first goal.
+- **Townsfolk** give way to the player and named neighbours: they drift aside, and one that would still overlap is not drawn.
+- **Captures:** R14 clears its tile with the scythe before hoeing, and tool strips are taller so the target tile shows.

@@ -174,9 +174,12 @@ def stamp_face(red, lab, pal, cw, chh):
         out[(out == 12 + k) & head] = skin_mid
     sx, sy = cw / SRC_W, chh / SRC_H
     w = max(1, round(cw / 21)); h = 2 * w
-    for n, my, mx in components(lab == 12 + eye):
-        if n < 6 or my > SRC_H * 0.62:  # eyes only (ignore specks, and the shoes low in the cell)
-            continue
+    found = [(n, my, mx) for n, my, mx in components(lab == 12 + eye) if n >= 6 and my <= SRC_H * 0.62]  # eyes only (not specks or shoes)
+    if not found:  # an eye broken into specks by the hair in front of it (dress-atlas profiles): one eye at their centroid
+        ys, xs = np.where((lab == 12 + eye) & (np.arange(SRC_H)[:, None] <= SRC_H * 0.62))
+        if len(ys) >= 6:
+            found = [(len(ys), ys.mean(), xs.mean())]
+    for n, my, mx in found:
         cx, cy = int(mx * sx), int(round(my * sy - h / 2))
         out[max(0, cy):cy + h, max(0, cx):cx + w] = 12 + eye
     return out
