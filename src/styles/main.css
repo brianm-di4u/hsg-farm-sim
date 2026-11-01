@@ -230,8 +230,8 @@ body.hc .toast { background: #000; }
    Pixel fonts (OFL) instead of the painted style's faces, square corners, and 9-slice pixel frames per era
    (--px-frame / --px-well, made in ui.js on a 2-CSS-px grid). */
 :root.px {
-  --font-body-serif: "Pixelify Sans", system-ui, sans-serif; --font-body-sans: "Pixelify Sans", system-ui, sans-serif;
-  --font-serif-victorian: "Pixelify Sans", system-ui, sans-serif; --font-sans: "Pixelify Sans", system-ui, sans-serif;
+  --font-body-serif: DotGothic16, "Pixelify Sans", system-ui, sans-serif; --font-body-sans: DotGothic16, "Pixelify Sans", system-ui, sans-serif;
+  --font-serif-victorian: DotGothic16, "Pixelify Sans", system-ui, sans-serif; --font-sans: DotGothic16, "Pixelify Sans", system-ui, sans-serif;
   --disp-frontier: "Jacquard 12", "Pixelify Sans", serif; --disp-victorian: "Jacquarda Bastarda 9", "Pixelify Sans", serif;
   --disp-deco: "Silkscreen", "Pixelify Sans", sans-serif; --disp-mid: "Jersey 10", "Pixelify Sans", sans-serif; --disp-modern: "Micro 5", "Pixelify Sans", sans-serif;
   --r: 0px;
@@ -250,6 +250,21 @@ body.hc .toast { background: #000; }
 .px .pad .knob, .px .tbtn { border-radius: 0; clip-path: polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%); }
 /* Pixel fonts are crisp only at whole multiples of their pixel unit (the root size, set by scene.js per device
    pixel ratio): body text at 1rem, titles at 2rem, nothing in between. */
-.px #app, .px #app * { font-size: 1rem !important; }
+.px #app, .px #app * { font-size: 1rem !important; font-weight: 400 !important; }
 .px #app h1, .px #app .title-logo, .px #app .h-big { font-size: 2rem !important; }
-
+/* Era display faces only at title size (2rem); small headings, the date and money use Silkscreen (8 px grid: crisp
+   at 16 px) or the body face, so they stay legible. */
+.px .h-quest b, .px .panel h3 { font-family: Silkscreen, DotGothic16, sans-serif; letter-spacing: 0; }
+.px .h-date, .px .h-money, .px .dialog .who { font-family: var(--font-body-sans); }
+.px #app .panel h2, .px #app .dialog .who { font-size: 2rem !important; }
+/* Phone: a compact pixel HUD (the frames are thick, so padding goes; the goals panel keeps one line). */
+@media (max-width: 699px) {
+  .px #hud { padding: 4px; gap: 4px; }
+  .px .panel-s, .px .hud-l { padding: 0 4px; }
+  .px .h-quest { padding: 0 4px; }
+  .px .h-quest b { display: inline; margin-right: 8px; }
+  .px .h-quest .q:nth-child(2) { display: inline; }
+  .px .hbtn { width: 40px; height: 40px; }
+  .px .h-energy .bar { min-width: 48px; }
+}
+.ic-animal { object-fit: contain; }

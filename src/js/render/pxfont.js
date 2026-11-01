@@ -67,3 +67,39 @@ export function pxLabel(text, color = '#ffffff', outline = '#141010') {
   labels.set(k, c);
   return c;
 }
+
+// A compact 3 x 5 capital font for building signs, so a sign board stays small on a 5-tile facade.
+const S5 = {
+  A: ['.#.', '#.#', '###', '#.#', '#.#'], B: ['##.', '#.#', '##.', '#.#', '##.'], C: ['.##', '#..', '#..', '#..', '.##'], D: ['##.', '#.#', '#.#', '#.#', '##.'],
+  E: ['###', '#..', '##.', '#..', '###'], F: ['###', '#..', '##.', '#..', '#..'], G: ['.##', '#..', '#.#', '#.#', '.##'], H: ['#.#', '#.#', '###', '#.#', '#.#'],
+  I: ['###', '.#.', '.#.', '.#.', '###'], J: ['..#', '..#', '..#', '#.#', '.#.'], K: ['#.#', '#.#', '##.', '#.#', '#.#'], L: ['#..', '#..', '#..', '#..', '###'],
+  M: ['#.#', '###', '###', '#.#', '#.#'], N: ['##.', '#.#', '#.#', '#.#', '#.#'], O: ['.#.', '#.#', '#.#', '#.#', '.#.'], P: ['##.', '#.#', '##.', '#..', '#..'],
+  Q: ['.#.', '#.#', '#.#', '##.', '.##'], R: ['##.', '#.#', '##.', '#.#', '#.#'], S: ['.##', '#..', '.#.', '..#', '##.'], T: ['###', '.#.', '.#.', '.#.', '.#.'],
+  U: ['#.#', '#.#', '#.#', '#.#', '###'], V: ['#.#', '#.#', '#.#', '#.#', '.#.'], W: ['#.#', '#.#', '###', '###', '#.#'], X: ['#.#', '#.#', '.#.', '#.#', '#.#'],
+  Y: ['#.#', '#.#', '.#.', '.#.', '.#.'], Z: ['###', '..#', '.#.', '#..', '###'], ' ': ['..', '..', '..', '..', '..'], '&': ['.#.', '#.#', '.#.', '#.#', '.##'],
+  '-': ['...', '...', '###', '...', '...'], '.': ['.', '.', '.', '.', '#'], "'": ['#', '#', '.', '.', '.'],
+  0: ['###', '#.#', '#.#', '#.#', '###'], 1: ['.#.', '##.', '.#.', '.#.', '###'], 2: ['##.', '..#', '.#.', '#..', '###'], 3: ['##.', '..#', '.#.', '..#', '##.'],
+  4: ['#.#', '#.#', '###', '..#', '..#'], 5: ['###', '#..', '##.', '..#', '##.'], 6: ['.##', '#..', '###', '#.#', '###'], 7: ['###', '..#', '.#.', '.#.', '.#.'],
+  8: ['###', '#.#', '###', '#.#', '###'], 9: ['###', '#.#', '###', '..#', '##.'],
+};
+const g5 = (ch) => S5[ch] || S5[ch.toUpperCase()] || S5[' '];
+export const PX_SMALL_H = 5;
+export function pxSmallWidth(text) { let w = 0; for (const ch of text) w += g5(ch)[0].length + 1; return Math.max(0, w - 1); }
+export function pxSmall(ctx, text, x, y, color) {
+  ctx.fillStyle = color; x = Math.round(x); y = Math.round(y);
+  for (const ch of text) { const g = g5(ch); for (let r = 0; r < 5; r++) for (let c = 0; c < g[r].length; c++) if (g[r][c] === '#') ctx.fillRect(x + c, y + r, 1, 1); x += g[0].length + 1; }
+}
+// The compact font with a 1-px dark outline (name tags over people).
+const smallLabels = new Map();
+export function pxSmallLabel(text, color = '#ffffff', outline = '#141010') {
+  const k = `${text}|${color}|${outline}`;
+  let c = smallLabels.get(k);
+  if (c) return c;
+  c = document.createElement('canvas'); c.width = pxSmallWidth(text) + 2; c.height = PX_SMALL_H + 2;
+  const g = c.getContext('2d');
+  for (const [dx, dy] of [[0, 1], [2, 1], [1, 0], [1, 2], [0, 0], [2, 2], [0, 2], [2, 0]]) pxSmall(g, text, dx, dy, outline);
+  pxSmall(g, text, 1, 1, color);
+  smallLabels.set(k, c);
+  return c;
+}
+

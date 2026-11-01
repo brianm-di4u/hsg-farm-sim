@@ -71,7 +71,7 @@ export const UI_THEME = {
 // Night tint and light color per chapter's light source.
 // Canvas sign faces per chapter (loaded from assets/fonts.css).
 export const SIGN_FONT = { 1: '"IM Fell English", Georgia, serif', 2: '"IM Fell English", Georgia, serif', 3: '"Playfair Display", Georgia, serif', 4: '"Josefin Sans", "Century Gothic", sans-serif', 5: 'Righteous, "Arial Black", sans-serif', 6: 'Outfit, system-ui, sans-serif' };
-export const FONT_FAMILIES = ['IM Fell English', 'Playfair Display', 'Josefin Sans', 'Righteous', 'Outfit', 'Alegreya', 'Nunito Sans'];
+export const FONT_FAMILIES = ['IM Fell English', 'Playfair Display', 'Josefin Sans', 'Righteous', 'Outfit', 'Alegreya', 'Nunito Sans', 'DotGothic16'];
 
 export const LIGHT = {
   fire: { col: '#ffb060', r: 3.2 }, lantern: { col: '#ffc070', r: 2.6 }, gas: { col: '#ffe0a0', r: 2.6 },

@@ -1,0 +1,208 @@
+[
+  {
+    "id": "G-night-facade-value-floor",
+    "category": "lighting",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "mobile/R05"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Clamp re-darkened facades to >= 35% value under a cool moon ramp with trim/doors one step lighter; widen each sign glow mask to its full board; 2-3 banded lamp-pool steps in at least 3 footprint shapes; remove the street-edge seam. Test: facade bbox mean luminance >= 0.30 in R05 and no full-width bright row > 20/255 above neighbours.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-ground-texture-calm",
+    "category": "pixel",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "crops/R04-player",
+      "crops/R03-field",
+      "desktop/R10",
+      "desktop/R07"
+    ],
+    "benchmark": "stardew-1.jpg; chained-5.jpg",
+    "fix": "Re-author grass, cobble, snow and water as a 2-tone base (dL <= 6) plus hand-placed 3-6 px clusters covering 10-15% of pixels; at least 4 water tile variants to break the diagonal repeat. Test: isolated single-pixel ratio < 5% per terrain tile.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-tool-body-poses",
+    "category": "animation",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14",
+      "strips/R13",
+      "desktop/R14"
+    ],
+    "benchmark": "pixel-anchors.md section 3.5",
+    "fix": "Five distinct body frames per direction matching the tool poses (arms up, lean, impact crouch, recoil), tool behind the head on wind-up; 6-10 px soil burst over 2-3 frames with 1-2 frames hit-stop; tile tilled on the impact frame; 6-frame walk with arm swing and 1-px bob; recapture R14 on an untilled field tile. Test: body pixels differ between every pair of frames 1-5.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-actor-upright-render",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R11",
+      "mobile/R11",
+      "desktop/R13",
+      "desktop/R15"
+    ],
+    "fix": "Find the shared actor rotation/lean and force angle 0 for idle NPCs and animals so Augustin stands upright and the ox stands instead of lying on its side; unit test asserts every actor draw angle is 0 outside scripted actions.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-town-life-dressing",
+    "category": "environment",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R09",
+      "desktop/R17",
+      "desktop/R07"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "3-6 ambient townsfolk and 1-2 era vehicles per town screen; benches, barrels, crates beside the existing posts; 1-px contact shadow under every prop; flowers, rocks and a worn path in the empty lower farm half; reeds, a boat and pier posts at the lake.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-ui-era-frames-icons",
+    "category": "ui",
+    "expectedGain": 1,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS6",
+    "evidence": [
+      "desktop/R18",
+      "desktop/R12",
+      "desktop/R11",
+      "desktop/R01"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "Nine-slice pixel frames per era material replacing CSS borders and web-form buttons; real Hen and Hardware icons; dialogue portrait at >= 2x with a name plate; slot numbers in a corner badge off the icon art; bitmap title font.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-npc-facing-and-labels",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "crops/R11-npcs",
+      "desktop/R16",
+      "mobile/R11"
+    ],
+    "fix": "NPCs turn to face the player when dialogue opens; show only the nearest label or de-collide so no label overlaps a sign or another label (frees TRADE); move Ezra's spawn outside the tent footprint.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-placeholder-props",
+    "category": "environment",
+    "expectedGain": 0.4,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R13",
+      "strips/R13",
+      "desktop/R08",
+      "desktop/R10"
+    ],
+    "fix": "Replace or remove the blank white rectangle on the 1871 cabin; redraw the box-shaped dog at the springs; swap flower boxes for bare or evergreen boxes in winter.",
+    "priority": 0.6,
+    "selected": false
+  },
+  {
+    "id": "G-headwear-silhouettes",
+    "category": "characters",
+    "expectedGain": 1.5,
+    "severity": 5,
+    "effort": "L",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R04-player",
+      "crops/R03-player",
+      "crops/R05-player",
+      "crops/R16-npcs",
+      "crops/R16-player"
+    ],
+    "benchmark": "stardew-1.jpg; seastars-2.jpg; research/refs/characters.md",
+    "fix": "Per-kind 4-direction hat sprites that break the head outline (2-px slouch brim, pinched fedora, face-surrounding sun bonnet, knotted red scarf, fur cap with tail, soft toque, billed cap); ankle-length skirt silhouette pre-1955; checklist hair/hat colours; eyes separated from nose block plus 1-px mouth. Test: each named person passes 4 of 5 checklist items in a grayscale 1x close-up beside the reference sheet.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-occlusion-see-through",
+    "category": "readability",
+    "expectedGain": 0.3,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "strips/R13",
+      "crops/R08-player"
+    ],
+    "fix": "Fade any post or lantern prop to 40% alpha while its bbox overlaps the player's bbox; in fog draw the faded post behind the player rather than through the face.",
+    "priority": 0.45,
+    "selected": false
+  },
+  {
+    "id": "G-phone-hud-compact",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R04",
+      "mobile/R11",
+      "mobile/R05"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Merge date, money/energy and the three buttons into one 44-CSS-px strip; collapse goals to a tap-to-expand single line; cap dialogue at 35% of viewport height. Test: HUD <= 12% of a 390x844 viewport.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-fog-evening-moods",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R08",
+      "desktop/R07",
+      "desktop/R06",
+      "desktop/R10"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "2-3 banded drifting fog sprites thinned within 2 tiles of the player instead of a flat alpha; warm low-sun ramp and sun glints on water for 2026 evening; street lamps on at dusk; rain splash sprites; make the claimed chimney smoke appear in winter and morning captures.",
+    "priority": 0.375,
+    "selected": false
+  }
+]

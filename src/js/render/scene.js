@@ -9,7 +9,7 @@ import { ART, PX, isPx, img as artImg } from './assets.js';
 import { bakeTerrain, terrainReady, drawPool, pattern } from './terrain.js';
 import * as PA from './painted.js';
 import { noise } from '../sim/rng.js';
-import { pxLabel, pxText, pxTextWidth, PX_FONT_H } from './pxfont.js';
+import { pxLabel, pxText, pxTextWidth, PX_FONT_H, pxSmall, pxSmallWidth, PX_SMALL_H, pxSmallLabel } from './pxfont.js';
 
 const CHUNK = 16;
 const CHUNK_CACHE = () => (PX.on ? 26 : 10);
@@ -64,9 +64,9 @@ function resizePixel(c) {
   if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
   R.ctx.imageSmoothingEnabled = false;
   R.k = k; R.dpr = dpr / k;
-  // UI type: the pixel body font's pixel unit is a tenth of its size, so the root size is picked to put that unit on
-  // whole device pixels (20 px at 1x, 15 px at 2x, 16.7 px at 3x); the stylesheet keeps text at whole multiples of it.
-  document.documentElement.style.fontSize = (Math.max(1, Math.round(1.7 * dpr)) / dpr) * 10 + 'px';
+  // UI type: the pixel body font (DotGothic16) has a 16-unit em, so a 16 px root puts its pixel on whole device pixels at
+  // 1x, 2x and 3x; fractional ratios round to the nearest whole multiple. The stylesheet keeps text at 1rem or 2rem.
+  document.documentElement.style.fontSize = (16 * Math.max(1, Math.round(dpr)) / dpr) + 'px';
   if (T !== R.u || R.ts !== T * k / dpr) { R.ts = T * k / dpr; R.u = R.cu = T; R.chunks.clear(); clearArt(); }
   R.offsetY = R.mobile ? -R.cssH * 0.1 : 0;
   R.night = null;
@@ -100,7 +100,7 @@ function chunkCanvas(gm, cx, cy, P) {
     bakeTerrain(ctx, gm.world, cx * CHUNK, cy * CHUNK, CHUNK, u, P, { snow });
     for (let y = cy * CHUNK - 1; y < Math.min(H, (cy + 1) * CHUNK + 1); y++) for (let x = cx * CHUNK - 1; x < Math.min(W, (cx + 1) * CHUNK + 1); x++) {
       const v = at(x, y);
-      if (v === G.POOL) drawPool(ctx, x, y, u, S.ch, gm.world.special[x + ',' + y], at);
+      if (v === G.POOL && !springProp(S.ch, x, y, gm.world.special[x + ',' + y])) drawPool(ctx, x, y, u, S.ch, gm.world.special[x + ',' + y], at);
       else if (v === G.BRIDGE || v === G.DOCK || v === G.RAIL || v === G.QUARRY) tileOverlay(ctx, v, x, y, u, P, at);
       else if (v === G.SAND && (x === 22 || x === 23) && at(x, y - 1) === G.WATER) { const wv = at(x, y + 1); if (wv === G.WATER || wv === G.DEEP) { ctx.fillStyle = shade(P.water, -0.1); ctx.fillRect(x * u, y * u, u, u); tileOverlay(ctx, G.BRIDGE, x, y, u, P, (xx, yy) => (yy === y && (xx === 22 || xx === 23) ? G.BRIDGE : G.GRASS)); } }
       else if (v === G.STREET && (at(x, y + 1) === G.WATER || at(x, y + 1) === G.DEEP)) boatRamp(ctx, x, y, u, P);
@@ -237,7 +237,7 @@ export function draw(gm, ui) {
   if (ART.dirty && (ART.pending === 0 || now - R.artFlushT > 600)) {
     ART.dirty = false; R.artFlushT = now;
     const mine = PA.buildingNames(S.ch);
-    if (ART.fresh.some((n) => n.startsWith('tex-') || mine.has(n))) R.chunks.clear();
+    if (ART.fresh.some((n) => n.startsWith('tex-') || n.startsWith('prop-') || mine.has(n))) R.chunks.clear();
     ART.fresh.length = 0;
   }
   // Chunks (baked at R.cu px per tile, drawn at R.u).
@@ -253,6 +253,8 @@ export function draw(gm, ui) {
   const list = [];
   const inView = (x, y) => x >= sx0 - 3 && x <= sx1 + 2 && y >= sy0 - 1 && y <= sy1 + 4;
   const pl = S.player;
+  if (!gm.world._fences) gm.world._fences = new Set(gm.world.fixed.filter((f) => f.t === 'pen').map((f) => f.x + ',' + f.y));
+  R.fenceAt = (x, y) => gm.world._fences.has(x + ',' + y) || (S.objs[x + ',' + y] && S.objs[x + ',' + y].t === 'fence');
   for (const [k, o] of Object.entries(S.objs)) { const [x, y] = k.split(',').map(Number); if (inView(x, y) && !(o.t === 'tuft' && S.weather === 'snow' && ART.on)) list.push(objEntry(ctx, o, x, y, P, u, pl)); }
   for (const f of gm.world.fixed) if (inView(f.x, f.y)) list.push(objEntry(ctx, f, f.x, f.y, P, u, pl));
   for (const l of gm.world.lamps) {
@@ -267,7 +269,16 @@ export function draw(gm, ui) {
     if (sp) list.push({ y: l.y + 0.05, sil: l.k === 'fire' ? null : { c: sp.c, bx: l.x * u, by: (l.y + 0.05) * u, ox: sp.ox, oy: sp.oy }, d: () => { if (lampFront) ctx.globalAlpha = 0.45; ctx.drawImage(sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); ctx.globalAlpha = 1; if (l.k === 'fire') fireFlicker(ctx, l, u, now); } });
     else if (l.post) list.push({ y: l.y, d: () => ctx.drawImage(objSprite({ t: 'lamp' }, P, u), (l.x - 0.5) * u, (l.y - 1.5) * u) });
   }
-  for (const [name, dx, dy, dw] of PA.DECO[S.ch] || []) {
+  // Pixel style, 1886 on: the springs as drawn props (stone spring boxes, the open display spring, the built soaking
+  // pool) in the sorted layer; the chunk bake leaves those tiles to them.
+  for (const k of Object.keys(gm.world.special)) {
+    const [x, y] = k.split(',').map(Number), kind = gm.world.special[k], name = springProp(S.ch, x, y, kind);
+    if (!name || !inView(x, y) || (kind === 'soak' && (gm.world.special[(x - 1) + ',' + y] === 'soak' || gm.world.special[x + ',' + (y - 1)] === 'soak'))) continue;
+    const sp = PA.decoSprite(name, 1, u); if (!sp) continue;
+    const bx = kind === 'soak' ? (x + 1) * u : (x + 0.5) * u, by = kind === 'soak' ? (y + 2) * u : (y + 0.95) * u;
+    list.push({ y: by / u, d: () => ctx.drawImage(sp.c, bx + sp.ox, by + sp.oy) });
+  }
+  for (const [name, dx, dy, dw] of [...(PA.DECO[S.ch] || []), ...(PX.on ? PA.STREET_PROPS[S.ch] || [] : [])]) {
     const tx = Math.floor(dx), ty = Math.floor(dy - 0.05), k = tx + ',' + ty;
     if (!inView(tx, ty) || S.objs[k] || S.crops[k]) continue;
     const sp = PA.decoSprite(name, dw, u);
@@ -280,7 +291,7 @@ export function draw(gm, ui) {
     // the player is redrawn as a see-through silhouette on top (below), so the building stays solid.
     if (sp && pl.y < b.y + b.h - 0.02 && pl.y * u > sp.y + u * 0.5 && pl.x * u > sp.x + u * 0.3 && pl.x * u < sp.x + sp.w - u * 0.3) R.playerHidden = true;
     if (sp) list.push({ y: b.y + b.h - 0.02, d: () => { ctx.drawImage(sp.c, sp.x, sp.y); if (b.label) buildingLabel(ctx, b, sp, u, P); } });
-    if (sp && S.ch >= 3 && b.id !== 'farmhouse' && b.w === 5) for (const fx of [b.x + 0.35, b.x + b.w - 0.35]) {
+    if (sp && S.ch >= 3 && b.id !== 'farmhouse' && b.w === 5 && !(PX.on && (sea === 'wi' || S.weather === 'snow'))) for (const fx of [b.x + 0.35, b.x + b.w - 0.35]) {
       const bs = PA.propSprite('bush', u * 0.8, Math.round(fx), b.y);
       if (bs) list.push({ y: b.y + b.h + 0.01, d: () => ctx.drawImage(bs.c, fx * u + bs.ox, (b.y + b.h - 0.02) * u + bs.oy) });
     }
@@ -320,9 +331,13 @@ export function draw(gm, ui) {
       questBubble(ctx, gm, id, n, u);
     } });
   }
+  if (PX.on && pxPeople && S.ch > 1) for (const w of townsfolk(gm, now)) {
+    if (!inView(Math.floor(w.x), Math.floor(w.y))) continue;
+    list.push({ y: w.y, sh: [w.x, w.y, 0.3], d: () => { const sp = PA.personSprite(w.id, w.look, w.face, R.reduced ? 'idle' : walkFrame(w.step), u); if (sp) ctx.drawImage(sp.c, w.x * u + sp.ox, w.y * u + sp.oy); } });
+  }
   const look = CHAPTERS[S.ch].look;
   list.push({ y: pl.y + 0.001, sh: [pl.x, pl.y, 0.3], d: () => {
-    const since = now - R.useT;
+    const since = now >= R.useT ? now - R.useT : 1e9; // a use stamped on a different clock (captures pin it) counts as long ago
     const frame = pxPeople && since < 300 ? 'use' + Math.min(4, Math.floor(since / 60)) : since < 110 ? 'use0' : since < 300 ? 'use1' : pl.moving && !R.reduced ? walkFrame(pl.walk / 7) : idleFrame(0);
     const sp = PA.personSprite('player' + S.ch, look, pl.face, frame, u);
     const swing = since < 300 && !R.reduced && sim.selected(S);
@@ -380,7 +395,7 @@ export function draw(gm, ui) {
     let x = n.x * u - w / 2, y = (n.y - 2.38) * u;
     for (let k = 0; k < 4 && tags.some((t) => x < t.x + t.w && t.x < x + w && y < t.y + t.h && t.y < y + h); k++) y -= h + u * 0.06;
     tags.push({ x, y, w, h });
-    if (PX.on) { const l = pxLabel(name); ctx.drawImage(l, Math.round(n.x * u - l.width / 2), Math.round(y + (h - l.height) / 2)); continue; }
+    if (PX.on) { const l = pxSmallLabel(name.toUpperCase()); ctx.drawImage(l, Math.round(n.x * u - l.width / 2), Math.round((n.y - 2.05) * u + (y - (n.y - 2.38) * u) * 0.5)); continue; }
     ctx.fillStyle = 'rgba(16,14,12,0.82)'; ctx.fillRect(x, y, w, h);
     ctx.fillStyle = '#ffffff'; ctx.fillText(name, x + w / 2, y + h / 2 + u * 0.01);
   }
@@ -455,7 +470,7 @@ function toolSwing(ctx, S, pl, since, u) {
 // impact with the head on the target tile, recover), a full tile long, so the arc and the contact read.
 const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15]];
 function pxToolSwing(ctx, it, pl, since, u) {
-  const f = Math.min(4, Math.floor(since / 60)), [dx, dy, ang] = SWING[f];
+  const f = Math.max(0, Math.min(4, Math.floor(since / 60))), [dx, dy, ang] = SWING[f];
   const side = pl.face === 'left' ? -1 : 1, s = u;
   const ic = PA.iconSprite(it.id, s) || iconCanvas(it.id, s);
   const down = pl.face === 'down', up = pl.face === 'up';
@@ -473,10 +488,10 @@ function fireFlicker(ctx, l, u, now) {
 }
 function buildingLabel(ctx, b, sp, u, P) {
   const [fg, bg] = LABEL_STYLE[P.ch] || LABEL_STYLE[1];
-  if (PX.on) { // a sign board: the era's colours, a 1-px darker frame and bitmap capitals
-    const text = b.label.toUpperCase(), tw = pxTextWidth(text);
-    const c = cached(`pxlbl|${text}|${P.ch}`, tw + 6, PX_FONT_H + 5, (g) => { g.fillStyle = shade(bg, -0.35); g.fillRect(0, 0, tw + 6, PX_FONT_H + 5); g.fillStyle = bg; g.fillRect(1, 1, tw + 4, PX_FONT_H + 3); pxText(g, text, 3, 2, fg); });
-    ctx.drawImage(c, Math.round(sp.x + sp.w / 2 - c.width / 2), Math.round(sp.y + sp.h * (b.w >= 10 ? 0.5 : 0.56) - c.height / 2));
+  if (PX.on) { // a small sign board over the door: the era's colours, a 1-px darker frame, 3x5 bitmap capitals
+    const text = b.label.toUpperCase(), tw = pxSmallWidth(text), w = tw + 4, h = PX_SMALL_H + 4;
+    const c = cached(`pxlbl|${text}|${P.ch}`, w, h, (g) => { g.fillStyle = shade(bg, -0.35); g.fillRect(0, 0, w, h); g.fillStyle = bg; g.fillRect(1, 1, w - 2, h - 2); pxSmall(g, text, 2, 2, fg); });
+    ctx.drawImage(c, Math.round(sp.x + sp.w / 2 - c.width / 2), Math.round(sp.y + sp.h * 0.62 - c.height / 2));
     return;
   }
   const style = SIGN_FONT[P.ch];
@@ -523,6 +538,12 @@ function blobShadow(ctx, x, y, r, u, sun) {
   else { ctx.beginPath(); ctx.ellipse((x + sun.sx * 0.12) * u, (y - 0.04) * u, r * u, r * u * 0.38, 0, 0, 7); ctx.fill(); }
   ctx.globalAlpha = 1;
 }
+// Which generated prop stands on a spring tile in the pixel style (1886 on, once its art has loaded), or null.
+function springProp(ch, x, y, kind) {
+  if (!PX.on || ch < 3) return null;
+  const name = kind === 'soak' ? 'prop-pool' : kind === 'hotspring' ? (x === 52 && y === 9 ? 'prop-springdisplay' : 'prop-springbox') : null;
+  return name && artImg(name) ? name : null;
+}
 // Pixel style: a hard-edged ellipse (no anti-aliasing), set pixel by pixel in a code-made canvas.
 const pxEllipses = new Map();
 function pxEllipse(rx, ry, col = '#0c1410') {
@@ -557,6 +578,7 @@ function footing(ctx, b, u) {
   for (let i = 0; i < 3; i++) ctx.fillRect((b.x + 0.02 + i * 0.06) * u, (b.y + b.h - 0.6 + i * 0.04) * u, (b.w - 0.04 - i * 0.12) * u, (0.74 - i * 0.08) * u);
 }
 function objEntry(ctx, o, x, y, P, u, pl) {
+  if (PX.on && (o.t === 'pen' || o.t === 'fence')) return { y: y + 0.95, d: () => pxFence(ctx, x, y, u, P.ch) };
   if (o.t === 'tree') {
     const sp = PA.treeSprite(o.k || 'pine', P.sea, u, x, y);
     if (sp) {
@@ -575,6 +597,20 @@ function objEntry(ctx, o, x, y, P, u, pl) {
   }
   if (ART.on && ART.pending === 0 && ART.loaded > 0) R.fallback.add(o.t);
   return { y: y + 0.95, d: () => drawObj(ctx, o, x, y, P, u) };
+}
+// Pixel style fences (the pen and placed fences): a post per tile and two rails that run to each neighbouring
+// fence tile, so runs join up; drawn pixel by pixel in an era wood (or, from 1955, white-painted) ramp.
+const FENCE_WOOD = { 1: ['#3e2a1a', '#6e4c2e', '#9a7048'], 2: ['#3e2a1a', '#74512f', '#a07650'], 3: ['#3a2a1e', '#7a5636', '#a8805a'], 4: ['#38281c', '#7e5a3a', '#ae8a60'], 5: ['#5a5a5e', '#d8d8d4', '#f4f4f0'], 6: ['#3a3430', '#8a7a68', '#b8a88e'] };
+function pxFence(ctx, x, y, u, ch) {
+  const [ink, mid, hi] = FENCE_WOOD[ch] || FENCE_WOOD[2], at = R.fenceAt || (() => false);
+  const X = x * u, Y = y * u, cx = X + (u >> 1), base = Y + Math.round(u * 0.9), postH = Math.round(u * 0.7), r1 = base - Math.round(u * 0.55), r2 = base - Math.round(u * 0.3);
+  const rail = (x0, x1, yy) => { ctx.fillStyle = ink; ctx.fillRect(x0, yy - 1, x1 - x0, 4); ctx.fillStyle = mid; ctx.fillRect(x0, yy, x1 - x0, 2); ctx.fillStyle = hi; ctx.fillRect(x0, yy, x1 - x0, 1); };
+  if (at(x - 1, y)) { rail(X, cx, r1); rail(X, cx, r2); }
+  if (at(x + 1, y)) { rail(cx, X + u, r1); rail(cx, X + u, r2); }
+  if (at(x, y - 1)) { ctx.fillStyle = ink; ctx.fillRect(cx - 2, Y - Math.round(u * 0.3), 4, base - postH - Y + Math.round(u * 0.3) + 1); ctx.fillStyle = mid; ctx.fillRect(cx - 1, Y - Math.round(u * 0.3), 2, base - postH - Y + Math.round(u * 0.3)); }
+  ctx.fillStyle = ink; ctx.fillRect(cx - 2, base - postH - 1, 5, postH + 1);
+  ctx.fillStyle = mid; ctx.fillRect(cx - 1, base - postH, 3, postH - 1);
+  ctx.fillStyle = hi; ctx.fillRect(cx - 1, base - postH, 1, postH - 1);
 }
 // Tilled soil: painted soil in one world-anchored pattern fill, dry and watered, with a darker rim where it
 // meets untilled ground and a droplet mark on watered tiles (a shape, not just a colour).
@@ -774,6 +810,15 @@ function steamFor(gm, sx0, sy0, sx1, sy1, dt) {
     if (!ROW_BATHS.has(b.id) || b.x + b.w < sx0 || b.x > sx1 || b.y > sy1 || b.y + 1 < sy0 - 2) continue;
     if (Math.random() < 0.035 * dt * rate) add(b.x + b.w * (0.35 + Math.random() * 0.3), b.y + 0.6, 0.22 + Math.random() * 0.15, 120, -0.012);
   }
+  // Chimney smoke from homes and shops on cool mornings and evenings: grey, slower and fewer than the steam, rising
+  // from the upper right of the roof (where the generated buildings keep their chimneys).
+  const hearth = S.time < 600 || S.time > 1080 || sim.season(S) === 'wi' || sim.season(S) === 'fa';
+  if (hearth && S.ch > 1) for (const b of gm.world.buildings) {
+    if (ROW_BATHS.has(b.id) || b.x + b.w < sx0 || b.x > sx1 || b.y > sy1 + 2 || b.y + b.h < sy0 - 3) continue;
+    if (!(b.id === 'farmhouse' || /house|home|store|drug|inn|stage|court|h\d/i.test(b.type + b.id))) continue;
+    if (Math.random() < 0.02 * dt) { const sp = PA.buildingSprite(S.ch, b, R.u); const top = sp ? sp.y / R.u + 0.25 : b.y - 0.6;
+      ps.push({ x: b.x + b.w * 0.74 + (Math.random() - 0.5) * 0.15, y: top, vx: 0.003 + Math.random() * 0.002, vy: -0.008, life: 150, max: 150, col: '#9a9890', s: 0.16 + Math.random() * 0.08, steam: true, smoke: true }); }
+  }
   if (cold) for (let y = Math.max(4, sy0); y <= Math.min(H - 1, sy1); y++) {
     if (Math.random() < 0.012 * dt) add(22 + Math.random() * 2, y + Math.random(), 0.35, 170, -0.006);
   }
@@ -820,7 +865,7 @@ function drawPxParticle(ctx, p, u, dt) {
   if (p.steam) {
     const t = 1 - p.life / p.max, a = Math.min(1, t * 2.5) * (1 - t) * 0.5, r = Math.max(2, Math.round(p.s * u * (0.5 + t * 2.2)));
     p.vx += (Math.random() - 0.5) * 0.0006 * dt;
-    ctx.globalAlpha = a; const c = pxLight(r, r, '#ffffff', 3); ctx.drawImage(c, X - r, Y - r);
+    ctx.globalAlpha = a; const c = pxLight(r, r, p.smoke ? '#8e8c86' : '#ffffff', 3); ctx.drawImage(c, X - r, Y - r);
   } else if (p.ring) {
     const t = 1 - p.life / p.max, r = Math.round(u * (0.15 + t * 0.45));
     ctx.globalAlpha = (1 - t) * 0.8; ctx.fillStyle = p.col;
@@ -906,7 +951,7 @@ const ERA_TINT = { 1: ['#2f5a48', 0.07], 2: ['#a07850', 0.09], 3: ['#c89040', 0.
 function todTint(t) {
   if (t < 450) return ['#ff9a7a', 0.2 * (450 - t) / 90];
   if (t < 960) return null;
-  if (t < 1110) return ['#ffa848', 0.38 * (t - 960) / 150];
+  if (t < 1110) return ['#ffa848', (PX.on ? 0.24 : 0.38) * (t - 960) / 150];
   if (t < 1220) return [t < 1160 ? '#e8806a' : '#9a5a9a', PX.on ? 0.28 : 0.17]; // pixel style: a dusk that reads
   return null;
 }
@@ -915,7 +960,8 @@ function nightPass(gm, P, cam, now) {
   const S = gm.S;
   // Pixel style: darkness and the hour's colour change in steps (5 bands), not continuously.
   const step = (v) => (LIGHT_MODE === 'smooth' ? v : Math.round(v * 5) / 5);
-  const d = step(sim.darkness(S));
+  // Pixel style: night never goes fully black (at most 75%), so facades keep their detail beside the lit windows.
+  const d = PX.on ? Math.min(0.75, step(sim.darkness(S))) : step(sim.darkness(S));
   const el = R.nightEl;
   const fog = S.weather === 'fog' && S.time < 720 ? Math.min(1, (720 - S.time) / 200) : 0;
   const W2 = R.canvas.width, H2 = R.canvas.height, u = R.u, NS = PX.on ? 1 : NS_PAINT;
@@ -942,6 +988,12 @@ function nightPass(gm, P, cam, now) {
     }
     n.globalAlpha = 1;
     n.fillStyle = `rgba(232,238,240,${(PX.on ? 0.1 : 0.22) * fog})`; n.fillRect(0, 0, w, h);
+    if (PX.on) { // a clear pocket round the player, so the fog never hides who you are
+      n.globalCompositeOperation = 'destination-out';
+      const c = pxLight(1.8 * u, 1.5 * u, 'hole'), sx = (S.player.x - cam.x) * u, sy = (S.player.y - 0.7 - cam.y) * u;
+      n.drawImage(c, Math.round(sx - c.width / 2), Math.round(sy - c.height / 2));
+      n.globalCompositeOperation = 'source-over';
+    }
   }
   if (d <= 0.01) return;
   n.fillStyle = rgba(NIGHT[S.ch], S.time < 480 ? d * 0.55 : d); n.fillRect(0, 0, w, h);
@@ -988,7 +1040,13 @@ function nightPass(gm, P, cam, now) {
     if (!b.label) continue;
     const sp = PA.buildingSprite(S.ch, b, u); if (!sp) continue;
     const neon = NEON[S.ch] && NEON[S.ch][b.id];
-    cut((sp.x + sp.w / 2) / u, (sp.y + sp.h * (b.w >= 10 ? 0.5 : 0.56)) / u, neon ? 1.7 : 1.1, neon ? 0.75 : 0.45, neon || '#ffe2b0', neon ? 0.8 : 0.35);
+    // Pixel style: the lit area is at least as wide as the sign board, so the whole name stays readable at night.
+    const boardR = PX.on ? (pxSmallWidth(b.label.toUpperCase()) + 10) / 2 / u + 0.2 : 0;
+    cut((sp.x + sp.w / 2) / u, (sp.y + sp.h * (PX.on ? 0.62 : b.w >= 10 ? 0.5 : 0.56)) / u, Math.max(boardR, neon ? (PX.on ? 1.2 : 1.7) : (PX.on ? 0.8 : 1.1)), neon ? 0.75 : 0.5, neon || '#ffe2b0', neon ? 0.8 : 0.35);
+    if (PX.on) { // and the board itself is fully lit (a sign lamp), edge to edge
+      const bw = pxSmallWidth(b.label.toUpperCase()) + 4, bh = PX_SMALL_H + 4, bx = Math.round(sp.x + sp.w / 2 - bw / 2 - cam.x * u), by = Math.round(sp.y + sp.h * 0.62 - bh / 2 - cam.y * u);
+      n.fillStyle = 'rgba(0,0,0,0.9)'; n.fillRect(bx, by, bw, bh);
+    }
   }
   if (d > 0.45) cut(S.player.x, S.player.y - 0.4, 1.9, 1.4, S.ch === 1 ? '#ffb060' : '#ffd8a0', 0.12);
   if (R.bench && R.bench.lights) for (let i = 0; i < R.bench.lights; i++) cut(cam.x + noise(i, 31) * R.cssW / R.ts, cam.y + noise(i, 32) * R.cssH / R.ts, 1.6, 1.0, '#ffd8a0', 0.3);
@@ -1000,6 +1058,39 @@ function nightPass(gm, P, cam, now) {
     else n.drawImage(gradSprite(col), (sx - rx * u * 0.8) / NS, (sy - ry * u * 0.8) / NS, 1.6 * rx * u / NS, 1.6 * ry * u / NS);
   }
   n.globalAlpha = 1;
+}
+
+// ---------- townsfolk (pixel style) ----------
+// A few render-only passers-by walk the town's long street rows in clothes of the era, so the streets aren't empty
+// between the named neighbours. They never block, talk or show up in the simulation; seeded per chapter.
+const FOLK = {
+  2: { shirts: ['#8e6a4a', '#5a4a3a', '#3a4a5a', '#7a3a2a', '#c8b89a'], pants: ['#3a3a44', '#4a3a2a', '#2a2a2a'], hats: ['brim', 'brim', 'none', 'bonnet'] },
+  3: { shirts: ['#2b4c6b', '#6a3a5a', '#4a5a3a', '#8a2a2a', '#d8ccb0'], pants: ['#2a2a33', '#3a2a3a', '#4a4038'], hats: ['brim', 'bonnet', 'fedora', 'none'] },
+  4: { shirts: ['#c8452b', '#d8cfbd', '#3c6a8a', '#e8c070', '#5a7a5a'], pants: ['#1f2f5c', '#34343a', '#5a4a3a'], hats: ['fedora', 'cap', 'none', 'none'] },
+  5: { shirts: ['#3fbfb5', '#e26d8e', '#f2d24a', '#ffffff', '#5a8ac8'], pants: ['#34424a', '#1e3e69', '#5a4a3a'], hats: ['none', 'cap', 'none', 'fedora'] },
+  6: { shirts: ['#f2a541', '#4c8fa8', '#b5654a', '#e8e0d0', '#3c9a4a'], pants: ['#1e4e79', '#2a2a2a', '#5a5a5a'], hats: ['cap', 'none', 'none', 'none'] },
+};
+const HAIR = ['#2a1c14', '#5a3a22', '#8a6a3a', '#1a1210', '#a86a3a', '#c8c0b0'];
+function townsfolk(gm, now) {
+  const S = gm.S, key = `${S.ch}|${S.seed}`;
+  if (!R.folk || R.folk.key !== key) {
+    const g = gm.world.g, rows = [];
+    for (let y = 0; y < H; y++) { let run = 0, best = null; for (let x = 0; x <= W; x++) { if (x < W && g[y * W + x] === G.STREET) run++; else { if (run >= 14 && (!best || run > best[1] - best[0])) best = [x - run, x - 1]; run = 0; } } if (best) rows.push([y, ...best]); }
+    const F = FOLK[S.ch] || FOLK[3], n = Math.min(6, rows.length * 2), list = [];
+    for (let i = 0; i < n; i++) {
+      const r = rows[i % rows.length], h = (k) => noise(i, S.ch, 900 + k);
+      const woman = h(1) < 0.45, dress = woman && S.ch < 5;
+      list.push({ id: `folk${S.ch}-${i}`, x: 0, y: r[0] + 0.55 + h(3) * 0.3, x0: r[1] + 0.5, x1: r[2] + 0.5, off: h(2) * 2, speed: 1.3 + h(5) * 0.7, step: 0,
+        look: { shirt: F.shirts[Math.floor(h(6) * F.shirts.length)], pants: F.pants[Math.floor(h(7) * F.pants.length)], hat: woman && S.ch <= 3 ? 'bonnet' : F.hats[Math.floor(h(8) * F.hats.length)], hair: HAIR[Math.floor(h(9) * HAIR.length)], skin: Math.floor(h(10) * 5), dress, ponytail: woman && S.ch >= 5, apron: dress && h(11) < 0.4 ? '#e8e0cc' : undefined } });
+    }
+    R.folk = { key, list };
+  }
+  // Positions are a function of the clock (tiles per second, back and forth), so pinned-clock captures repeat exactly.
+  for (const w of R.folk.list) {
+    const len = w.x1 - w.x0, t = R.reduced ? w.off * len : (now / 1000) * w.speed + w.off * len, ph = ((t % (2 * len)) + 2 * len) % (2 * len);
+    w.x = w.x0 + (ph < len ? ph : 2 * len - ph); w.face = ph < len ? 'right' : 'left'; w.step = t * 4.5;
+  }
+  return R.folk.list;
 }
 
 // ---------- complexity ladder (tools/perf-ladder.mjs) ----------

@@ -6,7 +6,7 @@
 // otherwise.
 import { W, H, G } from '../sim/world.js';
 import { noise } from '../sim/rng.js';
-import { img } from './assets.js';
+import { img, PX } from './assets.js';
 import { rgba, mix, shade } from './palette.js';
 import { cached } from './art.js';
 
@@ -206,9 +206,9 @@ export function bakeTerrain(ctx, world, tx0, ty0, size, u, P, opts = {}) {
   const bank = ch >= 4 && world.lake.some((v) => v) ? (ch === 4 ? '#9a4a2a' : '#8a6a44') : '#6a5034';
   stroke(water.edge, bank, u * 0.34, 0.85);
   stroke(water.edge, shade(bank, -0.3), u * 0.16, 0.6);
-  fillTex(water.fill, 'tex-lake', P.water, 0.45);
+  fillTex(water.fill, 'tex-lake', P.water, PX.on ? 0.15 : 0.45); // pixel style: the generated water keeps its own blues
   const creek = R((x, y) => (isW(x, y) && !lakeAt(x, y) ? 1 : 0), 0.6, 23);
-  if (fillTex(creek.fill, 'tex-creek', P.water, 0.25)) {
+  if (fillTex(creek.fill, 'tex-creek', P.water, PX.on ? 0.1 : 0.25)) {
     const deep = R((x, y) => (at(x, y) === G.DEEP ? 1 : 0), 0.9, 29);
     ctx.save(); ctx.globalAlpha = 0.38; ctx.fillStyle = shade(P.deep, -0.35); ctx.fill(deep.fill); ctx.restore();
     const deeper = R((x, y) => { let k = 0; for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) if (at(Math.max(0, Math.min(W - 1, x + i)), Math.max(0, Math.min(H - 1, y + j))) === G.DEEP) k++; return k >= 9 ? 1 : 0; }, 1.0, 31);

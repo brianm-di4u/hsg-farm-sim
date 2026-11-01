@@ -121,6 +121,24 @@ def key_background(rgba, thresh=28):
             continue
         bg[y, x] = True
         stack.extend(((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)))
+    # Enclosed near-white regions bigger than 0.4% of the image are openings (a dogtrot breezeway, an arcade),
+    # not paint: generated art draws highlights small, so a large pure-white hole is background seen through.
+    hole = near & ~bg
+    if hole.any():
+        seen = np.zeros_like(hole)
+        lim = hole.size * 0.004
+        for y0, x0 in zip(*np.where(hole)):
+            if seen[y0, x0]:
+                continue
+            stack, pts = [(y0, x0)], []
+            seen[y0, x0] = True
+            while stack:
+                y, x = stack.pop(); pts.append((y, x))
+                for yy, xx in ((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)):
+                    if 0 <= yy < h and 0 <= xx < w and hole[yy, xx] and not seen[yy, xx]:
+                        seen[yy, xx] = True; stack.append((yy, xx))
+            if len(pts) > lim:
+                ys, xs = zip(*pts); bg[list(ys), list(xs)] = True
     out = rgba.copy()
     out[bg, 3] = 0
     return out
@@ -149,7 +167,7 @@ def trim(rgba):
 
 
 # ---------- the pipeline ----------
-def pixelize(rgba, width, pal_rgb=None, colors=24, f=4, smooth=0):
+def pixelize(rgba, width, pal_rgb=None, colors=24, f=4, smooth=0, line_weight=0.0):
     """Majority-vote downsample of a pre-quantized image. Returns (index image HxW with -1 = transparent, palette rgb).
     smooth > 0 runs an edge-preserving median of that size over the intermediate image first, so painted brush
     texture becomes flat clusters instead of speckle."""
@@ -178,6 +196,11 @@ def pixelize(rgba, width, pal_rgb=None, colors=24, f=4, smooth=0):
     rows = np.repeat(np.arange(flat.shape[0]), f * f)
     np.add.at(cnt, (rows, flat.reshape(-1)), 1)
     cnt[:, -1] = -1
+    if line_weight:  # line-preserving: dark colours (outlines, spokes, rails) win more votes, so thin lines survive
+        L = pal_lab[:, 0]
+        wts = 1.0 + line_weight * np.clip((0.45 - L) / 0.25, 0, 1)
+        cnt = cnt * np.concatenate([wts, [1.0]])[None, :]
+        cnt[:, -1] = -1
     out = cnt.argmax(1).reshape(height, width)
     out[~alpha] = -1
     return out, pal_rgb
@@ -275,14 +298,15 @@ def run(img, a, pal=None):
     rgba = np.asarray(img.convert('RGBA')).copy()
     if a.key == 'auto' and (rgba[..., 3] == 255).all():
         rgba = key_background(rgba, a.key_thresh)
-    rgba = trim(rgba)
+    if getattr(a, 'trim', True):
+        rgba = trim(rgba)
     width = a.width
     if a.pitch:
         p = detect_pitch(rgba) if a.pitch == 'auto' else float(a.pitch)
         width = max(1, round(rgba.shape[1] / p))
     if pal is None and a.palette:
         pal = load_palette(a.palette)
-    ix, pal = pixelize(rgba, width, pal, a.colors, smooth=a.smooth)
+    ix, pal = pixelize(rgba, width, pal, a.colors, smooth=a.smooth, line_weight=getattr(a, 'line_weight', 0.0))
     if a.cleanup:
         ix = cleanup(ix)
     ix, pal = outline(ix, pal, a.outline)

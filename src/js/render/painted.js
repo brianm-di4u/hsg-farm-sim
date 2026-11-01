@@ -31,6 +31,7 @@ export function buildingArt(ch, b) {
 export function buildingNames(ch) {
   const s = new Set(['bld-farm-cabin', 'bld-farm-plank', 'bld-farm-brick', 'bld-farm-bungalow', 'bld-farm-ranch', 'bld-farm-restored']);
   for (const e of Object.values(BLD[ch] || {})) s.add('bld-' + (Array.isArray(e) ? e[0] : e));
+  for (const n of [...s]) s.add(n + '-snow'); // pixel style's snow-day variants (absent names are ignored)
   return s;
 }
 
@@ -70,7 +71,7 @@ export function buildingSprite(ch, b, u, snow = false) {
   const a = buildingArt(ch, b);
   if (!a || !img(a.name)) return null;
   const [w, h] = size(a.name, b.w * u);
-  const c = snow && !isPx(a.name) ? snowy(a.name, w, h, a.flip) : scaled(a.name, w, h, a.flip);
+  const c = snow && isPx(a.name + '-snow') && img(a.name + '-snow') ? scaled(a.name + '-snow', w, h, a.flip) : snow && !isPx(a.name) ? snowy(a.name, w, h, a.flip) : scaled(a.name, w, h, a.flip);
   return { c, x: Math.round(b.x * u + (b.w * u - w) / 2), y: (b.y + b.h) * u - h, w, h };
 }
 // Snow lying on the roof: the roof fills the top of each painting (the three-quarter view), so a white wash that
@@ -172,6 +173,15 @@ const TOWN_DECO = {
   6: [['street-car26a', 25.0, 19.4, 2.0], ['street-umbrella', 49.9, 26.4, 1.3], ['street-bikes', 25.0, 26.4, 1.2], ['street-planter', 25.0, 12.5, 1.0]],
 };
 for (const ch of Object.keys(TOWN_DECO)) DECO[ch].push(...TOWN_DECO[ch]);
+// Pixel style: street furniture beside the lamp posts (x 27, 33, 41, 47 on the y 14.9 and 21.9 sidewalks), by era,
+// so the blocks between the named buildings aren't bare. Render-only, skipped where anything else stands.
+export const STREET_PROPS = {
+  2: [['deco-barrels', 28.2, 15.0, 1.0], ['street-hitch', 46.0, 15.0, 1.2], ['deco-barrels', 34.2, 22.0, 1.0], ['street-hitch', 40.0, 22.0, 1.2]],
+  3: [['street-bench', 28.2, 15.0, 1.1], ['deco-barrels', 46.0, 15.0, 1.0], ['street-hitch', 34.2, 22.0, 1.2], ['street-bench', 40.0, 22.0, 1.1]],
+  4: [['street-bench', 28.2, 15.0, 1.1], ['street-planter', 46.0, 15.0, 1.0], ['street-planter', 34.2, 22.0, 1.0], ['street-bench', 40.0, 22.0, 1.1]],
+  5: [['street-bench', 28.2, 15.0, 1.1], ['street-hydrant', 46.0, 15.0, 0.7], ['street-planter', 34.2, 22.0, 1.0], ['street-bench', 40.0, 22.0, 1.1]],
+  6: [['street-bench', 28.2, 15.0, 1.1], ['street-planter', 46.0, 15.0, 1.0], ['street-bikes', 34.2, 22.0, 1.2], ['street-umbrella', 40.0, 22.0, 1.3]],
+};
 export function decoSprite(name, wTiles, u) {
   if (!img(name)) return null;
   const [w, h] = size(name, wTiles * u);
@@ -187,14 +197,16 @@ export function iconSprite(id, px) {
     if (!img('icon-seedpacket') || !img('icon-' + crop)) return null;
     return cached(`icp|${id}|${px}`, px, px, (g) => { g.drawImage(scaled('icon-seedpacket', px, px), 0, 0); g.drawImage(scaled('icon-' + crop, px * 0.6, px * 0.6), px * 0.42, px * 0.42); });
   }
-  return img('icon-' + id) ? scaled('icon-' + id, px, px) : null;
+  if (img('icon-' + id)) return scaled('icon-' + id, px, px);
+  return img('animal-' + id) ? scaled('animal-' + id, px, px * aspect('animal-' + id)) : null;
 }
 // DOM markup for an icon from the packed files (no canvas readback, so file:// works); null when not painted.
 export function iconHtml(id, cls = '') {
   if (!ART.on) return null;
   const M = manifest(), crop = seedCrop(id);
   if (crop) return M['icon-seedpacket'] && M['icon-' + crop] ? `<span class="ic-seed ${cls}"><img alt="" src="assets/${M['icon-seedpacket'].file}"><img alt="" class="ic-crop" src="assets/${M['icon-' + crop].file}"></span>` : null;
-  return M['icon-' + id] ? `<img alt="" class="${cls}" src="assets/${M['icon-' + id].file}">` : null;
+  if (M['icon-' + id]) return `<img alt="" class="${cls}" src="assets/${M['icon-' + id].file}">`;
+  return M['animal-' + id] ? `<img alt="" class="${cls} ic-animal" src="assets/${M['animal-' + id].file}">` : null; // livestock in the shop
 }
 
 // ---------- people ----------

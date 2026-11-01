@@ -2,17 +2,17 @@
  "16": {
   "animal-cow": {
    "file": "px/16/animal-cow.png",
-   "h": 23,
+   "h": 17,
    "w": 27
   },
   "animal-goat": {
    "file": "px/16/animal-goat.png",
-   "h": 19,
+   "h": 17,
    "w": 19
   },
   "animal-hen": {
    "file": "px/16/animal-hen.png",
-   "h": 12,
+   "h": 13,
    "w": 12
   },
   "bin": {
@@ -22,252 +22,492 @@
   },
   "bld-barn": {
    "file": "px/16/bld-barn.png",
-   "h": 79,
+   "h": 81,
+   "w": 162
+  },
+  "bld-barn-snow": {
+   "file": "px/16/bld-barn-snow.png",
+   "h": 81,
    "w": 162
   },
   "bld-brickstore": {
    "file": "px/16/bld-brickstore.png",
-   "h": 85,
+   "h": 64,
+   "w": 82
+  },
+  "bld-brickstore-snow": {
+   "file": "px/16/bld-brickstore-snow.png",
+   "h": 64,
    "w": 82
   },
   "bld-brickstore4": {
    "file": "px/16/bld-brickstore4.png",
-   "h": 82,
+   "h": 70,
+   "w": 82
+  },
+  "bld-brickstore4-snow": {
+   "file": "px/16/bld-brickstore4-snow.png",
+   "h": 70,
    "w": 82
   },
   "bld-cabin": {
    "file": "px/16/bld-cabin.png",
-   "h": 79,
+   "h": 53,
+   "w": 82
+  },
+  "bld-cabin-snow": {
+   "file": "px/16/bld-cabin-snow.png",
+   "h": 53,
    "w": 82
   },
   "bld-club": {
    "file": "px/16/bld-club.png",
-   "h": 82,
+   "h": 69,
+   "w": 82
+  },
+  "bld-club-snow": {
+   "file": "px/16/bld-club-snow.png",
+   "h": 69,
    "w": 82
   },
   "bld-court": {
    "file": "px/16/bld-court.png",
-   "h": 53,
+   "h": 67,
+   "w": 162
+  },
+  "bld-court-snow": {
+   "file": "px/16/bld-court-snow.png",
+   "h": 67,
    "w": 162
   },
   "bld-depot": {
    "file": "px/16/bld-depot.png",
-   "h": 81,
+   "h": 38,
+   "w": 82
+  },
+  "bld-depot-snow": {
+   "file": "px/16/bld-depot-snow.png",
+   "h": 38,
    "w": 82
   },
   "bld-drivein": {
    "file": "px/16/bld-drivein.png",
-   "h": 78,
+   "h": 47,
+   "w": 82
+  },
+  "bld-drivein-snow": {
+   "file": "px/16/bld-drivein-snow.png",
+   "h": 47,
    "w": 82
   },
   "bld-drug": {
    "file": "px/16/bld-drug.png",
-   "h": 84,
+   "h": 65,
+   "w": 82
+  },
+  "bld-drug-snow": {
+   "file": "px/16/bld-drug-snow.png",
+   "h": 65,
    "w": 82
   },
   "bld-farm-brick": {
    "file": "px/16/bld-farm-brick.png",
-   "h": 72,
+   "h": 57,
+   "w": 98
+  },
+  "bld-farm-brick-snow": {
+   "file": "px/16/bld-farm-brick-snow.png",
+   "h": 57,
    "w": 98
   },
   "bld-farm-bungalow": {
    "file": "px/16/bld-farm-bungalow.png",
-   "h": 66,
+   "h": 58,
+   "w": 98
+  },
+  "bld-farm-bungalow-snow": {
+   "file": "px/16/bld-farm-bungalow-snow.png",
+   "h": 58,
    "w": 98
   },
   "bld-farm-cabin": {
    "file": "px/16/bld-farm-cabin.png",
-   "h": 66,
+   "h": 65,
+   "w": 98
+  },
+  "bld-farm-cabin-snow": {
+   "file": "px/16/bld-farm-cabin-snow.png",
+   "h": 65,
    "w": 98
   },
   "bld-farm-plank": {
    "file": "px/16/bld-farm-plank.png",
-   "h": 66,
+   "h": 49,
+   "w": 98
+  },
+  "bld-farm-plank-snow": {
+   "file": "px/16/bld-farm-plank-snow.png",
+   "h": 49,
    "w": 98
   },
   "bld-farm-ranch": {
    "file": "px/16/bld-farm-ranch.png",
-   "h": 50,
+   "h": 57,
+   "w": 98
+  },
+  "bld-farm-ranch-snow": {
+   "file": "px/16/bld-farm-ranch-snow.png",
+   "h": 57,
    "w": 98
   },
   "bld-farm-restored": {
    "file": "px/16/bld-farm-restored.png",
-   "h": 71,
+   "h": 61,
+   "w": 98
+  },
+  "bld-farm-restored-snow": {
+   "file": "px/16/bld-farm-restored-snow.png",
+   "h": 61,
    "w": 98
   },
   "bld-grandhotel": {
    "file": "px/16/bld-grandhotel.png",
-   "h": 105,
+   "h": 80,
+   "w": 162
+  },
+  "bld-grandhotel-snow": {
+   "file": "px/16/bld-grandhotel-snow.png",
+   "h": 80,
    "w": 162
   },
   "bld-hardware": {
    "file": "px/16/bld-hardware.png",
-   "h": 81,
+   "h": 71,
+   "w": 82
+  },
+  "bld-hardware-snow": {
+   "file": "px/16/bld-hardware-snow.png",
+   "h": 71,
    "w": 82
   },
   "bld-house2": {
    "file": "px/16/bld-house2.png",
-   "h": 86,
+   "h": 74,
+   "w": 82
+  },
+  "bld-house2-snow": {
+   "file": "px/16/bld-house2-snow.png",
+   "h": 74,
    "w": 82
   },
   "bld-house3": {
    "file": "px/16/bld-house3.png",
-   "h": 85,
+   "h": 61,
+   "w": 82
+  },
+  "bld-house3-snow": {
+   "file": "px/16/bld-house3-snow.png",
+   "h": 61,
    "w": 82
   },
   "bld-house4": {
    "file": "px/16/bld-house4.png",
-   "h": 81,
+   "h": 55,
+   "w": 82
+  },
+  "bld-house4-snow": {
+   "file": "px/16/bld-house4-snow.png",
+   "h": 55,
    "w": 82
   },
   "bld-house6": {
    "file": "px/16/bld-house6.png",
-   "h": 81,
+   "h": 58,
+   "w": 82
+  },
+  "bld-house6-snow": {
+   "file": "px/16/bld-house6-snow.png",
+   "h": 58,
    "w": 82
   },
   "bld-hut": {
    "file": "px/16/bld-hut.png",
-   "h": 75,
+   "h": 56,
+   "w": 82
+  },
+  "bld-hut-snow": {
+   "file": "px/16/bld-hut-snow.png",
+   "h": 56,
    "w": 82
   },
   "bld-market": {
    "file": "px/16/bld-market.png",
-   "h": 60,
+   "h": 69,
+   "w": 162
+  },
+  "bld-market-snow": {
+   "file": "px/16/bld-market-snow.png",
+   "h": 69,
    "w": 162
   },
   "bld-mill": {
    "file": "px/16/bld-mill.png",
-   "h": 54,
+   "h": 69,
+   "w": 82
+  },
+  "bld-mill-snow": {
+   "file": "px/16/bld-mill-snow.png",
+   "h": 69,
    "w": 82
   },
   "bld-modernstore": {
    "file": "px/16/bld-modernstore.png",
-   "h": 72,
+   "h": 69,
+   "w": 82
+  },
+  "bld-modernstore-snow": {
+   "file": "px/16/bld-modernstore-snow.png",
+   "h": 69,
    "w": 82
   },
   "bld-motel": {
    "file": "px/16/bld-motel.png",
-   "h": 78,
+   "h": 61,
+   "w": 162
+  },
+  "bld-motel-snow": {
+   "file": "px/16/bld-motel-snow.png",
+   "h": 61,
    "w": 162
   },
   "bld-plankbath": {
    "file": "px/16/bld-plankbath.png",
-   "h": 84,
+   "h": 73,
+   "w": 82
+  },
+  "bld-plankbath-snow": {
+   "file": "px/16/bld-plankbath-snow.png",
+   "h": 73,
    "w": 82
   },
   "bld-plankbath2": {
    "file": "px/16/bld-plankbath2.png",
-   "h": 83,
+   "h": 64,
+   "w": 82
+  },
+  "bld-plankbath2-snow": {
+   "file": "px/16/bld-plankbath2-snow.png",
+   "h": 64,
    "w": 82
   },
   "bld-plankhotel": {
    "file": "px/16/bld-plankhotel.png",
-   "h": 83,
+   "h": 68,
+   "w": 82
+  },
+  "bld-plankhotel-snow": {
+   "file": "px/16/bld-plankhotel-snow.png",
+   "h": 68,
    "w": 82
   },
   "bld-plankstore": {
    "file": "px/16/bld-plankstore.png",
-   "h": 77,
+   "h": 61,
+   "w": 82
+  },
+  "bld-plankstore-snow": {
+   "file": "px/16/bld-plankstore-snow.png",
+   "h": 61,
    "w": 82
   },
   "bld-radio": {
    "file": "px/16/bld-radio.png",
-   "h": 82,
+   "h": 81,
+   "w": 82
+  },
+  "bld-radio-snow": {
+   "file": "px/16/bld-radio-snow.png",
+   "h": 81,
    "w": 82
   },
   "bld-ranchhouse": {
    "file": "px/16/bld-ranchhouse.png",
-   "h": 58,
+   "h": 35,
+   "w": 82
+  },
+  "bld-ranchhouse-snow": {
+   "file": "px/16/bld-ranchhouse-snow.png",
+   "h": 35,
    "w": 82
   },
   "bld-row-1": {
    "file": "px/16/bld-row-1.png",
-   "h": 80,
+   "h": 56,
+   "w": 82
+  },
+  "bld-row-1-snow": {
+   "file": "px/16/bld-row-1-snow.png",
+   "h": 56,
    "w": 82
   },
   "bld-row-1r": {
    "file": "px/16/bld-row-1r.png",
-   "h": 78,
+   "h": 56,
+   "w": 82
+  },
+  "bld-row-1r-snow": {
+   "file": "px/16/bld-row-1r-snow.png",
+   "h": 56,
    "w": 82
   },
   "bld-row-2": {
    "file": "px/16/bld-row-2.png",
-   "h": 78,
+   "h": 69,
+   "w": 82
+  },
+  "bld-row-2-snow": {
+   "file": "px/16/bld-row-2-snow.png",
+   "h": 69,
    "w": 82
   },
   "bld-row-2r": {
    "file": "px/16/bld-row-2r.png",
-   "h": 78,
+   "h": 64,
+   "w": 82
+  },
+  "bld-row-2r-snow": {
+   "file": "px/16/bld-row-2r-snow.png",
+   "h": 64,
    "w": 82
   },
   "bld-row-3": {
    "file": "px/16/bld-row-3.png",
-   "h": 80,
+   "h": 59,
+   "w": 82
+  },
+  "bld-row-3-snow": {
+   "file": "px/16/bld-row-3-snow.png",
+   "h": 59,
    "w": 82
   },
   "bld-row-3r": {
    "file": "px/16/bld-row-3r.png",
-   "h": 80,
+   "h": 61,
+   "w": 82
+  },
+  "bld-row-3r-snow": {
+   "file": "px/16/bld-row-3r-snow.png",
+   "h": 61,
    "w": 82
   },
   "bld-row-4": {
    "file": "px/16/bld-row-4.png",
-   "h": 78,
+   "h": 63,
+   "w": 82
+  },
+  "bld-row-4-snow": {
+   "file": "px/16/bld-row-4-snow.png",
+   "h": 63,
    "w": 82
   },
   "bld-row-4r": {
    "file": "px/16/bld-row-4r.png",
-   "h": 78,
+   "h": 64,
+   "w": 82
+  },
+  "bld-row-4r-snow": {
+   "file": "px/16/bld-row-4r-snow.png",
+   "h": 64,
    "w": 82
   },
   "bld-stage": {
    "file": "px/16/bld-stage.png",
-   "h": 82,
+   "h": 59,
+   "w": 82
+  },
+  "bld-stage-snow": {
+   "file": "px/16/bld-stage-snow.png",
+   "h": 59,
    "w": 82
   },
   "bld-tent": {
    "file": "px/16/bld-tent.png",
-   "h": 80,
+   "h": 55,
+   "w": 82
+  },
+  "bld-tent-snow": {
+   "file": "px/16/bld-tent-snow.png",
+   "h": 55,
    "w": 82
   },
   "bld-tent2": {
    "file": "px/16/bld-tent2.png",
-   "h": 85,
+   "h": 63,
+   "w": 82
+  },
+  "bld-tent2-snow": {
+   "file": "px/16/bld-tent2-snow.png",
+   "h": 63,
    "w": 82
   },
   "bld-twinhotel": {
    "file": "px/16/bld-twinhotel.png",
-   "h": 105,
+   "h": 86,
+   "w": 162
+  },
+  "bld-twinhotel-snow": {
+   "file": "px/16/bld-twinhotel-snow.png",
+   "h": 86,
    "w": 162
   },
   "bld-vicbath-1": {
    "file": "px/16/bld-vicbath-1.png",
-   "h": 83,
+   "h": 63,
+   "w": 82
+  },
+  "bld-vicbath-1-snow": {
+   "file": "px/16/bld-vicbath-1-snow.png",
+   "h": 63,
    "w": 82
   },
   "bld-vicbath-2": {
    "file": "px/16/bld-vicbath-2.png",
-   "h": 83,
+   "h": 68,
+   "w": 82
+  },
+  "bld-vicbath-2-snow": {
+   "file": "px/16/bld-vicbath-2-snow.png",
+   "h": 68,
    "w": 82
   },
   "bld-vicbath-3": {
    "file": "px/16/bld-vicbath-3.png",
-   "h": 83,
+   "h": 65,
+   "w": 82
+  },
+  "bld-vicbath-3-snow": {
+   "file": "px/16/bld-vicbath-3-snow.png",
+   "h": 65,
    "w": 82
   },
   "bld-vicbath-free": {
    "file": "px/16/bld-vicbath-free.png",
-   "h": 82,
+   "h": 52,
+   "w": 82
+  },
+  "bld-vicbath-free-snow": {
+   "file": "px/16/bld-vicbath-free-snow.png",
+   "h": 52,
    "w": 82
   },
   "bush": {
    "file": "px/16/bush.png",
-   "h": 13,
+   "h": 11,
    "w": 15
   },
   "campfire": {
    "file": "px/16/campfire.png",
-   "h": 20,
+   "h": 18,
    "w": 18
   },
   "chars-dress": {
@@ -302,162 +542,167 @@
   },
   "crop-beans": {
    "file": "px/16/crop-beans.png",
-   "h": 40,
+   "h": 32,
    "w": 95
   },
   "crop-blueberry": {
    "file": "px/16/crop-blueberry.png",
-   "h": 22,
+   "h": 18,
    "w": 95
   },
   "crop-cabbage": {
    "file": "px/16/crop-cabbage.png",
-   "h": 19,
+   "h": 18,
    "w": 95
   },
   "crop-collards": {
    "file": "px/16/crop-collards.png",
-   "h": 22,
+   "h": 19,
    "w": 95
   },
   "crop-corn": {
    "file": "px/16/crop-corn.png",
-   "h": 43,
+   "h": 35,
    "w": 95
   },
   "crop-heirloom": {
    "file": "px/16/crop-heirloom.png",
-   "h": 32,
+   "h": 23,
    "w": 95
   },
   "crop-hops": {
    "file": "px/16/crop-hops.png",
-   "h": 55,
+   "h": 34,
    "w": 95
   },
   "crop-okra": {
    "file": "px/16/crop-okra.png",
-   "h": 29,
+   "h": 26,
    "w": 95
   },
   "crop-peanut": {
    "file": "px/16/crop-peanut.png",
-   "h": 27,
+   "h": 21,
    "w": 95
   },
   "crop-pepper": {
    "file": "px/16/crop-pepper.png",
-   "h": 25,
+   "h": 22,
    "w": 95
   },
   "crop-potato": {
    "file": "px/16/crop-potato.png",
-   "h": 28,
+   "h": 18,
    "w": 95
   },
   "crop-radish": {
    "file": "px/16/crop-radish.png",
-   "h": 22,
+   "h": 19,
    "w": 95
   },
   "crop-squash": {
    "file": "px/16/crop-squash.png",
-   "h": 19,
+   "h": 16,
    "w": 95
   },
   "crop-strawberry": {
    "file": "px/16/crop-strawberry.png",
-   "h": 17,
+   "h": 18,
    "w": 95
   },
   "crop-sweetcorn": {
    "file": "px/16/crop-sweetcorn.png",
-   "h": 42,
+   "h": 29,
    "w": 95
   },
   "crop-sweetpotato": {
    "file": "px/16/crop-sweetpotato.png",
-   "h": 20,
+   "h": 19,
    "w": 95
   },
   "crop-tomato": {
    "file": "px/16/crop-tomato.png",
-   "h": 35,
+   "h": 26,
    "w": 95
   },
   "crop-tulip": {
    "file": "px/16/crop-tulip.png",
-   "h": 23,
+   "h": 22,
    "w": 95
   },
   "crop-watermelon": {
    "file": "px/16/crop-watermelon.png",
-   "h": 22,
+   "h": 16,
    "w": 95
   },
   "crop-wheat": {
    "file": "px/16/crop-wheat.png",
-   "h": 35,
+   "h": 24,
    "w": 95
   },
   "crystal": {
    "file": "px/16/crystal.png",
-   "h": 17,
+   "h": 16,
    "w": 14
   },
   "deco-barrels": {
    "file": "px/16/deco-barrels.png",
-   "h": 20,
+   "h": 13,
    "w": 20
   },
   "deco-beehives": {
    "file": "px/16/deco-beehives.png",
-   "h": 23,
+   "h": 15,
    "w": 21
   },
   "deco-greenhouse": {
    "file": "px/16/deco-greenhouse.png",
-   "h": 40,
+   "h": 27,
    "w": 44
   },
   "deco-haybale": {
    "file": "px/16/deco-haybale.png",
-   "h": 22,
+   "h": 15,
    "w": 21
   },
   "deco-haystack": {
    "file": "px/16/deco-haystack.png",
-   "h": 26,
+   "h": 23,
    "w": 23
   },
   "deco-modelA": {
    "file": "px/16/deco-modelA.png",
-   "h": 28,
+   "h": 22,
    "w": 42
   },
   "deco-pump": {
    "file": "px/16/deco-pump.png",
-   "h": 19,
+   "h": 20,
    "w": 16
+  },
+  "deco-raisedbeds": {
+   "file": "px/16/deco-raisedbeds.png",
+   "h": 14,
+   "w": 32
   },
   "deco-scarecrow": {
    "file": "px/16/deco-scarecrow.png",
-   "h": 21,
+   "h": 27,
    "w": 20
   },
   "deco-tractor": {
    "file": "px/16/deco-tractor.png",
-   "h": 29,
+   "h": 25,
    "w": 40
   },
   "deco-wagon": {
    "file": "px/16/deco-wagon.png",
-   "h": 25,
+   "h": 19,
    "w": 39
   },
   "deco-woodpile": {
    "file": "px/16/deco-woodpile.png",
-   "h": 26,
+   "h": 18,
    "w": 26
   },
   "icon-acorn": {
@@ -852,57 +1097,82 @@
   },
   "lamp-deco": {
    "file": "px/16/lamp-deco.png",
-   "h": 41,
+   "h": 39,
    "w": 17
   },
   "lamp-gas": {
    "file": "px/16/lamp-gas.png",
-   "h": 34,
+   "h": 35,
    "w": 10
   },
   "lamp-lantern": {
    "file": "px/16/lamp-lantern.png",
-   "h": 16,
+   "h": 17,
    "w": 8
   },
   "lamp-led": {
    "file": "px/16/lamp-led.png",
-   "h": 37,
+   "h": 43,
    "w": 10
   },
   "lamp-sodium": {
    "file": "px/16/lamp-sodium.png",
-   "h": 31,
+   "h": 27,
    "w": 12
   },
   "outcrop": {
    "file": "px/16/outcrop.png",
-   "h": 22,
+   "h": 11,
    "w": 19
+  },
+  "prop-bench": {
+   "file": "px/16/prop-bench.png",
+   "h": 15,
+   "w": 20
+  },
+  "prop-pool": {
+   "file": "px/16/prop-pool.png",
+   "h": 28,
+   "w": 39
+  },
+  "prop-pump": {
+   "file": "px/16/prop-pump.png",
+   "h": 17,
+   "w": 12
+  },
+  "prop-springbox": {
+   "file": "px/16/prop-springbox.png",
+   "h": 13,
+   "w": 16
+  },
+  "prop-springdisplay": {
+   "file": "px/16/prop-springdisplay.png",
+   "h": 23,
+   "w": 20
   },
   "rock": {
    "file": "px/16/rock.png",
-   "h": 15,
+   "h": 12,
    "w": 17
   },
   "sign": {
    "file": "px/16/sign.png",
-   "h": 17,
+   "h": 16,
    "w": 18
   },
   "street-bench": {
    "file": "px/16/street-bench.png",
-   "h": 17,
+   "h": 16,
    "w": 20
   },
   "street-bikes": {
    "file": "px/16/street-bikes.png",
-   "h": 21,
+   "h": 14,
    "w": 21
   },
   "street-buggy": {
    "file": "px/16/street-buggy.png",
-   "h": 18,
+   "h": 17,
    "w": 34
   },
   "street-car26a": {
@@ -910,44 +1180,49 @@
    "h": 19,
    "w": 34
   },
+  "street-car26b": {
+   "file": "px/16/street-car26b.png",
+   "h": 16,
+   "w": 34
+  },
   "street-car55a": {
    "file": "px/16/street-car55a.png",
-   "h": 19,
+   "h": 17,
    "w": 35
   },
   "street-car55b": {
    "file": "px/16/street-car55b.png",
-   "h": 17,
+   "h": 16,
    "w": 35
   },
   "street-carriage": {
    "file": "px/16/street-carriage.png",
-   "h": 18,
+   "h": 17,
    "w": 34
   },
   "street-coupe31": {
    "file": "px/16/street-coupe31.png",
-   "h": 19,
+   "h": 18,
    "w": 34
   },
   "street-hitch": {
    "file": "px/16/street-hitch.png",
-   "h": 20,
+   "h": 14,
    "w": 21
   },
   "street-hydrant": {
    "file": "px/16/street-hydrant.png",
-   "h": 18,
+   "h": 23,
    "w": 13
   },
   "street-planter": {
    "file": "px/16/street-planter.png",
-   "h": 20,
+   "h": 18,
    "w": 18
   },
   "street-sedan31": {
    "file": "px/16/street-sedan31.png",
-   "h": 22,
+   "h": 19,
    "w": 34
   },
   "street-umbrella": {
@@ -1047,42 +1322,42 @@
   },
   "tree-magnolia": {
    "file": "px/16/tree-magnolia.png",
-   "h": 39,
+   "h": 37,
    "w": 31
   },
   "tree-oak-fa": {
    "file": "px/16/tree-oak-fa.png",
-   "h": 47,
+   "h": 34,
    "w": 38
   },
   "tree-oak-sp": {
    "file": "px/16/tree-oak-sp.png",
-   "h": 47,
+   "h": 44,
    "w": 38
   },
   "tree-oak-su": {
    "file": "px/16/tree-oak-su.png",
-   "h": 47,
+   "h": 35,
    "w": 38
   },
   "tree-oak-wi": {
    "file": "px/16/tree-oak-wi.png",
-   "h": 49,
+   "h": 45,
    "w": 38
   },
   "tree-pine": {
    "file": "px/16/tree-pine.png",
-   "h": 40,
+   "h": 63,
    "w": 30
   },
   "trough": {
    "file": "px/16/trough.png",
-   "h": 16,
+   "h": 14,
    "w": 26
   },
   "tuft": {
    "file": "px/16/tuft.png",
-   "h": 17,
+   "h": 12,
    "w": 16
   },
   "vista-1": {
@@ -2236,17 +2511,17 @@
  "32": {
   "animal-cow": {
    "file": "px/32/animal-cow.png",
-   "h": 43,
+   "h": 33,
    "w": 52
   },
   "animal-goat": {
    "file": "px/32/animal-goat.png",
-   "h": 36,
+   "h": 32,
    "w": 36
   },
   "animal-hen": {
    "file": "px/32/animal-hen.png",
-   "h": 22,
+   "h": 24,
    "w": 22
   },
   "bin": {
@@ -2256,57 +2531,112 @@
   },
   "bld-barn": {
    "file": "px/32/bld-barn.png",
-   "h": 155,
+   "h": 161,
+   "w": 322
+  },
+  "bld-barn-snow": {
+   "file": "px/32/bld-barn-snow.png",
+   "h": 161,
    "w": 322
   },
   "bld-brickstore": {
    "file": "px/32/bld-brickstore.png",
-   "h": 168,
+   "h": 127,
+   "w": 162
+  },
+  "bld-brickstore-snow": {
+   "file": "px/32/bld-brickstore-snow.png",
+   "h": 127,
    "w": 162
   },
   "bld-brickstore4": {
    "file": "px/32/bld-brickstore4.png",
-   "h": 162,
+   "h": 138,
+   "w": 162
+  },
+  "bld-brickstore4-snow": {
+   "file": "px/32/bld-brickstore4-snow.png",
+   "h": 138,
    "w": 162
   },
   "bld-cabin": {
    "file": "px/32/bld-cabin.png",
-   "h": 157,
+   "h": 104,
+   "w": 162
+  },
+  "bld-cabin-snow": {
+   "file": "px/32/bld-cabin-snow.png",
+   "h": 104,
    "w": 162
   },
   "bld-club": {
    "file": "px/32/bld-club.png",
-   "h": 162,
+   "h": 137,
+   "w": 162
+  },
+  "bld-club-snow": {
+   "file": "px/32/bld-club-snow.png",
+   "h": 137,
    "w": 162
   },
   "bld-court": {
    "file": "px/32/bld-court.png",
-   "h": 104,
+   "h": 133,
+   "w": 322
+  },
+  "bld-court-snow": {
+   "file": "px/32/bld-court-snow.png",
+   "h": 133,
    "w": 322
   },
   "bld-depot": {
    "file": "px/32/bld-depot.png",
-   "h": 159,
+   "h": 74,
+   "w": 162
+  },
+  "bld-depot-snow": {
+   "file": "px/32/bld-depot-snow.png",
+   "h": 74,
    "w": 162
   },
   "bld-drivein": {
    "file": "px/32/bld-drivein.png",
-   "h": 154,
+   "h": 92,
+   "w": 162
+  },
+  "bld-drivein-snow": {
+   "file": "px/32/bld-drivein-snow.png",
+   "h": 92,
    "w": 162
   },
   "bld-drug": {
    "file": "px/32/bld-drug.png",
-   "h": 165,
+   "h": 128,
+   "w": 162
+  },
+  "bld-drug-snow": {
+   "file": "px/32/bld-drug-snow.png",
+   "h": 128,
    "w": 162
   },
   "bld-farm-brick": {
    "file": "px/32/bld-farm-brick.png",
-   "h": 142,
+   "h": 112,
+   "w": 194
+  },
+  "bld-farm-brick-snow": {
+   "file": "px/32/bld-farm-brick-snow.png",
+   "h": 112,
    "w": 194
   },
   "bld-farm-bungalow": {
    "file": "px/32/bld-farm-bungalow.png",
-   "h": 130,
+   "h": 114,
+   "w": 194
+  },
+  "bld-farm-bungalow-snow": {
+   "file": "px/32/bld-farm-bungalow-snow.png",
+   "h": 114,
    "w": 194
   },
   "bld-farm-cabin": {
@@ -2314,194 +2644,379 @@
    "h": 129,
    "w": 194
   },
+  "bld-farm-cabin-snow": {
+   "file": "px/32/bld-farm-cabin-snow.png",
+   "h": 129,
+   "w": 194
+  },
   "bld-farm-plank": {
    "file": "px/32/bld-farm-plank.png",
-   "h": 130,
+   "h": 97,
+   "w": 194
+  },
+  "bld-farm-plank-snow": {
+   "file": "px/32/bld-farm-plank-snow.png",
+   "h": 97,
    "w": 194
   },
   "bld-farm-ranch": {
    "file": "px/32/bld-farm-ranch.png",
-   "h": 98,
+   "h": 112,
+   "w": 194
+  },
+  "bld-farm-ranch-snow": {
+   "file": "px/32/bld-farm-ranch-snow.png",
+   "h": 112,
    "w": 194
   },
   "bld-farm-restored": {
    "file": "px/32/bld-farm-restored.png",
-   "h": 139,
+   "h": 120,
+   "w": 194
+  },
+  "bld-farm-restored-snow": {
+   "file": "px/32/bld-farm-restored-snow.png",
+   "h": 120,
    "w": 194
   },
   "bld-grandhotel": {
    "file": "px/32/bld-grandhotel.png",
-   "h": 209,
+   "h": 157,
+   "w": 322
+  },
+  "bld-grandhotel-snow": {
+   "file": "px/32/bld-grandhotel-snow.png",
+   "h": 157,
    "w": 322
   },
   "bld-hardware": {
    "file": "px/32/bld-hardware.png",
-   "h": 161,
+   "h": 139,
+   "w": 162
+  },
+  "bld-hardware-snow": {
+   "file": "px/32/bld-hardware-snow.png",
+   "h": 139,
    "w": 162
   },
   "bld-house2": {
    "file": "px/32/bld-house2.png",
-   "h": 170,
+   "h": 145,
+   "w": 162
+  },
+  "bld-house2-snow": {
+   "file": "px/32/bld-house2-snow.png",
+   "h": 145,
    "w": 162
   },
   "bld-house3": {
    "file": "px/32/bld-house3.png",
-   "h": 168,
+   "h": 121,
+   "w": 162
+  },
+  "bld-house3-snow": {
+   "file": "px/32/bld-house3-snow.png",
+   "h": 121,
    "w": 162
   },
   "bld-house4": {
    "file": "px/32/bld-house4.png",
-   "h": 160,
+   "h": 109,
+   "w": 162
+  },
+  "bld-house4-snow": {
+   "file": "px/32/bld-house4-snow.png",
+   "h": 109,
    "w": 162
   },
   "bld-house6": {
    "file": "px/32/bld-house6.png",
-   "h": 160,
+   "h": 115,
+   "w": 162
+  },
+  "bld-house6-snow": {
+   "file": "px/32/bld-house6-snow.png",
+   "h": 115,
    "w": 162
   },
   "bld-hut": {
    "file": "px/32/bld-hut.png",
-   "h": 147,
+   "h": 111,
+   "w": 162
+  },
+  "bld-hut-snow": {
+   "file": "px/32/bld-hut-snow.png",
+   "h": 111,
    "w": 162
   },
   "bld-market": {
    "file": "px/32/bld-market.png",
-   "h": 118,
+   "h": 137,
+   "w": 322
+  },
+  "bld-market-snow": {
+   "file": "px/32/bld-market-snow.png",
+   "h": 137,
    "w": 322
   },
   "bld-mill": {
    "file": "px/32/bld-mill.png",
-   "h": 107,
+   "h": 136,
+   "w": 162
+  },
+  "bld-mill-snow": {
+   "file": "px/32/bld-mill-snow.png",
+   "h": 136,
    "w": 162
   },
   "bld-modernstore": {
    "file": "px/32/bld-modernstore.png",
-   "h": 142,
+   "h": 135,
+   "w": 162
+  },
+  "bld-modernstore-snow": {
+   "file": "px/32/bld-modernstore-snow.png",
+   "h": 135,
    "w": 162
   },
   "bld-motel": {
    "file": "px/32/bld-motel.png",
-   "h": 155,
+   "h": 120,
+   "w": 322
+  },
+  "bld-motel-snow": {
+   "file": "px/32/bld-motel-snow.png",
+   "h": 120,
    "w": 322
   },
   "bld-plankbath": {
    "file": "px/32/bld-plankbath.png",
-   "h": 166,
+   "h": 143,
+   "w": 162
+  },
+  "bld-plankbath-snow": {
+   "file": "px/32/bld-plankbath-snow.png",
+   "h": 143,
    "w": 162
   },
   "bld-plankbath2": {
    "file": "px/32/bld-plankbath2.png",
-   "h": 164,
+   "h": 125,
+   "w": 162
+  },
+  "bld-plankbath2-snow": {
+   "file": "px/32/bld-plankbath2-snow.png",
+   "h": 125,
    "w": 162
   },
   "bld-plankhotel": {
    "file": "px/32/bld-plankhotel.png",
-   "h": 164,
+   "h": 133,
+   "w": 162
+  },
+  "bld-plankhotel-snow": {
+   "file": "px/32/bld-plankhotel-snow.png",
+   "h": 133,
    "w": 162
   },
   "bld-plankstore": {
    "file": "px/32/bld-plankstore.png",
-   "h": 152,
+   "h": 119,
+   "w": 162
+  },
+  "bld-plankstore-snow": {
+   "file": "px/32/bld-plankstore-snow.png",
+   "h": 119,
    "w": 162
   },
   "bld-radio": {
    "file": "px/32/bld-radio.png",
-   "h": 162,
+   "h": 160,
+   "w": 162
+  },
+  "bld-radio-snow": {
+   "file": "px/32/bld-radio-snow.png",
+   "h": 160,
    "w": 162
   },
   "bld-ranchhouse": {
    "file": "px/32/bld-ranchhouse.png",
-   "h": 114,
+   "h": 69,
+   "w": 162
+  },
+  "bld-ranchhouse-snow": {
+   "file": "px/32/bld-ranchhouse-snow.png",
+   "h": 69,
    "w": 162
   },
   "bld-row-1": {
    "file": "px/32/bld-row-1.png",
-   "h": 159,
+   "h": 111,
+   "w": 162
+  },
+  "bld-row-1-snow": {
+   "file": "px/32/bld-row-1-snow.png",
+   "h": 111,
    "w": 162
   },
   "bld-row-1r": {
    "file": "px/32/bld-row-1r.png",
-   "h": 155,
+   "h": 111,
+   "w": 162
+  },
+  "bld-row-1r-snow": {
+   "file": "px/32/bld-row-1r-snow.png",
+   "h": 111,
    "w": 162
   },
   "bld-row-2": {
    "file": "px/32/bld-row-2.png",
-   "h": 154,
+   "h": 136,
+   "w": 162
+  },
+  "bld-row-2-snow": {
+   "file": "px/32/bld-row-2-snow.png",
+   "h": 136,
    "w": 162
   },
   "bld-row-2r": {
    "file": "px/32/bld-row-2r.png",
-   "h": 154,
+   "h": 126,
+   "w": 162
+  },
+  "bld-row-2r-snow": {
+   "file": "px/32/bld-row-2r-snow.png",
+   "h": 126,
    "w": 162
   },
   "bld-row-3": {
    "file": "px/32/bld-row-3.png",
-   "h": 157,
+   "h": 116,
+   "w": 162
+  },
+  "bld-row-3-snow": {
+   "file": "px/32/bld-row-3-snow.png",
+   "h": 116,
    "w": 162
   },
   "bld-row-3r": {
    "file": "px/32/bld-row-3r.png",
-   "h": 157,
+   "h": 121,
+   "w": 162
+  },
+  "bld-row-3r-snow": {
+   "file": "px/32/bld-row-3r-snow.png",
+   "h": 121,
    "w": 162
   },
   "bld-row-4": {
    "file": "px/32/bld-row-4.png",
-   "h": 154,
+   "h": 125,
+   "w": 162
+  },
+  "bld-row-4-snow": {
+   "file": "px/32/bld-row-4-snow.png",
+   "h": 125,
    "w": 162
   },
   "bld-row-4r": {
    "file": "px/32/bld-row-4r.png",
-   "h": 154,
+   "h": 125,
+   "w": 162
+  },
+  "bld-row-4r-snow": {
+   "file": "px/32/bld-row-4r-snow.png",
+   "h": 125,
    "w": 162
   },
   "bld-stage": {
    "file": "px/32/bld-stage.png",
-   "h": 162,
+   "h": 116,
+   "w": 162
+  },
+  "bld-stage-snow": {
+   "file": "px/32/bld-stage-snow.png",
+   "h": 116,
    "w": 162
   },
   "bld-tent": {
    "file": "px/32/bld-tent.png",
-   "h": 159,
+   "h": 108,
+   "w": 162
+  },
+  "bld-tent-snow": {
+   "file": "px/32/bld-tent-snow.png",
+   "h": 108,
    "w": 162
   },
   "bld-tent2": {
    "file": "px/32/bld-tent2.png",
-   "h": 167,
+   "h": 123,
+   "w": 162
+  },
+  "bld-tent2-snow": {
+   "file": "px/32/bld-tent2-snow.png",
+   "h": 123,
    "w": 162
   },
   "bld-twinhotel": {
    "file": "px/32/bld-twinhotel.png",
-   "h": 208,
+   "h": 169,
+   "w": 322
+  },
+  "bld-twinhotel-snow": {
+   "file": "px/32/bld-twinhotel-snow.png",
+   "h": 169,
    "w": 322
   },
   "bld-vicbath-1": {
    "file": "px/32/bld-vicbath-1.png",
-   "h": 164,
+   "h": 124,
+   "w": 162
+  },
+  "bld-vicbath-1-snow": {
+   "file": "px/32/bld-vicbath-1-snow.png",
+   "h": 124,
    "w": 162
   },
   "bld-vicbath-2": {
    "file": "px/32/bld-vicbath-2.png",
-   "h": 164,
+   "h": 134,
+   "w": 162
+  },
+  "bld-vicbath-2-snow": {
+   "file": "px/32/bld-vicbath-2-snow.png",
+   "h": 134,
    "w": 162
   },
   "bld-vicbath-3": {
    "file": "px/32/bld-vicbath-3.png",
-   "h": 165,
+   "h": 129,
+   "w": 162
+  },
+  "bld-vicbath-3-snow": {
+   "file": "px/32/bld-vicbath-3-snow.png",
+   "h": 129,
    "w": 162
   },
   "bld-vicbath-free": {
    "file": "px/32/bld-vicbath-free.png",
-   "h": 162,
+   "h": 101,
+   "w": 162
+  },
+  "bld-vicbath-free-snow": {
+   "file": "px/32/bld-vicbath-free-snow.png",
+   "h": 101,
    "w": 162
   },
   "bush": {
    "file": "px/32/bush.png",
-   "h": 24,
+   "h": 20,
    "w": 28
   },
   "campfire": {
    "file": "px/32/campfire.png",
-   "h": 39,
+   "h": 35,
    "w": 34
   },
   "chars-dress": {
@@ -2536,162 +3051,167 @@
   },
   "crop-beans": {
    "file": "px/32/crop-beans.png",
-   "h": 81,
+   "h": 65,
    "w": 185
   },
   "crop-blueberry": {
    "file": "px/32/crop-blueberry.png",
-   "h": 42,
+   "h": 34,
    "w": 185
   },
   "crop-cabbage": {
    "file": "px/32/crop-cabbage.png",
-   "h": 37,
+   "h": 35,
    "w": 185
   },
   "crop-collards": {
    "file": "px/32/crop-collards.png",
-   "h": 42,
+   "h": 38,
    "w": 185
   },
   "crop-corn": {
    "file": "px/32/crop-corn.png",
-   "h": 87,
+   "h": 70,
    "w": 185
   },
   "crop-heirloom": {
    "file": "px/32/crop-heirloom.png",
-   "h": 64,
+   "h": 46,
    "w": 185
   },
   "crop-hops": {
    "file": "px/32/crop-hops.png",
-   "h": 112,
+   "h": 68,
    "w": 185
   },
   "crop-okra": {
    "file": "px/32/crop-okra.png",
-   "h": 57,
+   "h": 51,
    "w": 185
   },
   "crop-peanut": {
    "file": "px/32/crop-peanut.png",
-   "h": 53,
+   "h": 41,
    "w": 185
   },
   "crop-pepper": {
    "file": "px/32/crop-pepper.png",
-   "h": 49,
+   "h": 44,
    "w": 185
   },
   "crop-potato": {
    "file": "px/32/crop-potato.png",
-   "h": 55,
+   "h": 36,
    "w": 185
   },
   "crop-radish": {
    "file": "px/32/crop-radish.png",
-   "h": 44,
+   "h": 37,
    "w": 185
   },
   "crop-squash": {
    "file": "px/32/crop-squash.png",
-   "h": 36,
+   "h": 30,
    "w": 185
   },
   "crop-strawberry": {
    "file": "px/32/crop-strawberry.png",
-   "h": 33,
+   "h": 34,
    "w": 185
   },
   "crop-sweetcorn": {
    "file": "px/32/crop-sweetcorn.png",
-   "h": 84,
+   "h": 58,
    "w": 185
   },
   "crop-sweetpotato": {
    "file": "px/32/crop-sweetpotato.png",
-   "h": 40,
+   "h": 37,
    "w": 185
   },
   "crop-tomato": {
    "file": "px/32/crop-tomato.png",
-   "h": 70,
+   "h": 52,
    "w": 185
   },
   "crop-tulip": {
    "file": "px/32/crop-tulip.png",
-   "h": 45,
+   "h": 44,
    "w": 185
   },
   "crop-watermelon": {
    "file": "px/32/crop-watermelon.png",
-   "h": 44,
+   "h": 32,
    "w": 185
   },
   "crop-wheat": {
    "file": "px/32/crop-wheat.png",
-   "h": 71,
+   "h": 48,
    "w": 185
   },
   "crystal": {
    "file": "px/32/crystal.png",
-   "h": 33,
+   "h": 32,
    "w": 27
   },
   "deco-barrels": {
    "file": "px/32/deco-barrels.png",
-   "h": 38,
+   "h": 24,
    "w": 37
   },
   "deco-beehives": {
    "file": "px/32/deco-beehives.png",
-   "h": 43,
+   "h": 27,
    "w": 40
   },
   "deco-greenhouse": {
    "file": "px/32/deco-greenhouse.png",
-   "h": 77,
+   "h": 52,
    "w": 85
   },
   "deco-haybale": {
    "file": "px/32/deco-haybale.png",
-   "h": 42,
+   "h": 29,
    "w": 40
   },
   "deco-haystack": {
    "file": "px/32/deco-haystack.png",
-   "h": 51,
+   "h": 44,
    "w": 44
   },
   "deco-modelA": {
    "file": "px/32/deco-modelA.png",
-   "h": 53,
+   "h": 42,
    "w": 82
   },
   "deco-pump": {
    "file": "px/32/deco-pump.png",
-   "h": 38,
+   "h": 40,
    "w": 31
+  },
+  "deco-raisedbeds": {
+   "file": "px/32/deco-raisedbeds.png",
+   "h": 26,
+   "w": 63
   },
   "deco-scarecrow": {
    "file": "px/32/deco-scarecrow.png",
-   "h": 39,
+   "h": 51,
    "w": 37
   },
   "deco-tractor": {
    "file": "px/32/deco-tractor.png",
-   "h": 57,
+   "h": 49,
    "w": 79
   },
   "deco-wagon": {
    "file": "px/32/deco-wagon.png",
-   "h": 49,
+   "h": 37,
    "w": 76
   },
   "deco-woodpile": {
    "file": "px/32/deco-woodpile.png",
-   "h": 50,
+   "h": 33,
    "w": 50
   },
   "icon-acorn": {
@@ -3086,12 +3606,12 @@
   },
   "lamp-deco": {
    "file": "px/32/lamp-deco.png",
-   "h": 81,
+   "h": 76,
    "w": 32
   },
   "lamp-gas": {
    "file": "px/32/lamp-gas.png",
-   "h": 66,
+   "h": 68,
    "w": 18
   },
   "lamp-lantern": {
@@ -3101,42 +3621,67 @@
   },
   "lamp-led": {
    "file": "px/32/lamp-led.png",
-   "h": 72,
+   "h": 84,
    "w": 18
   },
   "lamp-sodium": {
    "file": "px/32/lamp-sodium.png",
-   "h": 60,
+   "h": 53,
    "w": 22
   },
   "outcrop": {
    "file": "px/32/outcrop.png",
-   "h": 43,
+   "h": 20,
    "w": 36
+  },
+  "prop-bench": {
+   "file": "px/32/prop-bench.png",
+   "h": 27,
+   "w": 37
+  },
+  "prop-pool": {
+   "file": "px/32/prop-pool.png",
+   "h": 55,
+   "w": 76
+  },
+  "prop-pump": {
+   "file": "px/32/prop-pump.png",
+   "h": 31,
+   "w": 21
+  },
+  "prop-springbox": {
+   "file": "px/32/prop-springbox.png",
+   "h": 24,
+   "w": 29
+  },
+  "prop-springdisplay": {
+   "file": "px/32/prop-springdisplay.png",
+   "h": 44,
+   "w": 39
   },
   "rock": {
    "file": "px/32/rock.png",
-   "h": 27,
+   "h": 22,
    "w": 32
   },
   "sign": {
    "file": "px/32/sign.png",
-   "h": 33,
+   "h": 29,
    "w": 34
   },
   "street-bench": {
    "file": "px/32/street-bench.png",
-   "h": 32,
+   "h": 29,
    "w": 37
   },
   "street-bikes": {
    "file": "px/32/street-bikes.png",
-   "h": 41,
+   "h": 27,
    "w": 40
   },
   "street-buggy": {
    "file": "px/32/street-buggy.png",
-   "h": 35,
+   "h": 31,
    "w": 66
   },
   "street-car26a": {
@@ -3144,49 +3689,54 @@
    "h": 36,
    "w": 66
   },
+  "street-car26b": {
+   "file": "px/32/street-car26b.png",
+   "h": 30,
+   "w": 66
+  },
   "street-car55a": {
    "file": "px/32/street-car55a.png",
-   "h": 36,
+   "h": 31,
    "w": 68
   },
   "street-car55b": {
    "file": "px/32/street-car55b.png",
-   "h": 32,
+   "h": 30,
    "w": 68
   },
   "street-carriage": {
    "file": "px/32/street-carriage.png",
-   "h": 35,
+   "h": 33,
    "w": 66
   },
   "street-coupe31": {
    "file": "px/32/street-coupe31.png",
-   "h": 37,
+   "h": 35,
    "w": 66
   },
   "street-hitch": {
    "file": "px/32/street-hitch.png",
-   "h": 38,
+   "h": 25,
    "w": 40
   },
   "street-hydrant": {
    "file": "px/32/street-hydrant.png",
-   "h": 34,
+   "h": 44,
    "w": 24
   },
   "street-planter": {
    "file": "px/32/street-planter.png",
-   "h": 38,
+   "h": 34,
    "w": 34
   },
   "street-sedan31": {
    "file": "px/32/street-sedan31.png",
-   "h": 43,
+   "h": 36,
    "w": 66
   },
   "street-umbrella": {
    "file": "px/32/street-umbrella.png",
-   "h": 45,
+   "h": 46,
    "w": 44
   },
   "tex-asphalt": {
@@ -3281,42 +3831,42 @@
   },
   "tree-magnolia": {
    "file": "px/32/tree-magnolia.png",
-   "h": 78,
+   "h": 73,
    "w": 61
   },
   "tree-oak-fa": {
    "file": "px/32/tree-oak-fa.png",
-   "h": 93,
+   "h": 67,
    "w": 75
   },
   "tree-oak-sp": {
    "file": "px/32/tree-oak-sp.png",
-   "h": 93,
+   "h": 87,
    "w": 75
   },
   "tree-oak-su": {
    "file": "px/32/tree-oak-su.png",
-   "h": 93,
+   "h": 70,
    "w": 75
   },
   "tree-oak-wi": {
    "file": "px/32/tree-oak-wi.png",
-   "h": 97,
+   "h": 88,
    "w": 75
   },
   "tree-pine": {
    "file": "px/32/tree-pine.png",
-   "h": 78,
+   "h": 122,
    "w": 57
   },
   "trough": {
    "file": "px/32/trough.png",
-   "h": 29,
+   "h": 27,
    "w": 50
   },
   "tuft": {
    "file": "px/32/tuft.png",
-   "h": 31,
+   "h": 21,
    "w": 29
   },
   "vista-1": {

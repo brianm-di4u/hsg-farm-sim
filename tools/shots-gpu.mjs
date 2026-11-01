@@ -51,6 +51,19 @@ async function crop(buf, x, y, w, h, scale) {
     return c.toDataURL('image/png');
   }, { src: b64(buf), x, y, w, h, scale }));
 }
+// A character close-up beside its period reference image (research/refs), both at the same height.
+async function besideRef(buf, refPath) {
+  if (!refPath || !fs.existsSync(refPath)) return buf;
+  const ref = 'data:image/jpeg;base64,' + fs.readFileSync(refPath).toString('base64');
+  return fromData(await lab.evaluate(async ({ src, ref }) => {
+    const a = new Image(); a.src = src; await a.decode(); const b = new Image(); b.src = ref; await b.decode();
+    const h = a.height, bw = Math.round(b.width * h / b.height), c = document.createElement('canvas'); c.width = a.width + 8 + bw; c.height = h + 22;
+    const g = c.getContext('2d'); g.fillStyle = '#111'; g.fillRect(0, 0, c.width, c.height); g.imageSmoothingEnabled = false; g.drawImage(a, 0, 22);
+    g.imageSmoothingEnabled = true; g.drawImage(b, a.width + 8, 22, bw, h);
+    g.fillStyle = '#fff'; g.font = 'bold 14px sans-serif'; g.fillText('in game', 4, 16); g.fillText('period reference (research/refs)', a.width + 12, 16);
+    return c.toDataURL('image/png');
+  }, { src: b64(buf), ref }));
+}
 async function strip(bufs, labelPx = 18) {
   return fromData(await lab.evaluate(async ({ srcs, labelPx }) => {
     const ims = await Promise.all(srcs.map(async (s) => { const im = new Image(); im.src = s; await im.decode(); return im; }));
@@ -104,7 +117,8 @@ async function setup(page, s) {
   await page.waitForFunction(() => { const st = window.__game.getState(); return st.artPending === 0; }, null, { timeout: 30000 }).catch(() => problems.push(`${s.id}: art still loading`));
   if (s.talk) await page.evaluate(() => { const st = window.__game.getState(); const n = st.npcs.find((n) => !n.hidden) || st.npcs[0]; if (n) window.__game.act('talk', n.id); });
   if (s.modal) await page.evaluate((m) => window.__game.scene(m), s.modal);
-  await page.evaluate(() => window.__game.act('render'));
+  // Warm up 1.5 s of ambient motion (steam, chimney smoke) on a stepped clock, then pin it: frames repeat exactly.
+  await page.evaluate(() => { for (let i = 0; i <= 90; i++) { window.__game.act('clock', 48000 + i * 16.7); window.__game.act('render'); } window.__game.act('clock', 49520); window.__game.act('render'); });
   await frames(page, 3);
 }
 // Device-pixel rect of a tile rect, from the camera and tile size the game reports.
@@ -148,7 +162,9 @@ for (const vp of VPS) {
         rect.w = Math.min(rect.w, viewport.width * dpr - rect.x); rect.h = Math.min(rect.h, viewport.height * dpr - rect.y);
         if (rect.w < 8 || rect.h < 8) continue;
         const scale = Math.max(1, Math.min(4, Math.floor(900 / Math.max(rect.w, rect.h))));
-        row.crops.push({ name, file: save(path.join(dirOut, 'crops', `${s.id}-${name}.png`), await crop(buf, rect.x, rect.y, rect.w, rect.h, scale)) });
+        let img = await crop(buf, rect.x, rect.y, rect.w, rect.h, scale);
+        if (name === 'player' && SPEC.refs && s.scene) img = await besideRef(img, path.join(GAME, SPEC.refs[String(s.scene.era)] || ''));
+        row.crops.push({ name, file: save(path.join(dirOut, 'crops', `${s.id}-${name}.png`), img) });
       }
     }
     if (STRIPS && s.strip) {
@@ -170,6 +186,7 @@ for (const vp of VPS) {
       await page.evaluate(() => window.__game.act('clock', null));
       row.strip = save(path.join(dirOut, 'strips', `${s.id}${vp === 'desktop' ? '' : '-' + vp}.png`), await strip(shots));
     }
+    await page.evaluate(() => window.__game.act('clock', null));
     index.shots.push(row);
     process.stdout.write(`${vp}/${s.id} `);
   }

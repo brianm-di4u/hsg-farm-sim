@@ -223,14 +223,15 @@ characters are rendered from `art-src/blender/characters.py`.
 
 ## Pixel-art campaign (2026-11-01): pixel fonts
 
-Six families under the SIL Open Font License 1.1, downloaded from `github.com/google/fonts` (`main` branch,
+Seven families under the SIL Open Font License 1.1, downloaded from `github.com/google/fonts` (`main` branch,
 `ofl/<family>/`) on 2026-11-01 and subset with fontTools 4.68 to Latin-1 plus a few symbols (dashes, quotes,
 bullet, ellipsis, arrows, ×, ✓) as WOFF2 (`vendor/fonts/*.woff2`; licence texts as `vendor/fonts/LICENSE-<family>.txt`).
 `tools/build-fonts.mjs` inlines them into `assets/fonts.css` with the earlier faces. They are used only by the pixel style.
 
 | Family | File | Used for |
 |---|---|---|
-| Pixelify Sans (variable 400–700) | `pixelify-sans.woff2` | body text |
+| DotGothic16 | `dotgothic16.woff2` | body text (added after loop 1: Pixelify Sans's small-size 2/8, 5/S and C/O were ambiguous) |
+| Pixelify Sans (variable 400–700) | `pixelify-sans.woff2` | fallback |
 | Jacquard 12 | `jacquard-12.woff2` | 1807 and 1871 display |
 | Jacquarda Bastarda 9 | `jacquarda-bastarda-9.woff2` | 1886 display |
 | Silkscreen 400, 700 | `silkscreen-400.woff2`, `silkscreen-700.woff2` | 1931 display |

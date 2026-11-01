@@ -172,36 +172,36 @@ for sx, side in ((1, 'L'), (-1, 'R')):
     tag(mesh_obj(f'shin.{side}', capsule(0.068, 0.13), kn), 'legs')
     tag(mesh_obj(f'shoe.{side}', sphere(0.075, (0.95, 1.45, 0.7)), kn, (0, -0.04, -0.2), 'shoe'), 'fixed')
     LEG[side] = (hp, kn)
-tag(mesh_obj('skirt', cone(0.27, 0.16, 0.36, 28, -0.36), hips, (0, 0, 0.08)), 'skirt')
+tag(mesh_obj('skirt', cone(0.29, 0.16, 0.5, 28, -0.5), hips, (0, 0, 0.08)), 'skirt')  # pixel style: to the ankle
 
 # ------------------------------------------------------------------ overlays (hats, beard, glasses)
 def hatobj(name, bm, loc=(0, 0, 0), mat='grey'):
     return tag(mesh_obj(name, bm, headp, loc, mat), 'hat-' + name.split('_')[0])
 # brimmed farm hat (straw/felt)
-hatobj('brim_b', cone(0.31, 0.31, 0.025, 32), (0, 0, 0.15))
-hatobj('brim_c', cone(0.2, 0.18, 0.16, 28), (0, 0, 0.16))
+hatobj('brim_b', cone(0.4, 0.4, 0.03, 32), (0, 0, 0.14))  # slouch: a very wide brim
+hatobj('brim_c', cone(0.21, 0.19, 0.12, 28), (0, 0, 0.16))  # and a low crown
 # fedora: narrower brim, pinched crown, band
-hatobj('fedora_b', cone(0.33, 0.33, 0.022, 32), (0, 0, 0.13))
-hatobj('fedora_c', sphere(0.2, (1.0, 1.05, 0.62), 28, 14, lambda c: c.z > -0.05), (0, 0, 0.17))
+hatobj('fedora_b', cone(0.34, 0.34, 0.025, 32), (0, 0, 0.13))
+hatobj('fedora_c', sphere(0.2, (0.95, 1.05, 0.95), 28, 14, lambda c: c.z > -0.05), (0, 0, 0.18))  # a tall crown
 # cap (flat cap / ball cap): dome plus a visor toward the face
-hatobj('cap_d', sphere(0.272, (1.0, 1.0, 0.82), 28, 16, lambda c: c.z > 0.02), (0, 0.0, 0.03))
-hatobj('cap_v', sphere(0.16, (1.15, 0.85, 0.16), 20, 10, lambda c: c.y < 0.02), (0, -0.2, 0.06))
+hatobj('cap_d', sphere(0.295, (1.0, 1.0, 0.84), 28, 16, lambda c: c.z > 0.0), (0, 0.0, 0.03))  # pixel style: encloses the hair (no poke-through)
+hatobj('cap_v', sphere(0.2, (1.1, 1.0, 0.16), 20, 10, lambda c: c.y < 0.02), (0, -0.24, 0.05))  # a long visor
 # helmet (race helmet): rounder, a ridge, a short brim
 hatobj('helmet_d', sphere(0.29, (1.0, 1.06, 0.86), 28, 16, lambda c: c.z > -0.03), (0, 0.01, 0.02))
 hatobj('helmet_r', sphere(0.05, (0.7, 4.6, 0.7), 12, 8), (0, 0.02, 0.27))
 hatobj('helmet_v', sphere(0.14, (1.1, 0.6, 0.14), 16, 8, lambda c: c.y < 0.0), (0, -0.25, 0.08))
 # bonnet: a deep shell around the back and top that frames the face, with a brim forward
 hatobj('bonnet_s', sphere(0.3, (1.05, 1.0, 1.0), 28, 18, lambda c: c.y > -0.18 and c.z > -0.16), (0, 0.03, 0.03))
-o = hatobj('bonnet_f', sphere(0.29, (1.08, 0.55, 1.05), 28, 16, lambda c: c.y < 0.02 and c.z > 0.07), (0, -0.12, 0.06)); o.rotation_euler = (math.radians(-18), 0, 0)  # pixel style: the brim frames the face from above instead of hiding it
+o = hatobj('bonnet_f', sphere(0.33, (1.12, 0.7, 1.05), 28, 16, lambda c: c.y < 0.02 and c.z > 0.08), (0, -0.14, 0.08)); o.rotation_euler = (math.radians(-18), 0, 0)  # pixel style: the brim frames the face from above instead of hiding it
 # headscarf: tight wrap with a knot at the back
 hatobj('scarf_s', sphere(0.275, (1.02, 1.0, 1.0), 28, 18, lambda c: c.y > -0.12 and c.z > -0.12), (0, 0.01, 0.02))
-hatobj('scarf_k', sphere(0.075, (1.0, 0.8, 0.8)), (0, 0.27, -0.06))
+hatobj('scarf_k', sphere(0.11, (1.2, 0.8, 0.9)), (0, 0.27, -0.04))  # a big knot
 # toque (chef): a band and a tall puffed crown
 hatobj('toque_b', cone(0.24, 0.24, 0.08, 28), (0, 0, 0.13))
 hatobj('toque_c', sphere(0.19, (1.0, 1.0, 0.95), 28, 16), (0, 0, 0.32))  # pixel style: a smaller crown, so the toque doesn't swamp a 21-px figure
 # fur cap with a tail at the back
 hatobj('capfur_c', cone(0.26, 0.24, 0.17, 28), (0, 0, 0.1))
-hatobj('capfur_t', capsule(0.055, 0.22), (0.05, 0.27, 0.22))
+hatobj('capfur_t', capsule(0.075, 0.3), (0.08, 0.27, 0.22))  # a bushy tail
 # beard and glasses
 tag(mesh_obj('beard', sphere(0.215, (1.0, 0.8, 0.85), 24, 14, lambda c: c.z < -0.02 and c.y < 0.06), headp, (0, -0.06, -0.06)), 'beard')
 for sx in (-1, 1):
@@ -213,7 +213,7 @@ def front_only(bm, ymax):
     bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.y > ymax], context='VERTS')
     return bm
 tag(mesh_obj('apron_bib', sphere(0.208, (1.0, 0.76, 1.12), 24, 14, lambda c: c.y < -0.03 and c.z < 0.1), hips, (0, -0.004, 0.19)), 'apron')
-tag(mesh_obj('apron_skirt', front_only(cone(0.285, 0.17, 0.4, 28, -0.4), -0.04), hips, (0, -0.012, 0.08)), 'apron')
+tag(mesh_obj('apron_skirt', front_only(cone(0.305, 0.17, 0.52, 28, -0.52), -0.04), hips, (0, -0.012, 0.08)), 'apron')
 tag(mesh_obj('vest', sphere(0.21, (1.0, 0.78, 1.0), 24, 14, lambda c: c.z > -0.1 and not (c.y < -0.12 and abs(c.x) < 0.035)), hips, (0, 0, 0.21)), 'vest')
 tag(mesh_obj('overalls_bib', sphere(0.207, (0.62, 0.77, 1.0), 20, 12, lambda c: c.y < 0 and -0.12 < c.z < 0.08), hips, (0, -0.004, 0.2)), 'overalls')
 for sx in (-1, 1):
@@ -239,11 +239,13 @@ def reset_pose():
     for o in bpy.data.objects:
         if o.type == 'EMPTY': o.rotation_euler = (0, 0, 0)
     hips.location.z = 0.44
-    headp.rotation_euler.x = math.radians(-16)
+    headp.rotation_euler.x = math.radians(-16)  # nod for the three-quarter front and back views (side views: see pose)
 def pose(direction, kind, k):
     """idle 0-1, walk 0-5 (a six-step cycle: passing poses at 0 and 3), use 0-4."""
     reset_pose()
     root.rotation_euler.z = DIRS[direction]
+    if direction == 'left':  # pixel style: no forward nod in profile, or tall headwear tips forward and the figure reads as leaning
+        headp.rotation_euler.x = 0
     sL, eL = ARM['L']; sR, eR = ARM['R']; hL, kL = LEG['L']; hR, kR = LEG['R']
     # arms hang a little away from the body
     sL.rotation_euler.y = math.radians(-8); sR.rotation_euler.y = math.radians(8)

@@ -22,7 +22,8 @@
     "era": 1,
     "at": "farmDoor",
     "time": 470,
-    "day": 1
+    "day": 1,
+    "weather": "clear"
    },
    "crops": [
     [
@@ -268,20 +269,26 @@
   },
   {
    "id": "R14",
-   "title": "Hoe swing on the field (strip)",
+   "title": "Hoe swing on the field, tilling a tile (strip)",
    "cats": [
     "animation"
    ],
    "scene": {
     "era": 1,
-    "at": "farmDoor",
+    "at": "field",
     "time": 700
    },
    "tool": "hoe",
    "strip": {
     "act": "use",
     "ticks": 3
-   }
+   },
+   "acts": [
+    [
+     "face",
+     "down"
+    ]
+   ]
   },
   {
    "id": "R15",
@@ -391,6 +398,40 @@
     "time": 700
    },
    "modal": "shop"
+  },
+  {
+   "id": "R19",
+   "title": "2026 town, the restored Row by day",
+   "cats": [
+    "environment",
+    "authenticity"
+   ],
+   "scene": {
+    "era": 6,
+    "at": "town",
+    "time": 700,
+    "weather": "clear"
+   },
+   "crops": [
+    [
+     "player"
+    ],
+    [
+     "row",
+     27,
+     8,
+     6,
+     5
+    ]
+   ]
   }
- ]
+ ],
+ "refs": {
+  "1": "research/refs/clothing/1807/quilting-frolic-1813-krimmel.jpg",
+  "2": "research/refs/clothing/1871/allen-roan-notary-hot-springs-c1880-kennedy-nypl.jpg",
+  "3": "research/refs/clothing/1886/william-moore-family-sargent-ne-1886-butcher-loc.jpg",
+  "4": "research/refs/clothing/1931/farmer-sam-nichols-boone-co-ar-1935-shahn-fsa-loc.jpg",
+  "5": "research/refs/clothing/1955/neighbors-culp-ar-1953-mennonite-archives.jpg",
+  "6": "research/refs/clothing/2026/farmer-stanley-madison-lyles-station-in-2021-usda.jpg"
+ }
 }
