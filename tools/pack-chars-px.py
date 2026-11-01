@@ -117,6 +117,7 @@ def base_atlas(name, cw, chh):
                 g = px[..., 0][m]
                 lab[m] = r * 3 + (g > th[r][0]).astype(int) + (g > th[r][1]).astype(int)
         red = reduce_labels(lab, wts, nlab, cw, chh)
+        red = stamp_face(red, lab, pal, cw, chh)
         for l in range(12):
             m = red == l
             rows[l, :, c * cw:(c + 1) * cw][m] = (255, 255, 255, 255)
@@ -127,6 +128,50 @@ def base_atlas(name, cw, chh):
             blk[fm, :3] = col
             blk[fm, 3] = 255
     return rows.reshape(-1, cw * COLS, 4)
+
+
+def components(mask):
+    """Connected components (4-neighbour) of a boolean mask: list of (pixel count, mean y, mean x)."""
+    seen = np.zeros_like(mask)
+    out = []
+    for y0, x0 in zip(*np.where(mask)):
+        if seen[y0, x0]:
+            continue
+        stack, pts = [(y0, x0)], []
+        seen[y0, x0] = True
+        while stack:
+            y, x = stack.pop(); pts.append((y, x))
+            for yy, xx in ((y + 1, x), (y - 1, x), (y, x + 1), (y, x - 1)):
+                if 0 <= yy < mask.shape[0] and 0 <= xx < mask.shape[1] and mask[yy, xx] and not seen[yy, xx]:
+                    seen[yy, xx] = True; stack.append((yy, xx))
+        a = np.array(pts)
+        out.append((len(pts), a[:, 0].mean(), a[:, 1].mean()))
+    return out
+
+
+def stamp_face(red, lab, pal, cw, chh):
+    """Feature-preserving face: majority voting smears eyes into grey 2x2 blots and cheek blush into pink patches.
+    So the darkest fixed colour (the eyes) is cleared from the reduced cell and re-stamped as one crisp dark pixel
+    column per eye, at the centroid of that eye in the full-resolution render; blush and the mouth line (the reddish
+    fixed colour) are dropped, leaving skin. Shoes keep their voted pixels."""
+    lum = pal.mean(1)
+    eye = int(lum.argmin())
+    red_c = np.array([abs(c[0] - c[1]) + abs(c[0] - c[2]) for c in pal])
+    blush = [k for k in range(len(pal)) if k != eye and red_c[k] > 0.25 and pal[k][0] > pal[k][2]]
+    skin_mid = 1  # skin layer, mid shade
+    out = red.copy()
+    head = np.arange(chh)[:, None] < chh * 0.62  # the eye colour also clusters with the shoes: clear it on the head only
+    out[(out == 12 + eye) & head] = skin_mid
+    for k in blush:
+        out[(out == 12 + k) & head] = skin_mid
+    sx, sy = cw / SRC_W, chh / SRC_H
+    w = max(1, round(cw / 21)); h = 2 * w
+    for n, my, mx in components(lab == 12 + eye):
+        if n < 6 or my > SRC_H * 0.62:  # eyes only (ignore specks, and the shoes low in the cell)
+            continue
+        cx, cy = int(mx * sx), int(round(my * sy - h / 2))
+        out[max(0, cy):cy + h, max(0, cx):cx + w] = 12 + eye
+    return out
 
 
 def overlay_atlas(cw, chh):

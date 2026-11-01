@@ -1,0 +1,34 @@
+- **The pixel style is what these captures show** (`?style=pixel`).
+  - The world draws into a low-resolution canvas at 16 art px per tile, scaled up by a whole number with no smoothing: 4× on the 1280×800 desktop (320×200 art px visible), 4× device px on the 390×844@2 phone.
+  - The camera and every sprite sit on whole art pixels.
+- **Pixel assets:** buildings, trees, props, crops, animals, icons and terrain textures are converted at pack time (`tools/pixelize.py`, `tools/pack-px.py`) at exactly the size they are drawn. The conversion:
+  - recovers the grid and quantizes to an OKLab palette, with each art pixel taking the majority colour of its block;
+  - uses binary alpha;
+  - flattens painted texture with a median filter;
+  - adds a 1-px selective outline (a darkened shade of the bordering colour) on sprites, none on terrain.
+  - The sources are still the painted pictures; no art was redrawn by hand.
+- **Terrain edges:** baked terrain chunks are cleaned so that anti-aliased blend pixels between materials snap to one side (hard pixel steps). Small details such as flowers and pebbles are kept.
+- **Characters:**
+  - Re-rendered in Blender with 13 frames per direction: a 2-frame idle breath, a 6-step walk with arm swing and head bob, and a 5-frame tool swing (wind-up, top, strike, impact, recover).
+  - Converted to 21×32 cells, where each body layer has three shades filled per person with a hue-shifted ramp. The 1-px outline takes the hue of the part it borders.
+  - New garment layers: apron, vest, overalls, ponytail.
+  - Women before 1955 (Ada, Nora, Margaux, Corinna, Hattie, Ora, June Talley, Lorraine) now wear the dress body.
+  - Aprons: Ada, Nora, Corinna, Hattie, Ora, Priya. Vests: Caleb, Lucius. Overalls: Rusty. Ponytails: June Vale, Priya. Hattie's cap is white.
+- **Light:**
+  - Lamp pools and lit windows are hard-edged rings: 4 bands, no smooth gradient.
+  - Darkness and the time-of-day tint change in steps.
+  - Fog is lighter over the gameplay layer.
+  - 1886 street lamps are oil lantern posts (gas posts date from 1897).
+- **Weather and effects:** 1-px rain streaks and 1–2 px snow flakes; particles, steam puffs, splash rings, hearts and water glints are drawn as whole pixels; blob shadows are hard-edged.
+- **Text and UI:**
+  - In-world text (signs, name tags, pickup counts, speech badges) uses a 5×7 bitmap font.
+  - The HUD and panels use pixel fonts (OFL): Pixelify Sans for body text, plus one display face per era (Jacquard 12 for 1807/1871, Jacquarda Bastarda 9 for 1886, Silkscreen for 1931, Jersey 10 for 1955, Micro 5 for 2026).
+  - Panels use square-cornered 9-slice pixel frames per era, each with a material detail: hide stitching, plank grain, a brass bead, a gilt double line, a chrome highlight or an LED line.
+  - The target box is drawn as pixel corner brackets.
+- **Occlusion:** lamp posts in front of the player and buildings whose roof covers the player turn see-through.
+- **Capture changes:**
+  - R11 opens a dialogue with a neighbour placed beside the player.
+  - R15 has animals in the pen.
+  - R16 places three neighbours by the player.
+  - R03's crop plot no longer sits under the player.
+  - Strips pin the clock and advance 50 ms per frame, so time-based animation is sampled exactly.

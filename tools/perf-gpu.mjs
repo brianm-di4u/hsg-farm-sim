@@ -46,6 +46,14 @@ for (const vp of VPS) {
     await page.waitForFunction(() => { const s = window.__game.getState(); return s.artPending === 0 && s.artLoaded >= s.artTotal; }, null, { timeout: 60000 }).catch(() => {});
     await page.waitForTimeout(800); // warm-up: first chunks, caches
     await page.evaluate(() => window.__game.act('closeAll')); // a scene's first tick can complete a quest and open its card
+    // First-visit terrain bakes happen once per chapter, season and weather; measure walking after they settle and
+    // report their cost separately (research/pixel-budget.md).
+    const bake = await page.evaluate(() => new Promise((res) => {
+      const t0 = performance.now(); let last = window.__game.getState().chunkBakes, since = t0;
+      const f = () => { const s = window.__game.getState(); if (s.chunkBakes !== last) { last = s.chunkBakes; since = performance.now(); }
+        if (performance.now() - since > 600 || performance.now() - t0 > 20000) res({ settleMs: Math.round(since - t0), maxBakeMs: Math.max(0, ...s.bakeLog) }); else requestAnimationFrame(f); };
+      requestAnimationFrame(f);
+    }));
     await page.keyboard.down('ArrowRight');
     const r = await page.evaluate(() => new Promise((res) => {
       const dts = []; let last = performance.now(); const t0 = last;
@@ -57,9 +65,9 @@ for (const vp of VPS) {
     }));
     await page.keyboard.up('ArrowRight');
     await page.evaluate(() => window.__game.pause());
-    const row = { tier, viewport: vp, scene: name, throttle: THROTTLE, gpu: !SOFT, fps: +r.fps.toFixed(1), p50: +r.p50.toFixed(1), p95: +r.p95.toFixed(1), worst: +r.worst.toFixed(0), scriptMs: +(+r.scriptMs).toFixed(2), heapMB: +r.heapMB.toFixed(1) };
+    const row = { tier, viewport: vp, scene: name, throttle: THROTTLE, gpu: !SOFT, fps: +r.fps.toFixed(1), p50: +r.p50.toFixed(1), p95: +r.p95.toFixed(1), worst: +r.worst.toFixed(0), scriptMs: +(+r.scriptMs).toFixed(2), heapMB: +r.heapMB.toFixed(1), bakeSettleMs: bake.settleMs, maxBakeMs: bake.maxBakeMs };
     rows.push(row);
-    console.log(`${tier} ${vp.padEnd(7)} ${THROTTLE}x ${SOFT ? 'sw ' : 'gpu'} ${name.padEnd(24)} ${String(row.fps).padStart(6)} fps  p95 ${row.p95} ms  worst ${row.worst} ms  script ${row.scriptMs} ms  heap ${row.heapMB} MB`);
+    console.log(`${tier} ${vp.padEnd(7)} ${THROTTLE}x ${SOFT ? 'sw ' : 'gpu'} ${name.padEnd(24)} ${String(row.fps).padStart(6)} fps  p95 ${row.p95} ms  worst ${row.worst} ms  script ${row.scriptMs} ms  heap ${row.heapMB} MB  bakes settle ${row.bakeSettleMs} ms (max ${row.maxBakeMs} ms)`);
   }
   await ctx.close();
 }

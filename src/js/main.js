@@ -253,7 +253,7 @@ function handleResult(r, t) {
   if (r.fund) return openModal('fund');
   if (r.sign) return openModal('sign', r.sign);
   if (r.eat) { sim.eat(gm, r.eat); return; }
-  if (r.fx && t) scene.addFx(r.fx === 'water' ? 'water' : r.fx === 'dirt' ? 'dirt' : r.fx === 'spark' ? 'spark' : 'chip', t.x, t.y);
+  if (r.fx && t) scene.addFx(r.fx === 'water' ? 'water' : r.fx === 'dirt' ? 'dirt' : r.fx === 'spark' ? 'spark' : 'chip', t.x, t.y, scene.R.pixel ? 180 : 0);
 }
 function openTalk(id) {
   const d = sim.talk(app.gm, id);

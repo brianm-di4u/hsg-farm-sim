@@ -65,3 +65,16 @@ Readback of loaded images is impossible under file://, so all pixel processing h
 
 ## Pivots
 (Logged here whenever the wall protocol in `reviews/PROTOCOL.md` changes the plan.)
+
+- **2026-11-01, after loop 1 (critics 39.5 and 40.5; baseline 33): the art source changes from the painted pictures to
+  images generated as pixel art.**
+  - **Evidence:** both critics' top gap was the painted texture surviving the pixelizer (speckle, thousands of colours).
+  - **Pilot (`art-src/px-pilot/`):** Codex produced a bathhouse, springs props, a soaking pool and a tufa tile with the prompt
+    "16-bit SNES-era pixel art, three-quarter top-down, light from the upper left, limited hue-shifted palette, flat
+    clusters, dark outline, white background". The results are flat-cluster pixel art with clean outlines, at a drawn
+    pitch of about 5 px (about 47 art px per tile for a 5-tile building).
+  - **Comparison:** pixelized, the pilot is clean at 16 px/tile and holds twice the detail at 32 px/tile; the painted
+    source stays muddy at either size.
+  - **New pipeline:** Codex generates pixel art → `pixelize.py` → `pack-px.py`. The generated sources keep every tier open.
+  - **Prompts:** recorded in `art-src/px-prompts/`.
+

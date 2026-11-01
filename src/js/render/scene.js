@@ -12,6 +12,7 @@ import { noise } from '../sim/rng.js';
 import { pxLabel, pxText, pxTextWidth, PX_FONT_H } from './pxfont.js';
 
 const CHUNK = 16;
+const CHUNK_CACHE = () => (PX.on ? 26 : 10);
 export const R = {
   canvas: null, ctx: null, dpr: 1, cssW: 0, cssH: 0, ts: 40, u: 40, cam: { x: 0, y: 0 }, chunks: new Map(),
   cu: 40, fallback: new Set(), particles: [], pops: [], night: null, useT: -1e9, artFlushT: 0, reduced: false, mobile: false, offsetY: 0, frames: 0, chunkBakes: 0, lastT: 0, hover: null,
@@ -63,6 +64,9 @@ function resizePixel(c) {
   if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
   R.ctx.imageSmoothingEnabled = false;
   R.k = k; R.dpr = dpr / k;
+  // UI type: the pixel body font's pixel unit is a tenth of its size, so the root size is picked to put that unit on
+  // whole device pixels (20 px at 1x, 15 px at 2x, 16.7 px at 3x); the stylesheet keeps text at whole multiples of it.
+  document.documentElement.style.fontSize = (Math.max(1, Math.round(1.7 * dpr)) / dpr) * 10 + 'px';
   if (T !== R.u || R.ts !== T * k / dpr) { R.ts = T * k / dpr; R.u = R.cu = T; R.chunks.clear(); clearArt(); }
   R.offsetY = R.mobile ? -R.cssH * 0.1 : 0;
   R.night = null;
@@ -81,7 +85,9 @@ function chunkCanvas(gm, cx, cy, P) {
   const k = `${S.ch}|${P.sea}|${S.houseStyle || ''}|${cx},${cy}|${R.cu}|${painted ? 1 : 0}|${snow ? 1 : 0}`;
   let c = R.chunks.get(k);
   if (c) { R.chunks.delete(k); R.chunks.set(k, c); return c; }
-  if (R.chunks.size > 10) { const first = R.chunks.keys().next().value; R.chunks.delete(first); }
+  // LRU: 10 painted chunks (up to 1.5x 64 px per tile: about 40 MB). Pixel-style chunks are 256 px (about 256 KB), so
+  // the cache holds the whole map (12 chunks) twice over, and walking never re-bakes.
+  if (R.chunks.size > CHUNK_CACHE()) { const first = R.chunks.keys().next().value; R.chunks.delete(first); }
   const u = R.cu;
   const t0 = performance.now();
   c = document.createElement('canvas');
@@ -129,9 +135,11 @@ export function invalidateChunks() { R.chunks.clear(); }
 function crispify(c) {
   let im;
   try { im = c.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, c.width, c.height); } catch { return; }
-  const d = new Uint32Array(im.data.buffer), n = d.length, Wc = c.width, count = new Map();
-  for (let i = 0; i < n; i++) count.set(d[i], (count.get(d[i]) || 0) + 1);
-  const min = Math.max(6, n / 6000), freq = (v) => count.get(v) >= min;
+  const d = new Uint32Array(im.data.buffer), n = d.length, Wc = c.width;
+  // Colour frequency in 15-bit buckets (a flat table: far faster than a Map over 65k pixels on a slow phone).
+  const key = (v) => ((v >> 3) & 31) | (((v >> 11) & 31) << 5) | (((v >> 19) & 31) << 10), count = new Uint32Array(32768);
+  for (let i = 0; i < n; i++) count[key(d[i])]++;
+  const min = Math.max(6, n / 6000), freq = (v) => count[key(v)] >= min;
   const out = new Uint32Array(d), nb = [];
   const ch = (v, k) => (v >> k) & 255;
   for (let i = 0; i < n; i++) {
@@ -189,7 +197,9 @@ export function tileToScreen(x, y) { return { x: (x - R.cam.x) * R.ts, y: (y - R
 export function addPop(x, y, item, n) { R.pops.push({ x: x + 0.5, y: y + 0.2, item, n, t: 0 }); }
 // Tool feedback: soil puffs and clods for the hoe, a splash ring and droplets for the jug, chips for the axe,
 // sparks and grit for the pick. Reduced motion keeps a single short ring and no flying particles.
-export function addFx(kind, x, y) {
+// `delay` ms: tool hits land on the swing's impact frame (pixel style: 180 ms in), not on the button press.
+export function addFx(kind, x, y, delay = 0) {
+  if (delay > 0) { (R.fxQueue || (R.fxQueue = [])).push({ kind, x, y, at: (R.clockAt != null ? R.clockAt : performance.now()) + delay }); return; }
   const cx = x + 0.5, cy = y + 0.62, P = R.particles;
   if (kind === 'water' || kind === 'dirt') P.push({ ring: true, x: cx, y: cy, life: 22, max: 22, col: kind === 'water' ? '#d8f0ff' : '#c8a87a' });
   if (R.reduced) return;
@@ -266,9 +276,10 @@ export function draw(gm, ui) {
   for (const b of gm.world.buildings) {
     if (b.x + b.w < sx0 - 1 || b.x > sx1 + 1 || b.y > sy1 + 1 || b.y + b.h < sy0 - 1) continue;
     const sp = PA.buildingSprite(S.ch, b, u, S.weather === 'snow');
-    // Walking behind a building (its roof covers the player) makes it see-through.
-    const hides = sp && pl.y < b.y + b.h - 0.02 && pl.y * u > sp.y + u * 0.5 && pl.x * u > sp.x + u * 0.3 && pl.x * u < sp.x + sp.w - u * 0.3;
-    if (sp) list.push({ y: b.y + b.h - 0.02, d: () => { if (hides) ctx.globalAlpha = 0.55; ctx.drawImage(sp.c, sp.x, sp.y); ctx.globalAlpha = 1; if (b.label) buildingLabel(ctx, b, sp, u, P); } });
+    // A building drawn over the player (its upper storeys rise above its footprint) leaves the player hidden:
+    // the player is redrawn as a see-through silhouette on top (below), so the building stays solid.
+    if (sp && pl.y < b.y + b.h - 0.02 && pl.y * u > sp.y + u * 0.5 && pl.x * u > sp.x + u * 0.3 && pl.x * u < sp.x + sp.w - u * 0.3) R.playerHidden = true;
+    if (sp) list.push({ y: b.y + b.h - 0.02, d: () => { ctx.drawImage(sp.c, sp.x, sp.y); if (b.label) buildingLabel(ctx, b, sp, u, P); } });
     if (sp && S.ch >= 3 && b.id !== 'farmhouse' && b.w === 5) for (const fx of [b.x + 0.35, b.x + b.w - 0.35]) {
       const bs = PA.propSprite('bush', u * 0.8, Math.round(fx), b.y);
       if (bs) list.push({ y: b.y + b.h + 0.01, d: () => ctx.drawImage(bs.c, fx * u + bs.ox, (b.y + b.h - 0.02) * u + bs.oy) });
@@ -317,7 +328,7 @@ export function draw(gm, ui) {
     const swing = since < 300 && !R.reduced && sim.selected(S);
     const behind = pl.face === 'up';
     if (swing && behind) toolSwing(ctx, S, pl, since, u);
-    if (sp) ctx.drawImage(sp.c, pl.x * u + sp.ox, pl.y * u + sp.oy);
+    if (sp) { ctx.drawImage(sp.c, pl.x * u + sp.ox, pl.y * u + sp.oy); R.playerSprite = { c: sp.c, x: pl.x * u + sp.ox, y: pl.y * u + sp.oy }; }
     else ctx.drawImage(personSprite('player' + S.ch, look, pl.face, pl.moving && !R.reduced ? (Math.floor(pl.walk / 8) % 2) : 0, u), (pl.x - 0.5) * u, (pl.y - 1.5) * u);
     if (swing && !behind) toolSwing(ctx, S, pl, since, u);
   } });
@@ -355,6 +366,9 @@ export function draw(gm, ui) {
     }
   }
   for (const it of list) it.d();
+  // X-ray: a player hidden behind a building shows through as a faint copy (the Stardew / SNES convention).
+  if (R.playerHidden && R.playerSprite) { const p0 = R.playerSprite; ctx.globalAlpha = 0.45; ctx.drawImage(p0.c, p0.x, p0.y); ctx.globalAlpha = 1; }
+  R.playerHidden = false;
   // Name tags for people near the player.
   ctx.font = `bold ${Math.round(u * 0.3)}px system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   // Tags that would overlap stack upward instead.
@@ -380,6 +394,7 @@ export function draw(gm, ui) {
     if (f.phase === 'bite') bubble(ctx, pl.x * u, (pl.y - 2.15) * u, '!', u, '#f4c542');
   }
   // Particles and pops.
+  if (R.fxQueue && R.fxQueue.length) R.fxQueue = R.fxQueue.filter((q) => (now >= q.at ? (addFx(q.kind, q.x, q.y), false) : true));
   steamFor(gm, sx0, sy0, sx1, sy1, dt);
   if (R.bench && R.bench.particles) while (R.particles.length < R.bench.particles) R.particles.push({ x: cam.x + Math.random() * R.cssW / R.ts, y: cam.y + Math.random() * R.cssH / R.ts, vx: (Math.random() - 0.5) * 0.02, vy: -0.01, life: 60, max: 60, col: '#ffffff', s: 0.12, dust: true });
   drawParticles(ctx, u, dt);
@@ -410,10 +425,12 @@ export function draw(gm, ui) {
 let pre = null;
 function prefetch(gm, P, sx0, sy0, sx1, sy1) {
   if (R.bakedFrame === R.frames || R.frames % 3) return;
-  const m = 6, out = [];
+  // Pixel style: the whole map is only 12 small chunks, so all of them are baked ahead on quiet frames after a scene
+  // starts (first-visit bakes never land on a walking frame); the painted style looks 6 tiles ahead.
+  const m = PX.on ? 99 : 6, out = [];
   for (let cy = Math.max(0, Math.floor((sy0 - m) / CHUNK)); cy <= Math.min(Math.floor((H - 1) / CHUNK), Math.floor((sy1 + m) / CHUNK)); cy++)
     for (let cx = Math.max(0, Math.floor((sx0 - m) / CHUNK)); cx <= Math.min(Math.floor((W - 1) / CHUNK), Math.floor((sx1 + m) / CHUNK)); cx++) out.push([cx, cy]);
-  if (out.length > 10) return; // more than the LRU holds
+  if (out.length > CHUNK_CACHE()) return; // more than the LRU holds
   const k0 = R.chunkBakes;
   for (const [cx, cy] of out) {
     const c = chunkCanvas(gm, cx, cy, P);
@@ -425,12 +442,26 @@ function prefetch(gm, P, sx0, sy0, sx1, sy1) {
 const LABEL_STYLE = { 1: ['#2a2420', '#e8dcc0'], 2: ['#2a2420', '#e6d8bc'], 3: ['#e8b84a', '#1f2a24'], 4: ['#f3e9d2', '#1f1c2e'], 5: ['#fff6e0', '#d9503f'], 6: ['#f6f3ec', '#183f63'] };
 function toolSwing(ctx, S, pl, since, u) {
   const it = sim.selected(S); if (!it || !ITEMS[it.id] || ITEMS[it.id].kind !== 'tool') return;
+  if (PX.on) return pxToolSwing(ctx, it, pl, since, u);
   const t = Math.min(1, since / 260), e = t < 0.35 ? t / 0.35 : 1, side = pl.face === 'left' ? -1 : 1;
   const a = (-2.3 + e * 2.5) * side, s = u * 0.62;
   const hx = pl.x * u + (pl.face === 'left' ? -0.28 : pl.face === 'right' ? 0.28 : 0.18) * u, hy = (pl.y - 0.72 + (pl.face === 'up' ? -0.1 : 0)) * u;
   ctx.save(); ctx.translate(hx, hy); ctx.rotate(a); if (side < 0) ctx.scale(-1, 1);
   ctx.globalAlpha = Math.min(1, (1 - t) * 4);
   ctx.drawImage(PA.iconSprite(it.id, Math.round(s)) || iconCanvas(it.id, Math.round(s)), -s * 0.2, -s * 0.85, s, s);
+  ctx.restore();
+}
+// Pixel style: the tool in five held poses that match the body's use frames (wind-up behind the head, top, strike,
+// impact with the head on the target tile, recover), a full tile long, so the arc and the contact read.
+const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15]];
+function pxToolSwing(ctx, it, pl, since, u) {
+  const f = Math.min(4, Math.floor(since / 60)), [dx, dy, ang] = SWING[f];
+  const side = pl.face === 'left' ? -1 : 1, s = u;
+  const ic = PA.iconSprite(it.id, s) || iconCanvas(it.id, s);
+  const down = pl.face === 'down', up = pl.face === 'up';
+  const hx = Math.round(pl.x * u + (down || up ? (up ? -0.1 : 0.1) : dx * side) * u), hy = Math.round((pl.y + (down ? dy * 0.6 + 0.15 : up ? dy * 0.6 - 0.2 : dy * 0.85)) * u);
+  ctx.save(); ctx.translate(hx, hy); ctx.rotate(down || up ? ang * 0.5 : ang * side); if (side < 0) ctx.scale(-1, 1);
+  ctx.drawImage(ic, -Math.round(s * 0.2), -Math.round(s * 0.85));
   ctx.restore();
 }
 function fireFlicker(ctx, l, u, now) {
@@ -469,6 +500,13 @@ function silhouette(c) {
   let s = sils.get(c);
   if (!s) { s = document.createElement('canvas'); s.width = c.width; s.height = c.height; const g = s.getContext('2d'); g.drawImage(c, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = '#0c1410'; g.fillRect(0, 0, s.width, s.height); sils.set(c, s); }
   return s;
+}
+const tintSils = new Map();
+function tintSilhouette(c, col) {
+  let m = tintSils.get(col); if (!m) tintSils.set(col, (m = new WeakMap()));
+  let t = m.get(c);
+  if (!t) { t = document.createElement('canvas'); t.width = c.width; t.height = c.height; const g = t.getContext('2d'); g.drawImage(c, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = col; g.fillRect(0, 0, t.width, t.height); m.set(c, t); }
+  return t;
 }
 function silShadow(ctx, it, u, sun) {
   const m = ctx.getTransform();
@@ -869,7 +907,7 @@ function todTint(t) {
   if (t < 450) return ['#ff9a7a', 0.2 * (450 - t) / 90];
   if (t < 960) return null;
   if (t < 1110) return ['#ffa848', 0.38 * (t - 960) / 150];
-  if (t < 1220) return [t < 1160 ? '#e8806a' : '#9a5a9a', 0.17];
+  if (t < 1220) return [t < 1160 ? '#e8806a' : '#9a5a9a', PX.on ? 0.28 : 0.17]; // pixel style: a dusk that reads
   return null;
 }
 const NEON = { 4: { club: '#ff4a6a', court: '#4fd8ff', radio: '#ffb040' }, 5: { motel: '#ff5a7a', drivein: '#4fe0ff', store: '#ffcf4a', zoo: '#ff8a3a' } };
@@ -892,7 +930,7 @@ function nightPass(gm, P, cam, now) {
   n.fillStyle = rgba(ec, ea * (1 - d) * (1 - fog)); n.fillRect(0, 0, w, h);
   const tt = todTint(S.time);
   if (tt) { n.fillStyle = rgba(tt[0], LIGHT_MODE === 'smooth' ? tt[1] : Math.round(tt[1] * 10) / 10); n.fillRect(0, 0, w, h); }
-  if (S.weather === 'rain') { n.fillStyle = 'rgba(40,52,72,0.2)'; n.fillRect(0, 0, w, h); }
+  if (S.weather === 'rain') { n.fillStyle = PX.on ? 'rgba(34,46,70,0.32)' : 'rgba(40,52,72,0.2)'; n.fillRect(0, 0, w, h); }
   if (S.weather === 'snow') { n.fillStyle = 'rgba(214,226,240,0.12)'; n.fillRect(0, 0, w, h); }
   if (fog) {
     const f = fogSprite(), fs = 256 * u / 64 / NS;
@@ -922,6 +960,19 @@ function nightPass(gm, P, cam, now) {
     const col = l.k === 'neon' ? '#ffd8a0' : L.col;
     if (l.post) { cut(l.x, l.y + 0.15, L.r * 0.95, L.r * 0.6, col, 0.34); cut(l.x, l.y - 1.25, 0.5, 0.5, col, 0.6); }
     else cut(l.x, l.y + 0.5, L.r * 0.8, L.r * 0.5, col, 0.3);
+  }
+  // Pixel style: lamp light stays on the ground. Every building is darkened again over its own silhouette, so a
+  // pool never spills up a facade or across a roof; the building's lit windows and sign are cut afterwards.
+  if (PX.on) {
+    n.globalCompositeOperation = 'source-over';
+    n.globalAlpha = S.time < 480 ? d * 0.55 : d;
+    for (const b of gm.world.buildings) {
+      const sp = PA.buildingSprite(S.ch, b, u, S.weather === 'snow'); if (!sp) continue;
+      const x = Math.round(sp.x - cam.x * u), y = Math.round(sp.y - cam.y * u);
+      if (x > W2 || y > H2 || x + sp.w < 0 || y + sp.h < 0) continue;
+      n.drawImage(tintSilhouette(sp.c, NIGHT[S.ch]), x, y);
+    }
+    n.globalAlpha = 1; n.globalCompositeOperation = 'destination-out';
   }
   // Lit windows: most buildings with people in them, varied per building and fading out late at night.
   if (S.time > 1050 && S.time < 1440) for (const b of gm.world.buildings) {

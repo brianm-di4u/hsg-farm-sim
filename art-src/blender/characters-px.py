@@ -192,13 +192,13 @@ hatobj('helmet_r', sphere(0.05, (0.7, 4.6, 0.7), 12, 8), (0, 0.02, 0.27))
 hatobj('helmet_v', sphere(0.14, (1.1, 0.6, 0.14), 16, 8, lambda c: c.y < 0.0), (0, -0.25, 0.08))
 # bonnet: a deep shell around the back and top that frames the face, with a brim forward
 hatobj('bonnet_s', sphere(0.3, (1.05, 1.0, 1.0), 28, 18, lambda c: c.y > -0.18 and c.z > -0.16), (0, 0.03, 0.03))
-o = hatobj('bonnet_f', sphere(0.29, (1.08, 0.55, 1.05), 28, 16, lambda c: c.y < 0.02 and c.z > -0.05), (0, -0.12, 0.06)); o.rotation_euler = (math.radians(-18), 0, 0)
+o = hatobj('bonnet_f', sphere(0.29, (1.08, 0.55, 1.05), 28, 16, lambda c: c.y < 0.02 and c.z > 0.07), (0, -0.12, 0.06)); o.rotation_euler = (math.radians(-18), 0, 0)  # pixel style: the brim frames the face from above instead of hiding it
 # headscarf: tight wrap with a knot at the back
 hatobj('scarf_s', sphere(0.275, (1.02, 1.0, 1.0), 28, 18, lambda c: c.y > -0.12 and c.z > -0.12), (0, 0.01, 0.02))
 hatobj('scarf_k', sphere(0.075, (1.0, 0.8, 0.8)), (0, 0.27, -0.06))
 # toque (chef): a band and a tall puffed crown
 hatobj('toque_b', cone(0.24, 0.24, 0.08, 28), (0, 0, 0.13))
-hatobj('toque_c', sphere(0.25, (1.0, 1.0, 1.15), 28, 16), (0, 0, 0.42))
+hatobj('toque_c', sphere(0.19, (1.0, 1.0, 0.95), 28, 16), (0, 0, 0.32))  # pixel style: a smaller crown, so the toque doesn't swamp a 21-px figure
 # fur cap with a tail at the back
 hatobj('capfur_c', cone(0.26, 0.24, 0.17, 28), (0, 0, 0.1))
 hatobj('capfur_t', capsule(0.055, 0.22), (0.05, 0.27, 0.22))

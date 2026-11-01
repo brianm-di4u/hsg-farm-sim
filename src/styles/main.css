@@ -248,4 +248,8 @@ body.hc .toast { background: #000; }
 .px .toast, .px .prompt { box-shadow: 4px 4px 0 rgba(0,0,0,.35); }
 .px .pad { border-radius: 0; clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%); }
 .px .pad .knob, .px .tbtn { border-radius: 0; clip-path: polygon(25% 0, 75% 0, 100% 25%, 100% 75%, 75% 100%, 25% 100%, 0 75%, 0 25%); }
+/* Pixel fonts are crisp only at whole multiples of their pixel unit (the root size, set by scene.js per device
+   pixel ratio): body text at 1rem, titles at 2rem, nothing in between. */
+.px #app, .px #app * { font-size: 1rem !important; }
+.px #app h1, .px #app .title-logo, .px #app .h-big { font-size: 2rem !important; }
 

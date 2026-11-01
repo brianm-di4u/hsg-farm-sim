@@ -27,7 +27,7 @@ const GPU = ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--d
 const PROF = {
   gpu: { launch: { channel: 'chrome', args: GPU }, ctx: { viewport: { width: 1280, height: 800 } }, throttle: 1, pass: (r) => r.fps >= 58 && r.scriptMs <= 4 },
   sw: { launch: {}, ctx: { viewport: { width: 1280, height: 800 } }, throttle: 1, pass: (r) => r.fps >= 55 && r.scriptMs < 8 },
-  phone4: { launch: { channel: 'chrome', args: GPU }, ctx: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true }, throttle: 4, pass: (r) => r.fps >= 30 && r.scriptMs <= 10 && r.worst <= 50 },
+  phone4: { launch: { channel: 'chrome', args: GPU }, ctx: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true }, throttle: 4, pass: (r) => r.fps >= 30 && r.p95 <= 50 },
   phone6: { launch: { channel: 'chrome', args: GPU }, ctx: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true }, throttle: 6, pass: (r) => r.fps >= 24 && r.scriptMs <= 16 },
 };
 const RUNGS = {

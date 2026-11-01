@@ -1,0 +1,209 @@
+[
+  {
+    "id": "G-font-raster",
+    "category": "ui",
+    "expectedGain": 1.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "desktop/R18",
+      "desktop/R06",
+      "desktop/R07",
+      "mobile/R05",
+      "desktop/R01"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "Draw HUD and panel text from a bitmap glyph atlas on the 2x or 4x device-pixel grid with smoothing off; retire Jacquard 12 below 24 px; redraw the title logo as pixel art. Test: render 'Close Buy Crafting x5 0/15 $800 1955 2026 21:30' in every era frame, assert zero intermediate-alpha text pixels and a golden match where C!=O, B!=8, 5!=S, 2!=8. Also gives about +0.5 readability.",
+    "priority": 2.25,
+    "selected": true
+  },
+  {
+    "id": "G-hoe-swing",
+    "category": "animation",
+    "expectedGain": 1.5,
+    "severity": 5,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14",
+      "desktop/R14"
+    ],
+    "benchmark": "snes-harvestmoon-1.png (implement readability)",
+    "fix": "10-12 art px hoe visible in every frame; overhead-to-ground arc in front of the body: wind-up, top, strike, impact held 2 frames, recover; 2-3 px soil clod and dust on strike and the tile turns tilled; re-capture R14 on a field tile.",
+    "priority": 1.125,
+    "selected": true
+  },
+  {
+    "id": "G-tilted-sprites",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "S",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R11",
+      "mobile/R11",
+      "desktop/R15",
+      "mobile/R13",
+      "desktop/R17"
+    ],
+    "fix": "Augustin and the ox both lean about 30 deg with detached shadows; find the shared rotation or pose source and draw actors unrotated. Test: per actor cell, the centre of mass of the top 8 rows is within 2 art px of the bottom 8 rows, and the shadow overlaps the sprite's bottom row. Also about +0.25 environment.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-lamp-pool-depth",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "mobile/R05"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Draw lamp and window pools in the ground pass before building sprites, or clip them by building footprint. Test: zero pool-tinted pixels inside any building sprite mask in R05.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-occlusion-fade-scope",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "desktop/R08",
+      "crops/R08-player",
+      "desktop/R07"
+    ],
+    "fix": "Fade only a radius of about 24 art px around the player, and only while the player's feet are inside that building's roof footprint; no ghosting of buildings that cover nothing. Test: in R08, hotel pixels more than 24 px from the player stay at full alpha.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-faces-headwear",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 5,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R16-player",
+      "crops/R03-player",
+      "crops/R11-npcs",
+      "desktop/R16"
+    ],
+    "benchmark": "stardew-1.jpg; research/refs/characters.md",
+    "fix": "Hand-placed 1-px dark eyes; hair at least 2 ramp steps from skin; one silhouette per hat kind (slouch brim 2 px past the head each side, short-bill cap above the eyes, fur cap with a tail, a sun bonnet distinct from hair); Walt's knickers and white stockings; Hattie's near-black hair and a readable white cap; re-aim the NPC crops on the bodies with the reference row pasted beside each.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-time-weather-moods",
+    "category": "lighting",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R06",
+      "desktop/R07",
+      "desktop/R09",
+      "desktop/R10",
+      "desktop/R08"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Warm stepped palette shift 18:00-20:00 with street lamps on from 19:00; rain darkens the ground one ramp step and adds 1-2 px splash rings; 2-3 px snow caps on roofs, shrubs and fence tops; fog as 2-3 banded drifting layers. Test: R06 and R07 mean luminance at least 12% below the noon frame, with a warm hue shift.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-painted-speckle",
+    "category": "pixel",
+    "expectedGain": 1.5,
+    "severity": 5,
+    "effort": "L",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R04-row",
+      "desktop/R13",
+      "desktop/R02",
+      "crops/R03-field"
+    ],
+    "benchmark": "stardew-1.jpg; chained-5.jpg",
+    "fix": "Snap all assets and terrain to one shared 32-48 colour master palette per era; merge clusters under 3 px after the median filter; cap each material at a 3-4 step hue-shifted ramp; replace baked grass and road with hand-made 16 px tiles in 3-4 shades. Test: 64 or fewer distinct colours per frame at the art grid (HUD excluded) and isolated single pixels at 2% or less of sprite area. Also about +0.5 environment.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-farmyard-actors",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R17",
+      "crops/R15-pen"
+    ],
+    "fix": "Move the 1931 truck off the ox spawn tile, with a placement test that no two static actor masks overlap; redraw the hens at sprite size with a beak, comb and tail.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-farm-lake-dressing",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R17",
+      "mobile/R13",
+      "desktop/R07",
+      "desktop/R15",
+      "crops/R03-field"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Dress the empty farm halves with paths, stumps, flower clusters, a well and a woodpile; redraw side fence runs with upright posts and rails; 1-px soil gaps between crop columns; lake with a 3-4 band ramp, highlight lines, shore foam, reeds and a boat.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-ambient-life",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "desktop/R15",
+      "strips/R13"
+    ],
+    "fix": "On-grid chimney smoke puffs, 2-3 frame creek and water glint flow, idle breathing on standing NPCs and occasional birds; add an idle town strip to the capture set to show them.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-era-signage",
+    "category": "authenticity",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R05",
+      "desktop/R09",
+      "desktop/R07"
+    ],
+    "benchmark": "snes-earthbound-1.png",
+    "fix": "Per-era bathhouse names from the refs instead of generic BATHS plates (Fordyce, Buckstaff, Quapaw in 1931); false fronts or board-and-batten in 1871; carriages and autos on the town streets; a 2026 restored-Row capture.",
+    "priority": 0.25,
+    "selected": false
+  }
+]

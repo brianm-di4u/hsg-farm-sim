@@ -138,7 +138,12 @@ for (const vp of VPS) {
       for (const [name, x, y, w, h] of s.crops || []) {
         let rect;
         if (name === 'player') rect = tileRect(st, dpr, st.player.x - 1.5, st.player.y - 2.2, 3, 3);
-        else if (name === 'npcs') { const n = st.npcs.filter((n) => !n.hidden).sort((a, b) => Math.hypot(a.x - st.player.x, a.y - st.player.y) - Math.hypot(b.x - st.player.x, b.y - st.player.y))[0]; if (!n) continue; rect = tileRect(st, dpr, n.x - 2, n.y - 2.4, 4, 3); }
+        else if (name === 'npcs') { // every visible neighbour within 4 tiles of the player, plus the player
+          const ns = [...st.npcs.filter((n) => !n.hidden && Math.hypot(n.x - st.player.x, n.y - st.player.y) < 4), st.player];
+          if (ns.length < 2) continue;
+          const x0 = Math.min(...ns.map((n) => n.x)) - 1, x1 = Math.max(...ns.map((n) => n.x)) + 1, y0 = Math.min(...ns.map((n) => n.y)) - 2.6, y1 = Math.max(...ns.map((n) => n.y)) + 0.4;
+          rect = tileRect(st, dpr, x0, y0, x1 - x0, y1 - y0);
+        }
         else rect = tileRect(st, dpr, x, y, w, h);
         rect.w = Math.min(rect.w, viewport.width * dpr - rect.x); rect.h = Math.min(rect.h, viewport.height * dpr - rect.y);
         if (rect.w < 8 || rect.h < 8) continue;

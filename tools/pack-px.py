@@ -3,8 +3,9 @@
 
     python -I tools/pack-px.py [--tile 16] [--only name1,name2] [--group bld-]
 
-Source for every image is the packed painted asset (assets/<name>.webp: already keyed, trimmed, split and,
-for textures, seamless), so the keying work in pack-art.mjs is reused. Each one goes through tools/pixelize.py
+Source for each image: a generated pixel-art picture in art-src/px-gen/<name>.png when there is one (Codex, prompts
+in art-src/px-prompts/; white background keyed here, no smoothing: it is already flat-cluster art), else the packed
+painted asset (assets/<name>.webp: already keyed, trimmed, split and, for textures, seamless). Each one goes through tools/pixelize.py
 at exactly the size the game draws it, in art pixels:
   - width in tiles from art-src/px-sizes.json (the drawn-size survey, tools/px-sizes.mjs), else the defaults
     below, which mirror the size tables in src/js/render/painted.js and terrain.js;
@@ -109,8 +110,12 @@ def main():
     for name, ent in sorted(man.items()):
         if only and name not in only or a.group and not name.startswith(a.group) or name.startswith(SKIP):
             continue
-        src = Image.open(os.path.join(GAME, 'assets', ent['file']))
+        gen = os.path.join(GAME, 'art-src', 'px-gen', name + '.png')
+        is_gen = os.path.exists(gen)
+        src = Image.open(gen if is_gen else os.path.join(GAME, 'assets', ent['file']))
         o = opts_for(name, over)
+        if is_gen:  # flat-cluster pixel art already: no median flattening, a slightly larger palette, key the white
+            o.update(smooth=0, colors=o['colors'] + 8, key='auto')
         if name.startswith('tex-'):
             px = max(8, round(REPEAT.get(name, 4) * T))
             rgba = np.asarray(src.convert('RGBA')).copy()
@@ -125,7 +130,7 @@ def main():
             cols, rows = sheets[name]
             wt = width_tiles(name, sizes) or 1.08
             cw, chh = src.width // cols, src.height // rows
-            args = A(width=max(4, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline')})
+            args = A(width=max(4, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key')})
             pal = PZ.sheet_palette(src, args)
             cells = [[PZ.run(src.crop((c * cw, r * chh, (c + 1) * cw, (r + 1) * chh)), args, pal) for c in range(cols)] for r in range(rows)]
             ow = max(x.shape[1] for row in cells for x in row)
@@ -140,7 +145,7 @@ def main():
             if wt is None:
                 skipped += 1
                 continue
-            args = A(width=max(3, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline')})
+            args = A(width=max(3, round(wt * T)), **{k: v for k, v in o.items() if k in ('colors', 'smooth', 'outline', 'key')})
             out = PZ.run(src, args)
         PZ.save_png(out, os.path.join(out_dir, name + '.png'))
         mt[name] = {'file': f'px/{T}/{name}.png', 'w': int(out.shape[1]), 'h': int(out.shape[0])}
