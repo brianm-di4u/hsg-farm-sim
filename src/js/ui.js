@@ -320,7 +320,7 @@ export function settingsScreen(waiting) {
     <h3>Motion</h3><div class="tabs">${opt('motion', 'auto', s.motion, 'Follow system')}${opt('motion', 'reduced', s.motion, 'Reduced')}${opt('motion', 'full', s.motion, 'Full')}</div>
     <h3>Touch controls</h3><div class="tabs">${opt('touch', 'auto', s.touch, 'Auto')}${opt('touch', 'on', s.touch, 'Always show')}${opt('touch', 'off', s.touch, 'Hide')}</div>
     <h3>Sound</h3><div class="tabs">${opt('mute', 'off', s.mute ? 'on' : 'off', 'Sound on')}${opt('mute', 'on', s.mute ? 'on' : 'off', 'Muted')}${opt('vol', '0.25', String(s.volume), 'Quiet')}${opt('vol', '0.5', String(s.volume), 'Normal')}${opt('vol', '1', String(s.volume), 'Loud')}</div>
-    <h3>Graphics</h3><div class="tabs">${opt('gfx', 'painted', s.gfx || 'painted', 'Painted')}${opt('gfx', 'simple', s.gfx || 'painted', 'Simple (faster)')}</div>
+    <h3>Graphics</h3><div class="tabs">${opt('gfx', 'painted', s.gfx || 'painted', 'Painted')}${opt('gfx', 'pixel', s.gfx || 'painted', 'Pixel')}${opt('gfx', 'simple', s.gfx || 'painted', 'Simple (faster)')}</div>
     <h3>Assists</h3><div class="tabs">${opt('assist', 'on', s.assist ? 'on' : 'off', 'Wider fishing window')}${opt('assist', 'off', s.assist ? 'on' : 'off', 'Normal window')}${opt('contrast', 'on', s.contrast ? 'on' : 'off', 'High-contrast HUD')}${opt('contrast', 'off', s.contrast ? 'on' : 'off', 'Standard HUD')}</div>
     <h3>Keys</h3>
     <table class="keys">${Object.entries(ACTIONS).map(([a, label]) => `<tr><td>${label}</td><td>${s.keys[a].map((k) => `<span class="kbd">${esc(keyName(k))}</span>`).join(' ')}</td><td><button class="btn sm" data-act="rebind" data-arg="${a}">${waiting === a ? 'Press a key…' : 'Change'}</button></td></tr>`).join('')}</table>

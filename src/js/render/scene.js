@@ -5,7 +5,7 @@ import * as sim from '../sim/sim.js';
 import { PEOPLE, CHAPTERS, QUESTS, ITEMS } from '../sim/data.js';
 import { palette, LIGHT, NIGHT, SIGN_FONT, rgba, mix, shade } from './palette.js';
 import { cached, drawGround, drawBuilding, signText, personSprite, animalSprite, treeSprite, objSprite, cropSprite, soilSprite, iconCanvas, clearArt } from './art.js';
-import { ART, img as artImg } from './assets.js';
+import { ART, PX, img as artImg } from './assets.js';
 import { bakeTerrain, terrainReady, drawPool, pattern } from './terrain.js';
 import * as PA from './painted.js';
 import { noise } from '../sim/rng.js';
@@ -19,10 +19,13 @@ export const R = {
 export function setup(canvas) {
   R.canvas = canvas; R.ctx = canvas.getContext('2d');
   R.nightEl = document.getElementById('nightfx');
+  R.pixel = PX.on;
+  if (PX.on) snapDraws(R.ctx);
   resize();
 }
 export function resize() {
   const c = R.canvas;
+  if (PX.on) return resizePixel(c);
   R.cssW = c.clientWidth || window.innerWidth; R.cssH = c.clientHeight || window.innerHeight;
   // Phones get a 1.5× canvas: sharp enough for 34 px tiles, 44% fewer pixels to fill each frame.
   R.dpr = Math.min(R.cssW < 700 ? 1.5 : 2, window.devicePixelRatio || 1);
@@ -38,6 +41,35 @@ export function resize() {
   }
   R.offsetY = R.mobile ? -R.cssH * 0.1 : 0;
   R.night = null;
+}
+// Pixel style. The view canvas holds one pixel per art pixel (R.u = PX.T per tile) and the browser scales it up
+// by a whole number k of device pixels with `image-rendering: pixelated`. k is picked so a tile lands near the
+// painted style's size (64 / 56 CSS px on desktop, 30–38 on phones, never under the 30 px phone minimum).
+// R.ts stays CSS px per tile and R.dpr canvas px per CSS px, so screen <-> tile maths and the tests are unchanged.
+// The canvas is sized up to the next whole canvas pixel; the leftover (under k device px) falls off the
+// right and bottom edges of the fixed #app, which clips it.
+function resizePixel(c) {
+  R.cssW = window.innerWidth; R.cssH = window.innerHeight;
+  const dpr = window.devicePixelRatio || 1, T = PX.T;
+  R.mobile = R.cssW < 700;
+  const target = R.mobile ? 34 : (R.cssW >= 1100 ? 64 : 56);
+  let k = Math.max(1, Math.round(target * dpr / T));
+  while (T * k / dpr < 30) k++;
+  const w = Math.ceil(R.cssW * dpr / k), h = Math.ceil(R.cssH * dpr / k);
+  const cssW = w * k / dpr + 'px', cssH = h * k / dpr + 'px';
+  for (const el of [c, R.nightEl]) { if (!el) continue; el.style.width = cssW; el.style.height = cssH; el.style.imageRendering = 'pixelated'; }
+  if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+  R.ctx.imageSmoothingEnabled = false;
+  R.k = k; R.dpr = dpr / k;
+  if (T !== R.u || R.ts !== T * k / dpr) { R.ts = T * k / dpr; R.u = R.cu = T; R.chunks.clear(); clearArt(); }
+  R.offsetY = R.mobile ? -R.cssH * 0.1 : 0;
+  R.night = null;
+}
+// Pixel style: every image lands on whole canvas pixels (the transform's offset is already whole), so sprites
+// moving by fractions of a pixel step cleanly instead of resampling.
+function snapDraws(ctx) {
+  const di = ctx.drawImage.bind(ctx), r = Math.round;
+  ctx.drawImage = (im, a, b, c, d, ...rest) => (c === undefined ? di(im, r(a), r(b)) : d !== undefined && rest.length === 0 ? di(im, r(a), r(b), r(c), r(d)) : rest.length ? di(im, a, b, c, d, r(rest[0]), r(rest[1]), r(rest[2]), r(rest[3])) : di(im, a, b, c, d));
 }
 
 function chunkCanvas(gm, cx, cy, P) {
@@ -91,10 +123,26 @@ export function camera(gm) {
   const p = gm.S.player;
   const vw = R.cssW / R.ts, vh = R.cssH / R.ts;
   let cx = p.x - vw / 2, cy = p.y - 0.75 - vh / 2 - R.offsetY / R.ts;
+  const fx = cx, fy = cy;
   cx = vw >= W ? (W - vw) / 2 : Math.max(0, Math.min(W - vw, cx));
   cy = vh >= H ? (H - vh) / 2 : Math.max(0, Math.min(H - vh, cy));
+  if (PX.on) return pixelCamera(cx, cy, p, cx === fx, cy === fy);
   if (!R.reduced && R.camInit) { R.cam.x += (cx - R.cam.x) * 0.25; R.cam.y += (cy - R.cam.y) * 0.25; if (Math.abs(cx - R.cam.x) < 0.01) R.cam.x = cx; if (Math.abs(cy - R.cam.y) < 0.01) R.cam.y = cy; }
   else { R.cam.x = cx; R.cam.y = cy; R.camInit = true; }
+  return R.cam;
+}
+// Pixel style: the camera sits on whole canvas pixels. While it follows the player it is locked to the
+// player's rounded pixel, so the player never shimmers against the ground; it eases only when it has
+// far to go (a teleport, a map edge) and then snaps back to the lock.
+function pixelCamera(cx, cy, p, followX, followY) {
+  const T = PX.T, F = R.camF || (R.camF = { x: cx, y: cy });
+  // While following, the target is re-expressed against the player's rounded pixel (the same place to within a
+  // pixel); against a map edge it stays put.
+  const lx = followX ? (Math.round(p.x * T) - Math.round((p.x - cx) * T)) / T : cx;
+  const ly = followY ? (Math.round(p.y * T) - Math.round((p.y - cy) * T)) / T : cy;
+  if (!R.reduced && R.camInit && (Math.abs(lx - F.x) > 1 || Math.abs(ly - F.y) > 1)) { F.x += (lx - F.x) * 0.25; F.y += (ly - F.y) * 0.25; }
+  else { F.x = lx; F.y = ly; R.camInit = true; }
+  R.cam.x = Math.round(F.x * T) / T; R.cam.y = Math.round(F.y * T) / T;
   return R.cam;
 }
 export const snapCamera = (gm) => { R.camInit = false; camera(gm); };
@@ -129,6 +177,7 @@ export function draw(gm, ui) {
   const now = performance.now();
   const dt = Math.min(3, R.lastT ? (now - R.lastT) / 16.67 : 1); R.lastT = now;
   R.frames++;
+  if (PA.SIZES) PA.SIZES.u = u;
   const sea = sim.season(S);
   const P = palette(S.ch, sea);
   const cam = camera(gm);
@@ -519,13 +568,14 @@ function weather(ctx, S, now, dt) {
   if (S.weather === 'rain' || S.weather === 'snow') {
     const rain = S.weather === 'rain';
     const n = R.reduced ? 40 : rain ? 140 : 110;
-    if (rain) { ctx.strokeStyle = 'rgba(215,230,255,0.62)'; ctx.lineWidth = 1.4 * R.dpr; ctx.beginPath(); }
+    if (rain) { ctx.strokeStyle = 'rgba(215,230,255,0.62)'; ctx.lineWidth = Math.max(1, 1.4 * R.dpr); ctx.beginPath(); }
     else ctx.fillStyle = 'rgba(255,255,255,0.9)';
     for (let i = 0; i < n; i++) {
       const sp = rain ? 0.9 : 0.1;
       const x = (noise(i, 1) * w + (R.reduced ? 0 : now * 0.05 * (rain ? 0.3 : 0.4) + (rain ? 0 : Math.sin(now / 900 + i) * 12 * R.dpr))) % w;
       const y = (noise(i, 2) * h + (R.reduced ? 0 : now * sp)) % h;
       if (rain) { ctx.moveTo(x, y); ctx.lineTo(x - 4 * R.dpr, y + 18 * R.dpr); }
+      else if (PX.on) { const r = noise(i, 3) < 0.5 ? 1 : 2; ctx.fillRect(Math.round(x), Math.round(y), r, r); } // flakes are 1-2 px squares
       else { const r = (1.4 + noise(i, 3) * 1.6) * R.dpr; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
     }
     if (rain) {
@@ -637,7 +687,8 @@ function drawParticles(ctx, u, dt) {
 // time-of-day colour (dawn rose, golden hour, dusk violet), the weather colour and drifting fog, and at night
 // the darkness with soft holes for each light: lamps pool their light on the ground, lit windows glow on
 // building fronts after dusk, and the player carries a light only when it is truly dark.
-const NS = 4;
+// Overlay resolution: a quarter of the canvas; the pixel style's canvas is already small, so full size there.
+const NS_PAINT = 4;
 const gradSprites = new Map();
 function gradSprite(col) {
   let c = gradSprites.get(col);
@@ -678,7 +729,7 @@ function nightPass(gm, P, cam, now) {
   const d = sim.darkness(S);
   const el = R.nightEl;
   const fog = S.weather === 'fog' && S.time < 720 ? Math.min(1, (720 - S.time) / 200) : 0;
-  const W2 = R.canvas.width, H2 = R.canvas.height, u = R.u;
+  const W2 = R.canvas.width, H2 = R.canvas.height, u = R.u, NS = PX.on ? 1 : NS_PAINT;
   const w = Math.ceil(W2 / NS), h = Math.ceil(H2 / NS);
   if (el.width !== w || el.height !== h) { el.width = w; el.height = h; }
   const n = el.getContext('2d');

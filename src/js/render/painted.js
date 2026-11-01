@@ -34,10 +34,14 @@ export function buildingNames(ch) {
   return s;
 }
 
+// Size survey for packing pixel art at the size each sprite is drawn (`?sizelog`): every request is recorded in
+// tiles (w / SIZES.u) and read back through the `sizeLog` hook.
+export const SIZES = typeof location !== 'undefined' && /[?&]sizelog/.test(location.search) ? { u: 1, log: {} } : null;
 // A loaded image scaled once to w × h device pixels (optionally mirrored).
 export function scaled(name, w, h, flip = false, tint = null) {
   const im = img(name);
   if (!im) return null;
+  if (SIZES) { const k = (w / SIZES.u).toFixed(2); (SIZES.log[name] || (SIZES.log[name] = {}))[k] = 1; }
   w = Math.max(1, Math.round(w)); h = Math.max(1, Math.round(h));
   return cached(`img|${name}|${w}|${h}|${flip ? 1 : 0}|${tint ? tint.join() : ''}`, w, h, (g) => {
     let src = im, sw = im.naturalWidth, sh = im.naturalHeight;

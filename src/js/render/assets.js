@@ -4,8 +4,14 @@
 // Until an image is decoded the vector art in art.js is drawn instead; `?art=0` keeps the vector art.
 /* global ART_MANIFEST */
 const MAN = typeof ART_MANIFEST !== 'undefined' ? ART_MANIFEST : {};
-const simple = (() => { try { return JSON.parse(localStorage.getItem('vov-farm-settings') || '{}').gfx === 'simple'; } catch { return false; } })();
-const off = (typeof location !== 'undefined' && /[?&]art=0\b/.test(location.search)) || simple;
+const gfx = (() => { try { return JSON.parse(localStorage.getItem('vov-farm-settings') || '{}').gfx || ''; } catch { return ''; } })();
+const query = typeof location !== 'undefined' ? location.search : '';
+const off = /[?&]art=0\b/.test(query) || gfx === 'simple';
+// Pixel style (`?style=pixel`, or Settings → Graphics → Pixel): the world is drawn into a low-resolution canvas,
+// one canvas pixel per art pixel, `PX.T` pixels to a tile (`?tile=24` / `32` for the larger tiers), and the
+// browser scales it up by a whole number with no smoothing.
+const styleQ = (query.match(/[?&]style=(\w+)/) || [])[1];
+export const PX = { on: styleQ ? styleQ === 'pixel' : gfx === 'pixel', T: [16, 24, 32].includes(+(query.match(/[?&]tile=(\d+)/) || [])[1]) ? +query.match(/[?&]tile=(\d+)/)[1] : 16 };
 
 export const ART = { on: !off && Object.keys(MAN).length > 0, imgs: new Map(), loading: new Map(), pending: 0, failed: [], dirty: false, loaded: 0, fresh: [] };
 

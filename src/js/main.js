@@ -30,7 +30,7 @@ function loadSettings() {
   let s = {};
   try { s = JSON.parse(load(save.SETTINGS_KEY) || '{}') || {}; } catch { s = {}; }
   const keys = { ...DEFAULT_KEYS, ...(s.keys || {}) };
-  return { text: s.text || 1, motion: s.motion || 'auto', touch: s.touch || 'auto', mute: !!s.mute, volume: s.volume ?? 0.5, assist: !!s.assist, contrast: !!s.contrast, gfx: s.gfx === 'simple' ? 'simple' : 'painted', keys };
+  return { text: s.text || 1, motion: s.motion || 'auto', touch: s.touch || 'auto', mute: !!s.mute, volume: s.volume ?? 0.5, assist: !!s.assist, contrast: !!s.contrast, gfx: ['simple', 'pixel'].includes(s.gfx) ? s.gfx : 'painted', keys };
 }
 function saveSettings() { store(save.SETTINGS_KEY, JSON.stringify(app.settings)); }
 function saveGame() {
@@ -458,7 +458,7 @@ function onClick(e) {
     case 'vol': app.settings.volume = +arg; app.settings.mute = false; saveSettings(); applySettings(); play('coin'); refreshModal(); break;
     case 'assist': app.settings.assist = arg === 'on'; saveSettings(); applySettings(); refreshModal(); break;
     case 'contrast': app.settings.contrast = arg === 'on'; saveSettings(); applySettings(); refreshModal(); break;
-    case 'gfx': if (app.settings.gfx !== arg) { app.settings.gfx = arg; saveSettings(); ui.toast(arg === 'simple' ? 'Simple graphics from the next start (reload the page).' : 'Painted graphics from the next start (reload the page).', 'good'); } refreshModal(); break;
+    case 'gfx': if (app.settings.gfx !== arg) { app.settings.gfx = arg; saveSettings(); ui.toast(`${{ simple: 'Simple', pixel: 'Pixel' }[arg] || 'Painted'} graphics from the next start (reload the page).`, 'good'); } refreshModal(); break;
     case 'rebind': app.ui.rebinding = arg; ui.settingsScreen(arg); break;
     case 'resetkeys': app.settings.keys = JSON.parse(JSON.stringify(DEFAULT_KEYS)); saveSettings(); refreshModal(); break;
   }
@@ -513,7 +513,7 @@ function renderTitle() {
 // ---------- test hooks ----------
 function compact() {
   const gm = app.gm;
-  const base = { scene: app.ui.scene, modal: app.ui.modal, paused: app.paused, reduced: scene.R.reduced, loadMs: app.loadMs, settings: { ...app.settings, keys: app.settings.keys }, storageOK: app.storageOK, toasts: app.toastLog.slice(-8), wipe: !!app.fx.wipe, ts: scene.R.ts, touch: touchWanted(), audioPlayed: audioState.played, artCache: artCacheSize() };
+  const base = { scene: app.ui.scene, modal: app.ui.modal, paused: app.paused, reduced: scene.R.reduced, loadMs: app.loadMs, settings: { ...app.settings, keys: app.settings.keys }, storageOK: app.storageOK, toasts: app.toastLog.slice(-8), wipe: !!app.fx.wipe, ts: scene.R.ts, px: scene.R.pixel ? { T: scene.R.u, k: scene.R.k } : null, touch: touchWanted(), audioPlayed: audioState.played, artCache: artCacheSize() };
   if (!gm) return base;
   const S = gm.S;
   const t = sim.target(gm);
@@ -629,6 +629,7 @@ const hooks = {
         case 'objAt': { const o = sim.objAt(gm, args[0], args[1]); return o ? { ...o } : null; }
         case 'blocked': return sim.blocked(gm, args[0], args[1]);
         case 'describe': return ui.describeTarget(gm);
+        case 'sizeLog': return PA.SIZES ? PA.SIZES.log : null;
         case 'spriteSizes': return { tile: scene.R.ts, person: [scene.R.ts, scene.R.ts * 1.5] };
         case 'render': render(); return true;
       }
