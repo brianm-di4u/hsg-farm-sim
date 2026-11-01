@@ -4,6 +4,7 @@ import * as sim from './sim/sim.js';
 import * as D from './sim/data.js';
 import { iconURL, personSprite } from './render/art.js';
 import { PX } from './render/assets.js';
+import { pxTextSVG } from './render/pxfont.js';
 import * as PA from './render/painted.js';
 import { UI_THEME } from './render/palette.js';
 
@@ -81,7 +82,7 @@ export function hotbar(gm) {
   last.hot = sig;
   const cap = D.JUG_CAP[D.CHAPTERS[S.ch].tier] || 20;
   qs('#hotbar').innerHTML = S.inv.slice(0, sim.HOTBAR).map((it, i) => `<button class="slot${i === S.sel ? ' sel' : ''}" data-act="hot" data-arg="${i}" aria-label="Slot ${i + 1}: ${it ? esc(D.itemName(it.id)) + (it.n > 1 ? ' ×' + it.n : '') : 'empty'}${i === S.sel ? ' (selected)' : ''}">
-      <span class="k">${i + 1}</span>${it ? `${icon(it.id)}${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}
+      ${num(i + 1, 'k')}${it ? `${icon(it.id)}${it.n > 1 ? `${num(it.n, 'n')}` : ''}` : ''}
       ${it && it.id === 'jug' ? `<span class="jug"><i style="width:${Math.round(S.jug / cap * 100)}%"></i></span>` : ''}</button>`).join('');
 }
 export function resetHud() { for (const k of Object.keys(last)) delete last[k]; }
@@ -218,7 +219,7 @@ export function pauseScreen(canSave) {
 export function inventoryScreen(gm, tab = 'items', pick = null) {
   const S = gm.S;
   const slots = S.inv.map((it, i) => `<button class="slot${i === S.sel ? ' sel' : ''}${i === pick ? ' pick' : ''}" data-act="slot" data-arg="${i}" aria-label="Slot ${i + 1}: ${it ? esc(D.itemName(it.id)) + ' ×' + it.n : 'empty'}">
-    ${i < sim.HOTBAR ? `<span class="k">${i + 1}</span>` : ''}${it ? `${icon(it.id)}${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}</button>`).join('');
+    ${i < sim.HOTBAR ? `${num(i + 1, 'k')}` : ''}${it ? `${icon(it.id)}${it.n > 1 ? `${num(it.n, 'n')}` : ''}` : ''}</button>`).join('');
   const it = pick != null ? S.inv[pick] : sim.selected(S);
   const det = it ? itemDetail(gm, it) : '<span class="muted">Select an item. Click two slots to swap them; slots 1–8 are the hotbar.</span>';
   const tabs = `<div class="tabs"><button class="tab ${tab === 'items' ? 'on' : ''}" data-act="invtab" data-arg="items">Pack</button><button class="tab ${tab === 'craft' ? 'on' : ''}" data-act="invtab" data-arg="craft">Crafting</button></div>`;
@@ -260,7 +261,7 @@ export function binScreen(gm) {
 // ---------- chest ----------
 export function chestScreen(gm) {
   const S = gm.S;
-  const cell = (it, act, i) => `<button class="slot" data-act="${act}" data-arg="${i}" aria-label="${it ? esc(D.itemName(it.id)) + ' ×' + it.n : 'empty'}">${it ? `${icon(it.id)}${it.n > 1 ? `<span class="n">${it.n}</span>` : ''}` : ''}</button>`;
+  const cell = (it, act, i) => `<button class="slot" data-act="${act}" data-arg="${i}" aria-label="${it ? esc(D.itemName(it.id)) + ' ×' + it.n : 'empty'}">${it ? `${icon(it.id)}${it.n > 1 ? `${num(it.n, 'n')}` : ''}` : ''}</button>`;
   show(`<div class="panel">${head('Chest')}<p class="small muted">Click an item to move it between your pack and the chest.</p>
     <h3>Chest</h3><div class="grid">${S.chest.map((it, i) => cell(it, 'cslot', i)).join('')}</div>
     <h3>Pack</h3><div class="grid">${S.inv.map((it, i) => cell(it, 'pslot', i)).join('')}</div></div>`);
@@ -329,6 +330,8 @@ function portrait(ctx, id, w, h, u) {
   return true;
 }
 // An item icon: the painted file when there is one, else the drawn icon as a data URL.
+// A slot's key number or stack count: in the pixel style a crisp bitmap chip (DOM text gets colour fringes).
+const num = (t, cls) => (PX.on ? `<img class="${cls} pxnum" alt="" src="${pxTextSVG(String(t))}">` : `<span class="${cls}">${t}</span>`);
 function icon(id, cls = '') { return PA.iconHtml(id, cls) || `<img alt="" class="${cls}" src="${iconURL(id)}"${cls === 'big' ? ' width="40" height="40"' : ''}>`; }
 const giftName = (g) => (g.startsWith('kind:') ? 'any ' + g.slice(5) : D.itemName(g).toLowerCase());
 export function factHtml(id) {

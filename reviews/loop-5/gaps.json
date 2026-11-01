@@ -1,0 +1,211 @@
+[
+  {
+    "id": "G-regression-ui",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered ui since loop 4",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-occlusion-and-sort",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R08-player",
+      "crops/R15-player"
+    ],
+    "fix": "Exempt occluders under 6 art px wide (lamp and fence posts) from see-through; for canopies, tall crops and buildings keep the occluder opaque and draw the hidden player as a 1-art-px outline in the player's darkest shirt colour; sort actors and fence-mounted props by foot y. Test: no checker pixel in the player's head box in crops/R08-player; trough behind the hat in crops/R15-player.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-night-dusk-light",
+    "category": "lighting",
+    "expectedGain": 1,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "desktop/R06",
+      "desktop/R07",
+      "mobile/R05"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Lamp pools as one warm hue in 2 bands with a 1-band ordered-dither edge, multiplied (not hue-replaced); globes palette-swapped to lit from dusk; window spill trapezoids on the street; +1 ramp-step warm tint on sprites inside a pool; dusk orange key grade with 4-6 art px cast shadows; sun-glint column of 2-3 dithered bands on the evening lake. Test: at most 3 tints per pool; the NPC in a pool is warmer than one outside it.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-mobile-font-metrics",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R12",
+      "mobile/R11"
+    ],
+    "fix": "Render phone body text from the bitmap font at integer 2x device scale with per-glyph advance widths and smoothing off. Test: no grey edge pixels in 'Tool' and no gap wider than 1 font px inside 'fills', 'Duval', 'strawberries'.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-hoe-settle-and-dust",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Frames 5-8 lower the hoe head at least 3 art px per frame to a resting pose; 1-2 px lean-back on wind-up; 1 px squash and 2-frame hold at impact; replace the dust bar with 3-4 opaque puff clusters plus 2-3 soil chips that drift up and shrink over 4 frames. (The tilled-decal z-order clause is dropped: the hem is intact in strips/R14.)",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-hud-icons-and-numerals",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R12",
+      "desktop/R04"
+    ],
+    "fix": "Replace the emoji book and backpack HUD icons with 12-16 art px native sprites on the HUD palette; give slot numerals a dark 1-px-padded backing chip with a 1-art-px gap from the icon (or move them into the slot frame) and hide them on touch, so slot 5 no longer reads '57'.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-hat-silhouettes",
+    "category": "characters",
+    "expectedGain": 0.75,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R03-player",
+      "crops/R05-player",
+      "crops/R07-player",
+      "strips/R13"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Per-kind hat sprites in every direction: fedora with pinched crown and snapped brim (Ray); slouch hat no wider than 1.3x the head (Caleb); ball cap with a 3-4 px bill toward the facing direction (Sam); fur cap with tail (Josiah); deep sun bonnet with projecting brim (Nora). Side and back brims overhang by at most 2-3 art px so shoulders and arms show.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-soft-overlays",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS1",
+    "evidence": [
+      "desktop/R05",
+      "desktop/R07",
+      "desktop/R17",
+      "desktop/R15"
+    ],
+    "fix": "Quantize window orbs and lamp-post glow to 2-3 ordered-dither bands on the art grid; re-bake deep-water patch masks at art-pixel resolution with an opaque 1-tone rim; draw prop shadows as opaque one-step-darker art-pixel ellipses no wider than the footprint plus 2 px. Test: at most 60 colours in the r05-quapaw crop region; water edge steps at multiples of the art pixel. Also worth about +0.25 lighting.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-character-identity-and-clothing",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R10",
+      "crops/R16-npcs",
+      "crops/R06-player",
+      "crops/R11-npcs",
+      "strips/R14"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "At least 4 palette and garment variants for ambient townsfolk with no two adjacent identical; render Ezra with a walking stick; ponytail for June Vale; knickers and white stockings for Walt; 2 boot pixels below dress hems in front and 3/4 frames; 2-3 eye and mouth variants per named person. Also worth about +0.25 authenticity.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-walk-cycle",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R13",
+      "strips/R13-mobile"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "6-frame walk with a 1 px drop on both contact frames only (replacing the irregular bob), a 2-pose arm swing visible under a narrowed profile brim, de-duplicated frames 3 and 5, and a 1 px hair or hat lag on the frame after contact.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-rain-ground",
+    "category": "lighting",
+    "expectedGain": 0.25,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R09"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Rain already darkens the scene; add puddle tiles on the road with 1-2 highlight pixels, 2-3-frame splash sprites where drops land, and double the streak density.",
+    "priority": 0.375,
+    "selected": true
+  },
+  {
+    "id": "G-farm-and-lake-dressing",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R03",
+      "desktop/R17",
+      "desktop/R07",
+      "desktop/R10"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Lower base meadow and snow tile contrast one ramp step and remove isolated single-pixel speckle (tufts already exist); add 6-10 props per farm screen (fence runs, woodpile, stumps, bushes); reeds, rocks, a moored boat and buoys along the lake shore, with the ramp running into the water; wooded mountain backdrop behind the Row.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-quapaw-dome",
+    "category": "authenticity",
+    "expectedGain": 0.25,
+    "severity": 2,
+    "effort": "S",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R05",
+      "desktop/R06",
+      "desktop/R19"
+    ],
+    "fix": "Reuse the 2026 tiled-dome sprite on the 1931 and 1955 Quapaw (dome built 1922), keeping each era's signage.",
+    "priority": 0.25,
+    "selected": false
+  }
+]

@@ -54,6 +54,19 @@ export function pxText(ctx, text, x, y, color, scale = 1) {
     x += (g[0].length + 1) * scale;
   }
 }
+// The text as a tiny SVG on a solid chip, 2 CSS px per font pixel with crisp edges, as a data URL: DOM numbers (slot
+// keys, stack counts) drawn like this get no sub-pixel colour fringes and stay on the pixel grid.
+const svgs = new Map();
+export function pxTextSVG(text, color = '#f4ecd8', bg = '#18140f') {
+  const k = `${text}|${color}|${bg}`;
+  if (svgs.has(k)) return svgs.get(k);
+  const w = pxTextWidth(text) + 2, h = 9, s = 2;
+  let r = `<rect width="${w}" height="${h}" fill="${bg}"/>`, x = 1;
+  for (const ch of text) { const g = glyph(ch); for (let y = 0; y < 7; y++) for (let c = 0; c < g[y].length; c++) if (g[y][c] === '#') r += `<rect x="${x + c}" y="${y + 1}" width="1" height="1"/>`; x += g[0].length + 1; }
+  const url = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w * s}" height="${h * s}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" fill="${color}">${r}</svg>`);
+  svgs.set(k, url);
+  return url;
+}
 // A code-made canvas with the text and a 1-px dark outline around every glyph pixel (readable on any ground).
 const labels = new Map();
 export function pxLabel(text, color = '#ffffff', outline = '#141010', s = 1) {

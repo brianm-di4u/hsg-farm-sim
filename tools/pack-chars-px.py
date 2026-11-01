@@ -119,7 +119,7 @@ def base_atlas(name, cw, chh):
                 lab[m] = r * 3 + (g > th[r][0]).astype(int) + (g > th[r][1]).astype(int)
         red = reduce_labels(lab, wts, nlab, cw, chh)
         red = stamp_face(red, lab, pal, cw, chh)
-        win = face_window(red, pal, chh)
+        win = face_window(red, pal, chh, side=c // (COLS // 3) == 2)
         for l in range(3):  # face-window skin rows (13-15)
             rows[13 + l, :, c * cw:(c + 1) * cw][win & (red == l)] = (255, 255, 255, 255)
         for l in range(12):
@@ -185,8 +185,9 @@ def stamp_face(red, lab, pal, cw, chh):
     return out
 
 
-def face_window(red, pal, chh):
-    """The face below the brow line: skin and eye pixels from 3 rows above the eyes to 4 rows below them. The game
+def face_window(red, pal, chh, side=False):
+    """The face below the brow line: skin and eye pixels from 3 rows above the eyes to 4 rows below them (in profile,
+    from 1 row above and only the front of the face). The game
     redraws it over any headwear, so a cap, bonnet or toque never hides the eyes (a 16-bit convention: hats sit on
     the brow, the face always reads). Empty in back views, which have no eyes."""
     eye = 12 + int(pal.mean(1).argmin())
@@ -194,8 +195,12 @@ def face_window(red, pal, chh):
     win = np.zeros(red.shape, bool)
     if not len(ys):
         return win
-    y0, y1 = max(0, ys[0] - 3), min(chh, ys[-1] + 5)
+    y0, y1 = max(0, ys[0] - (1 if side else 3)), min(chh, ys[-1] + 5)
     win[y0:y1] = (red[y0:y1] <= 2) | (red[y0:y1] == eye)
+    if side:  # profile (facing left): only the front of the face, from just behind the eye to the nose
+        xs = np.where((red == eye).any(0))[0]
+        x1 = xs[-1] + max(2, round(red.shape[1] * 0.12))
+        win[:, x1 + 1:] = False
     return win
 
 

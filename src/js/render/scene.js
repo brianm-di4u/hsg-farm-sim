@@ -209,7 +209,7 @@ export function addFx(kind, x, y, delay = 0) {
     const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.4, sp = v * (0.4 + Math.random() * 0.8);
     P.push({ x: cx, y: cy - 0.1, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 26 + Math.random() * 10, col: cols[i % cols.length], s: s * (0.6 + Math.random() * 0.8), round: kind !== 'chip', ground: cy + 0.1 + Math.random() * 0.2, spark: kind === 'spark' });
   }
-  if (kind === 'dirt') for (let i = 0; i < 3; i++) P.push({ x: cx + (Math.random() - 0.5) * 0.4, y: cy, vx: (Math.random() - 0.5) * 0.01, vy: -0.006, life: 40, max: 40, col: '#b89870', s: 0.22, dust: true });
+  if (kind === 'dirt') for (let i = 0; i < (PX.on ? 5 : 3); i++) P.push({ x: cx + (Math.random() - 0.5) * (PX.on ? 0.7 : 0.4), y: cy, vx: (Math.random() - 0.5) * 0.01, vy: -0.006, life: PX.on ? 54 : 40, max: PX.on ? 54 : 40, col: i % 2 ? '#c8a87a' : '#b89870', s: PX.on ? 0.26 : 0.22, dust: true });
 }
 // Hearts rising over a neighbour whose friendship just grew.
 export function addHearts(x, y) {
@@ -272,9 +272,10 @@ export function draw(gm, ui) {
     }
     if (!(l.post || l.k === 'fire') || !inView(Math.floor(l.x), Math.floor(l.y))) continue;
     const sp = PA.lampSprite(l.k, u);
-    // A lamp post standing in front of the player turns see-through, like trees, so it never hides them.
+    // A lamp post standing in front of the player turns see-through, like trees, so it never hides them. Pixel style:
+    // a post is thin, so it simply stands in front (a checker over the face read as a mesh).
     const lampFront = l.post && l.y + 0.05 > pl.y && l.y - pl.y < 1.8 && Math.abs(l.x - pl.x) < 0.7;
-    if (sp) list.push({ y: l.y + 0.05, sil: l.k === 'fire' ? null : { c: sp.c, bx: l.x * u, by: (l.y + 0.05) * u, ox: sp.ox, oy: sp.oy }, d: () => { if (lampFront) seeThrough(ctx, sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); else ctx.drawImage(sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); if (l.k === 'fire') fireFlicker(ctx, l, u, now); } });
+    if (sp) list.push({ y: l.y + 0.05, sil: l.k === 'fire' ? null : { c: sp.c, bx: l.x * u, by: (l.y + 0.05) * u, ox: sp.ox, oy: sp.oy }, d: () => { if (lampFront && !PX.on) seeThrough(ctx, sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); else ctx.drawImage(sp.c, l.x * u + sp.ox, (l.y + 0.05) * u + sp.oy); if (l.k === 'fire') fireFlicker(ctx, l, u, now); } });
     else if (l.post) list.push({ y: l.y, d: () => ctx.drawImage(objSprite({ t: 'lamp' }, P, u), (l.x - 0.5) * u, (l.y - 1.5) * u) });
   }
   // Pixel style, 1886 on: the springs as drawn props (stone spring boxes, the open display spring, the built soaking
@@ -349,7 +350,7 @@ export function draw(gm, ui) {
     const since = now >= R.useT ? now - R.useT : 1e9; // a use stamped on a different clock (captures pin it) counts as long ago
     const frame = pxPeople && since < 300 ? 'use' + Math.min(4, Math.floor(since / 60)) : since < 110 ? 'use0' : since < 300 ? 'use1' : pl.moving && !R.reduced ? walkFrame(pl.walk / 7) : idleFrame(0);
     const sp = PA.personSprite('player' + S.ch, look, pl.face, frame, u);
-    const swing = since < 300 && !R.reduced && sim.selected(S);
+    const swing = since < (PX.on ? 420 : 300) && !R.reduced && sim.selected(S); // pixel style: two settle frames after the swing
     const behind = pl.face === 'up' || (PX.on && pl.face === 'down' && since < 120); // facing down, the wind-up is raised behind the head
     if (swing && behind) toolSwing(ctx, S, pl, since, u);
     if (sp && PX.on && swing && since < 300) pxCrouch(ctx, sp.c, pl.x * u + sp.ox, pl.y * u + sp.oy, SWING_BODY[Math.min(4, Math.floor(since / 60))]);
@@ -479,10 +480,10 @@ function toolSwing(ctx, S, pl, since, u) {
 }
 // Pixel style: the tool in five held poses that match the body's use frames (wind-up behind the head, top, strike,
 // impact with the head on the target tile, recover), a full tile long, so the arc and the contact read.
-const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15]];
+const SWING = [[-0.22, -1.25, -2.6], [0.0, -1.45, -1.75], [0.3, -0.95, -0.7], [0.42, -0.25, 0.35], [0.36, -0.55, -0.15], [0.32, -0.5, 0.2], [0.3, -0.45, 0.45]];
 // The body through the same five poses, in art px: up on the toes for the wind-up (the whole figure rises), then the
 // upper body drops onto the hips at the strike and impact (a crouch), feet planted.
-const SWING_BODY = [-1, -1, 0, 3, 1];
+const SWING_BODY = [-1, -1, 0, 3, 1, 0, 0]; // frames 5-6: the tool lowered to rest, body upright
 function pxCrouch(ctx, c, x, y, dy) {
   if (dy <= 0) { ctx.drawImage(c, x, y + dy); return; }
   const cut = Math.round(c.height * 0.62); // the hips
@@ -490,7 +491,7 @@ function pxCrouch(ctx, c, x, y, dy) {
   ctx.drawImage(c, 0, 0, c.width, cut, x, y + dy, c.width, cut);
 }
 function pxToolSwing(ctx, it, pl, since, u) {
-  const f = Math.max(0, Math.min(4, Math.floor(since / 60))), [dx, dy, ang] = SWING[f];
+  const f = Math.max(0, Math.min(6, Math.floor(since / 60))), [dx, dy, ang] = SWING[f];
   const side = pl.face === 'left' ? -1 : 1, s = u;
   const ic = PA.iconSprite(it.id, s) || iconCanvas(it.id, s);
   const down = pl.face === 'down', up = pl.face === 'up';
@@ -690,6 +691,15 @@ function drawSoil(ctx, S, sx0, sy0, sx1, sy1, u) {
 // Bridges, docks, rails and quarry pits on top of the painted terrain, styled by era.
 function boatRamp(ctx, x, y, u, P) {
   const px = x * u, py = (y + 0.85) * u;
+  if (PX.on) { // solid planks or concrete in two tones, stepping down to a dark waterline (no fade into the water)
+    const top = P.ch >= 5 ? '#b8b4aa' : '#9a8a70', q = PX.S, x0 = Math.round(px + u * 0.08), w = Math.round(u * 0.84), y0 = Math.round(py), h = Math.round(u * 0.62);
+    ctx.fillStyle = shade(top, -0.45); ctx.fillRect(x0 - q, y0, w + 2 * q, h + 2 * q);
+    ctx.fillStyle = top; ctx.fillRect(x0, y0, w, Math.round(h * 0.55));
+    ctx.fillStyle = shade(top, -0.18); ctx.fillRect(x0, y0 + Math.round(h * 0.55), w, h - Math.round(h * 0.55));
+    ctx.fillStyle = shade(top, 0.25); for (let i = 1; i < 4; i++) ctx.fillRect(x0, y0 + Math.round(h * i / 4), w, q);
+    ctx.fillStyle = '#1e3a48'; ctx.fillRect(x0 - q, y0 + h + q, w + 2 * q, q);
+    return;
+  }
   const gr = ctx.createLinearGradient(0, py, 0, py + u * 0.9);
   gr.addColorStop(0, P.ch >= 5 ? '#b8b4aa' : '#9a8a70'); gr.addColorStop(1, 'rgba(120,140,140,0)');
   ctx.fillStyle = gr; ctx.fillRect(px + u * 0.05, py, u * 0.9, u * 0.9);
@@ -990,11 +1000,11 @@ function pxFogSprite(size) {
   return c;
 }
 // Pixel style: lamp pools are a few hard-edged rings of light rather than a smooth gradient over the pixel art.
-// `band` (default, after research/pixel-tradeoffs.md §10: Harvest Moon-style stepped light) leaves plain rings,
-// `dither` blends neighbouring rings with a 4x4 Bayer pattern, `smooth` keeps the painted style's gradients
-// (A/B: ?light=dither|smooth). The pattern lives in the light's own sprite, which is
+// `dither` (default since loop 6: both reviewers read plain rings as targets) blends neighbouring rings with a 4x4
+// Bayer pattern, `band` leaves plain rings (research/pixel-tradeoffs.md §10: Harvest Moon-style stepped light),
+// `smooth` keeps the painted style's gradients (A/B: ?light=band|smooth). The pattern lives in the light's own sprite, which is
 // fixed in the world, so the dither doesn't crawl when the camera moves.
-const LIGHT_MODE = !PX.on ? 'smooth' : ((typeof location !== 'undefined' && (location.search.match(/[?&]light=(dither|band|smooth)/) || [])[1]) || 'band');
+const LIGHT_MODE = !PX.on ? 'smooth' : ((typeof location !== 'undefined' && (location.search.match(/[?&]light=(dither|band|smooth)/) || [])[1]) || 'dither');
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
 const pxLights = new Map();
 function pxLight(rx, ry, col, bands = 4) {

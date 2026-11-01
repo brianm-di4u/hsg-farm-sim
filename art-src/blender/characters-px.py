@@ -178,21 +178,21 @@ tag(mesh_obj('skirt', cone(0.29, 0.16, 0.5, 28, -0.5), hips, (0, 0, 0.08)), 'ski
 def hatobj(name, bm, loc=(0, 0, 0), mat='grey'):
     return tag(mesh_obj(name, bm, headp, loc, mat), 'hat-' + name.split('_')[0])
 # brimmed farm hat (straw/felt)
-hatobj('brim_b', cone(0.4, 0.4, 0.03, 32), (0, 0, 0.14))  # slouch: a very wide brim
+hatobj('brim_b', cone(0.32, 0.32, 0.03, 32), (0, 0, 0.14))  # slouch: a wide brim (0.4 swallowed head and shoulders)
 hatobj('brim_c', cone(0.21, 0.19, 0.12, 28), (0, 0, 0.16))  # and a low crown
 # fedora: narrower brim, pinched crown, band
-hatobj('fedora_b', cone(0.34, 0.34, 0.025, 32), (0, 0, 0.13))
-hatobj('fedora_c', sphere(0.2, (0.95, 1.05, 0.95), 28, 14, lambda c: c.z > -0.05), (0, 0, 0.18))  # a tall crown
+hatobj('fedora_b', cone(0.29, 0.29, 0.025, 32), (0, 0, 0.13))
+hatobj('fedora_c', sphere(0.2, (0.82, 1.0, 0.95), 28, 14, lambda c: c.z > -0.05), (0, 0, 0.18))  # a tall, pinched crown
 # cap (flat cap / ball cap): dome plus a visor toward the face
 hatobj('cap_d', sphere(0.295, (1.0, 1.0, 0.84), 28, 16, lambda c: c.z > 0.0), (0, 0.0, 0.03))  # pixel style: encloses the hair (no poke-through)
-hatobj('cap_v', sphere(0.2, (1.1, 1.0, 0.16), 20, 10, lambda c: c.y < 0.02), (0, -0.24, 0.05))  # a long visor
+hatobj('cap_v', sphere(0.17, (1.1, 1.0, 0.16), 20, 10, lambda c: c.y < 0.02), (0, -0.22, 0.06))  # a visor
 # helmet (race helmet): rounder, a ridge, a short brim
 hatobj('helmet_d', sphere(0.29, (1.0, 1.06, 0.86), 28, 16, lambda c: c.z > -0.03), (0, 0.01, 0.02))
 hatobj('helmet_r', sphere(0.05, (0.7, 4.6, 0.7), 12, 8), (0, 0.02, 0.27))
 hatobj('helmet_v', sphere(0.14, (1.1, 0.6, 0.14), 16, 8, lambda c: c.y < 0.0), (0, -0.25, 0.08))
 # bonnet: a deep shell around the back and top that frames the face, with a brim forward
 hatobj('bonnet_s', sphere(0.3, (1.05, 1.0, 1.0), 28, 18, lambda c: c.y > -0.18 and c.z > -0.16), (0, 0.03, 0.03))
-o = hatobj('bonnet_f', sphere(0.33, (1.12, 0.7, 1.05), 28, 16, lambda c: c.y < 0.02 and c.z > 0.08), (0, -0.14, 0.08)); o.rotation_euler = (math.radians(-18), 0, 0)  # pixel style: the brim frames the face from above instead of hiding it
+o = hatobj('bonnet_f', sphere(0.33, (1.1, 0.95, 1.05), 28, 16, lambda c: c.y < 0.02 and c.z > 0.08), (0, -0.16, 0.08)); o.rotation_euler = (math.radians(-10), 0, 0)  # pixel style: the brim frames the face from above instead of hiding it
 # headscarf: tight wrap with a knot at the back
 hatobj('scarf_s', sphere(0.275, (1.02, 1.0, 1.0), 28, 18, lambda c: c.y > -0.12 and c.z > -0.12), (0, 0.01, 0.02))
 hatobj('scarf_k', sphere(0.11, (1.2, 0.8, 0.9)), (0, 0.27, -0.04))  # a big knot

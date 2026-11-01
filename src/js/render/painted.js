@@ -213,14 +213,24 @@ export function iconHtml(id, cls = '') {
 export const peopleReady = () => !!(img('chars-trousers') && img('chars-dress') && img('chars-overlay'));
 export const FEET = 164 / 192; // ground point within a character cell
 // Pixel-style people with the 13-frame atlases (walk 6, use 5, idle 2), or false.
+const WALK_BOB = [2, 1, 0, 2, 1, 0];
 export const pxPeople = () => isPx('chars-trousers') && manifest()['chars-trousers'].perDir === 13;
 // A person frame at u px per tile: 1.0 tile wide × 1.5 tall cell; returns { c, ox, oy } relative to the feet.
 export function personSprite(id, look, face, frame, u) {
   if (!peopleReady()) return null;
   if (isPx('chars-trousers')) { // pixel style: the native-size cell, outlined
     const { cell: [cw, ch], perDir } = manifest()['chars-trousers'];
-    const c = cached(`ppx|${id}|${face}|${frame}`, cw + 2, ch + 2, (g) => g.drawImage(composePx({ trousers: img('chars-trousers'), dress: img('chars-dress'), overlay: img('chars-overlay') },
-      face === 'up' ? { ...look, glasses: false } : look, SKINS[look.skin ?? 1], face, frame, cw, ch, perDir), 0, 0));
+    const c = cached(`ppx|${id}|${face}|${frame}`, cw + 2, ch + 2, (g) => {
+      const f = composePx({ trousers: img('chars-trousers'), dress: img('chars-dress'), overlay: img('chars-overlay') },
+        face === 'up' ? { ...look, glasses: false } : look, SKINS[look.skin ?? 1], face, frame, cw, ch, perDir);
+      // Walk bob: the upper body settles onto the hips at each contact (2 art px, then 1, then 0 at the passing pose),
+      // feet planted. It also tells apart the rendered walk's repeated poses (steps 1-2 and 4-5).
+      const dy = frame.startsWith('walk') && perDir === 13 ? WALK_BOB[+frame.slice(4) % 6] : 0;
+      if (!dy) { g.drawImage(f, 0, 0); return; }
+      const cut = Math.round(f.height * 0.62);
+      g.drawImage(f, 0, cut, f.width, f.height - cut, 0, cut, f.width, f.height - cut);
+      g.drawImage(f, 0, 0, f.width, cut, 0, dy, f.width, cut);
+    });
     return { c, ox: -Math.floor(c.width / 2), oy: -(Math.round(ch * FEET) + 1) };
   }
   const w = Math.round(u * 1.3), h = Math.round(w * CELL_H / CELL_W);

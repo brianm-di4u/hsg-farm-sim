@@ -1,0 +1,14 @@
+- **Face window by direction:**
+  - Front views keep the face below the brow line drawn over any headwear.
+  - In profile the window covers only the front of the face (from just behind the eye to the nose, from one row above the eye), so it no longer cuts a skin band across a hat.
+  - Bonnets and headscarves, which wrap round the face, hide it in profile.
+  - Back views never had a window.
+  - Dress-figure profiles whose eye was broken up by the hair now get one eye back, so their faces show under a hat too.
+- **See-through sprites:** a lamp post, tree canopy or tall crop in front of the player, and the player's silhouette behind a building, are drawn as a 50% pixel checker of the opaque sprite instead of a 45% alpha blend. Ghost figures in off-palette colours are gone.
+- **Hoe:** after the strike the hoe lowers to rest over two more frames instead of vanishing. The dust puff on impact is larger and lasts longer.
+- **Ground:** meadow light and dark patches now have all-or-nothing edges (no half-tinted rim cells).
+- **Shadows:** people's contact shadows are wider and sit a little lower, so they show round the feet.
+- **Boat ramp:** solid planks or concrete in two tones, ending in a dark waterline, instead of a gradient fading into the water.
+- **Hotbar:**
+  - Slot numbers and stack counts are crisp bitmap chips drawn from the game's 5×7 glyphs, with no sub-pixel colour fringes, and they sit above the icon.
+  - Slot icons show at their native pixels with no soft drop shadow.
