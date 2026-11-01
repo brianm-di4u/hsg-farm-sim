@@ -1,0 +1,3 @@
+- Baseline loop: these captures show the game as it was before the pixel-art campaign: the painted style (gouache-look sprites from image generation, Blender-rendered chibi characters, smooth gradient lighting). No pixel-art work is in them.
+- The renderer draws the world at device resolution with smoothed image scaling; terrain is painted textures laid as smooth regions.
+- Captured with the default style (no `?style=pixel`), so the pixel-integrity check does not apply.

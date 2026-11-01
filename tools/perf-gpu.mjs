@@ -42,9 +42,10 @@ for (const vp of VPS) {
   await page.waitForFunction(() => !!window.__game);
   const tier = await page.evaluate(() => { const s = window.__game.getState(); return s.px ? 'T' + s.px.T : 'painted'; });
   for (const [name, sc] of SCENES) {
-    await page.evaluate((sc) => { window.__game.seed(7); window.__game.scene(sc); window.__game.resume(); }, sc);
+    await page.evaluate((sc) => { window.__game.seed(7); window.__game.scene(sc); window.__game.act('closeAll'); window.__game.resume(); }, sc); // closeAll: a scene can open a quest card
     await page.waitForFunction(() => { const s = window.__game.getState(); return s.artPending === 0 && s.artLoaded >= s.artTotal; }, null, { timeout: 60000 }).catch(() => {});
     await page.waitForTimeout(800); // warm-up: first chunks, caches
+    await page.evaluate(() => window.__game.act('closeAll')); // a scene's first tick can complete a quest and open its card
     await page.keyboard.down('ArrowRight');
     const r = await page.evaluate(() => new Promise((res) => {
       const dts = []; let last = performance.now(); const t0 = last;

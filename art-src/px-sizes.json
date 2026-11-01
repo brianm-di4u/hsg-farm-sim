@@ -1,0 +1,351 @@
+{
+ "bin": [
+  1
+ ],
+ "bld-barn": [
+  10
+ ],
+ "bld-brickstore": [
+  5
+ ],
+ "bld-brickstore4": [
+  5
+ ],
+ "bld-cabin": [
+  5
+ ],
+ "bld-club": [
+  5
+ ],
+ "bld-court": [
+  10
+ ],
+ "bld-depot": [
+  5
+ ],
+ "bld-drivein": [
+  5
+ ],
+ "bld-drug": [
+  5
+ ],
+ "bld-farm-bungalow": [
+  6
+ ],
+ "bld-farm-cabin": [
+  6
+ ],
+ "bld-farm-plank": [
+  6
+ ],
+ "bld-farm-ranch": [
+  6
+ ],
+ "bld-farm-restored": [
+  6
+ ],
+ "bld-grandhotel": [
+  10
+ ],
+ "bld-hardware": [
+  5
+ ],
+ "bld-house2": [
+  5
+ ],
+ "bld-house3": [
+  5
+ ],
+ "bld-house4": [
+  5
+ ],
+ "bld-house6": [
+  5
+ ],
+ "bld-hut": [
+  5
+ ],
+ "bld-market": [
+  10
+ ],
+ "bld-mill": [
+  5
+ ],
+ "bld-modernstore": [
+  5
+ ],
+ "bld-motel": [
+  10
+ ],
+ "bld-plankbath": [
+  5
+ ],
+ "bld-plankbath2": [
+  5
+ ],
+ "bld-plankhotel": [
+  5
+ ],
+ "bld-plankstore": [
+  5
+ ],
+ "bld-radio": [
+  5
+ ],
+ "bld-ranchhouse": [
+  5
+ ],
+ "bld-row-1": [
+  5
+ ],
+ "bld-row-1r": [
+  5
+ ],
+ "bld-row-2": [
+  5
+ ],
+ "bld-row-2r": [
+  5
+ ],
+ "bld-row-3": [
+  5
+ ],
+ "bld-row-3r": [
+  5
+ ],
+ "bld-row-4": [
+  5
+ ],
+ "bld-row-4r": [
+  5
+ ],
+ "bld-stage": [
+  5
+ ],
+ "bld-tent": [
+  5
+ ],
+ "bld-tent2": [
+  5
+ ],
+ "bld-twinhotel": [
+  10
+ ],
+ "bld-vicbath-1": [
+  5
+ ],
+ "bld-vicbath-2": [
+  5
+ ],
+ "bld-vicbath-3": [
+  5
+ ],
+ "bld-vicbath-free": [
+  5
+ ],
+ "bush": [
+  0.8
+ ],
+ "campfire": [
+  1
+ ],
+ "crystal": [
+  0.78
+ ],
+ "deco-barrels": [
+  1.1
+ ],
+ "deco-beehives": [
+  1.2
+ ],
+ "deco-greenhouse": [
+  2.6
+ ],
+ "deco-haybale": [
+  1.2
+ ],
+ "deco-haystack": [
+  1.3
+ ],
+ "deco-modelA": [
+  2.5
+ ],
+ "deco-pump": [
+  0.9
+ ],
+ "deco-scarecrow": [
+  1.1
+ ],
+ "deco-tractor": [
+  2.4
+ ],
+ "deco-wagon": [
+  2.3
+ ],
+ "deco-woodpile": [
+  1.4,
+  1.5
+ ],
+ "icon-acorn": [
+  0.7
+ ],
+ "icon-blackberry": [
+  0.7
+ ],
+ "icon-coin": [
+  0.42
+ ],
+ "icon-crate": [
+  0.85
+ ],
+ "icon-greens": [
+  0.7
+ ],
+ "icon-hickory": [
+  0.7
+ ],
+ "icon-mushroom": [
+  0.7
+ ],
+ "icon-oakleaf": [
+  0.7
+ ],
+ "icon-pineknot": [
+  0.7
+ ],
+ "lamp-deco": [
+  0.95
+ ],
+ "lamp-gas": [
+  0.5
+ ],
+ "lamp-lantern": [
+  0.38
+ ],
+ "lamp-led": [
+  0.5
+ ],
+ "lamp-sodium": [
+  0.62
+ ],
+ "outcrop": [
+  1.05
+ ],
+ "rock": [
+  0.85,
+  0.9,
+  0.95,
+  1,
+  1.04
+ ],
+ "sign": [
+  1
+ ],
+ "street-bench": [
+  1.1
+ ],
+ "street-bikes": [
+  1.2
+ ],
+ "street-buggy": [
+  2
+ ],
+ "street-car26a": [
+  2
+ ],
+ "street-car55a": [
+  2.05
+ ],
+ "street-car55b": [
+  2.05
+ ],
+ "street-carriage": [
+  2
+ ],
+ "street-coupe31": [
+  2
+ ],
+ "street-hitch": [
+  1.2
+ ],
+ "street-hydrant": [
+  0.7
+ ],
+ "street-planter": [
+  1
+ ],
+ "street-sedan31": [
+  2
+ ],
+ "street-umbrella": [
+  1.3
+ ],
+ "tree-magnolia": [
+  1.83
+ ],
+ "tree-oak-fa": [
+  2.02,
+  2.09,
+  2.15,
+  2.22,
+  2.28,
+  2.34,
+  2.41,
+  2.47,
+  2.54
+ ],
+ "tree-oak-sp": [
+  2.02,
+  2.09,
+  2.15,
+  2.22,
+  2.28,
+  2.34,
+  2.41,
+  2.47,
+  2.54
+ ],
+ "tree-oak-su": [
+  2.02,
+  2.09,
+  2.15,
+  2.22,
+  2.28,
+  2.34,
+  2.41,
+  2.47,
+  2.54
+ ],
+ "tree-oak-wi": [
+  2.02,
+  2.09,
+  2.15,
+  2.22,
+  2.28,
+  2.34,
+  2.41,
+  2.47,
+  2.54
+ ],
+ "tree-pine": [
+  1.54,
+  1.59,
+  1.64,
+  1.69,
+  1.73,
+  1.78,
+  1.83,
+  1.88,
+  1.93
+ ],
+ "trough": [
+  1.5
+ ],
+ "tuft": [
+  0.77,
+  0.81,
+  0.85,
+  0.89,
+  0.94
+ ]
+}

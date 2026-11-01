@@ -220,3 +220,21 @@ SIL Open Font License 1.1 (license text copied beside each file as `vendor/fonts
 
 No other third-party code or art is used: painted images are generated for this game (see VISUAL-REPORT.md),
 characters are rendered from `art-src/blender/characters.py`.
+
+## Pixel-art campaign (2026-11-01): pixel fonts
+
+Six families under the SIL Open Font License 1.1, downloaded from `github.com/google/fonts` (`main` branch,
+`ofl/<family>/`) on 2026-11-01 and subset with fontTools 4.68 to Latin-1 plus a few symbols (dashes, quotes,
+bullet, ellipsis, arrows, ×, ✓) as WOFF2 (`vendor/fonts/*.woff2`; licence texts as `vendor/fonts/LICENSE-<family>.txt`).
+`tools/build-fonts.mjs` inlines them into `assets/fonts.css` with the earlier faces. They are used only by the pixel style.
+
+| Family | File | Used for |
+|---|---|---|
+| Pixelify Sans (variable 400–700) | `pixelify-sans.woff2` | body text |
+| Jacquard 12 | `jacquard-12.woff2` | 1807 and 1871 display |
+| Jacquarda Bastarda 9 | `jacquarda-bastarda-9.woff2` | 1886 display |
+| Silkscreen 400, 700 | `silkscreen-400.woff2`, `silkscreen-700.woff2` | 1931 display |
+| Jersey 10 | `jersey-10.woff2` | 1955 display |
+| Micro 5 | `micro-5.woff2` | 2026 display |
+
+The 5×7 bitmap font for in-world text (`src/js/render/pxfont.js`) is original to this game.

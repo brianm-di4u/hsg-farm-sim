@@ -263,7 +263,7 @@ function doUse(at) {
   const gm = app.gm;
   if (at) { const p = gm.S.player; const dx = at.x + 0.5 - p.x, dy = at.y + 0.5 - (p.y - 0.3); p.face = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'); }
   const t = at || sim.target(gm);
-  scene.R.useT = performance.now();
+  scene.R.useT = scene.R.clockAt != null ? scene.R.clockAt : performance.now();
   handleResult(sim.use(gm, at ? { x: at.x, y: at.y } : undefined), t);
 }
 function doTalk() {
@@ -563,6 +563,7 @@ const hooks = {
   isIdle() { return (!app.fx.wipe || app.fx.animAt != null) && ART.pending === 0 && app.fontsReady !== false; },
   step(n = 1) { app.paused = true; for (let i = 0; i < n; i++) tickOnce(); if (app.ui.scene === 'game' && app.gm) render(); return compact(); },
   pause() { app.paused = true; return true; },
+  bench(b) { scene.R.bench = b || null; app.dirty = true; return true; },
   resume() { app.paused = false; return true; },
   scene(name) {
     if (name && typeof name === 'object') {
@@ -630,6 +631,7 @@ const hooks = {
         case 'blocked': return sim.blocked(gm, args[0], args[1]);
         case 'describe': return ui.describeTarget(gm);
         case 'sizeLog': return PA.SIZES ? PA.SIZES.log : null;
+        case 'clock': scene.R.clockAt = args[0] == null ? null : +args[0]; return true;
         case 'spriteSizes': return { tile: scene.R.ts, person: [scene.R.ts, scene.R.ts * 1.5] };
         case 'render': render(); return true;
       }

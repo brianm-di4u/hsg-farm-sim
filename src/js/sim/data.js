@@ -16,7 +16,7 @@ export const CHAPTERS = [null,
   { n: 1, title: 'Steam Valley', year: 1807, corpus: 'ancient · frontier', pal: 'ouachita-forest',
     house: 'cabin', animal: null, lake: false, light: 'fire', tier: 1, street: 'trail',
     startMoney: 150, kit: [['seed:radish', 12], ['seed:corn', 6]],
-    who: 'Ada Vale', look: { shirt: '#7a5a3a', pants: '#4a3a2a', hat: 'none', hair: '#3b2a1c', skin: 2 },
+    who: 'Ada Vale', look: { shirt: '#7a5a3a', pants: '#4a3a2a', hat: 'none', hair: '#3b2a1c', dress: true, apron: '#e4dccb', skin: 2 },
     intro: [
       'Spring, 1807. Ada Vale poles a flatboat up the Ouachita and turns into a creek the 1804 explorers called Calfait Creek. Steam rises from the hillside to the east.',
       'There is no town yet: a trader\'s camp, a trapper\'s cabin, and a few huts where sick travelers soak in the hot water. The creek bottom is good, rocky ground. It is yours to work.',
@@ -26,7 +26,7 @@ export const CHAPTERS = [null,
   { n: 2, title: 'The Reservation', year: 1871, corpus: 'frontier', pal: 'frontier-valley',
     house: 'plank', animal: 'cow', lake: false, light: 'lantern', tier: 1, street: 'dirt',
     startMoney: 200, kit: [['seed:wheat', 10], ['seed:corn', 6]],
-    who: 'Caleb Vale', look: { shirt: '#8e3b2b', pants: '#3a3a44', hat: 'brim', hair: '#2a2420', skin: 2 },
+    who: 'Caleb Vale', look: { shirt: '#8e3b2b', pants: '#3a3a44', hat: 'brim', hair: '#2a2420', vest: '#4a3c30', skin: 2 },
     intro: [
       'Spring, 1871. The springs belong to the federal reservation, and claimants have fought over title for decades. Valley Street now runs between two rows of plank hotels and bathhouses.',
       'Caleb Vale, Ada\'s grandson, works the same creek-bottom farm. There is a mill on the creek, a stage to Malvern, and a town that buys what it cannot grow.',
@@ -34,9 +34,9 @@ export const CHAPTERS = [null,
     introFacts: ['f-yellowstone', 'f-new-madrid'],
     closing: ['f-garland-county', 'f-arlington-1875', 'f-malvern-rail', 'f-enslaved-1860'] },
   { n: 3, title: 'Golden Age of the Row', year: 1886, corpus: 'gilded-spa', pal: 'gilded-spa',
-    house: 'brickless', animal: 'cow', lake: false, light: 'gas', tier: 2, street: 'gravel',
+    house: 'brickless', animal: 'cow', lake: false, light: 'lantern', tier: 2, street: 'gravel',
     startMoney: 300, kit: [['seed:strawberry', 6], ['seed:potato', 8]],
-    who: 'Nora Vale', look: { shirt: '#2b4c9b', pants: '#2a2a33', hat: 'bonnet', hair: '#5a3a22', skin: 2 },
+    who: 'Nora Vale', look: { shirt: '#2b4c9b', pants: '#2a2a33', hat: 'bonnet', hair: '#5a3a22', dress: true, apron: '#ece6d8', skin: 2 },
     intro: [
       'Spring, 1886. The railroad has come, and Valley Street is Central Avenue. Grand hotels need fresh food, bathers come by the trainload, and a ballclub has arrived for spring training.',
       'Nora Vale sells to the hotel kitchens. The town has burned before; folks say a brick house is a safe house.',
@@ -56,7 +56,7 @@ export const CHAPTERS = [null,
   { n: 5, title: 'Mid-Century', year: 1955, corpus: 'midcentury', pal: 'motor-hotel',
     house: 'ranch', animal: 'hen', lake: true, light: 'sodium', tier: 3, street: 'asphalt',
     startMoney: 800, kit: [['seed:sweetcorn', 8], ['seed:okra', 6]],
-    who: 'June Vale', look: { shirt: '#3fbfb5', pants: '#34424a', hat: 'none', hair: '#3b2a1c', skin: 2 },
+    who: 'June Vale', look: { shirt: '#3fbfb5', pants: '#34424a', hat: 'none', hair: '#3b2a1c', ponytail: true, skin: 2 },
     intro: [
       'Spring, 1955. Motor hotels line the avenue, a trained-animal show draws families, and a new dam upriver has flooded whole farm communities.',
       'June Vale keeps hens and plans a roadside stand for the tourists driving by.',
@@ -252,7 +252,7 @@ export const PEOPLE = {
       { h: 3, t: 'You\'re steady, Ada. I\'d trust you with my traps.' },
     ] },
   margaux: { ch: 1, name: 'Margaux Delacroix', role: 'River trader; runs the trade camp', home: 'margauxHome',
-    look: { shirt: '#2b4c6b', pants: '#5a3a3a', hat: 'scarf', hair: '#2a1a12', skin: 2 },
+    look: { shirt: '#2b4c6b', pants: '#5a3a3a', hat: 'scarf', hair: '#2a1a12', dress: true, skin: 2 },
     sched: [[360, 'margauxHome'], [480, 'tradeCamp'], [1020, 'creek'], [1140, 'margauxHome']],
     gifts: { love: ['whetstone', 'novaculite'], like: ['squash', 'hickory', 'kind:fish'], dislike: ['pineknot'] },
     lines: [
@@ -276,7 +276,7 @@ export const PEOPLE = {
     ] },
   // Chapter 2
   corinna: { ch: 2, name: 'Corinna Bell', role: 'Keeps a boardinghouse on Valley Street', home: 'inn',
-    look: { shirt: '#6a3a5a', pants: '#3a2a3a', hat: 'bonnet', hair: '#4a2a1a', skin: 1 },
+    look: { shirt: '#6a3a5a', pants: '#3a2a3a', hat: 'bonnet', hair: '#4a2a1a', dress: true, apron: '#ddd4c0', skin: 1 },
     sched: [[360, 'inn'], [600, 'store'], [720, 'inn'], [960, 'mill'], [1080, 'inn']],
     gifts: { love: ['cornmeal', 'milk'], like: ['potato', 'cabbage', 'wheat'], dislike: ['charcoal'] },
     lines: [
@@ -298,7 +298,7 @@ export const PEOPLE = {
       { h: 3, t: 'You\'re the only farmer who never haggles. I like that.' },
     ] },
   lucius: { ch: 2, name: 'Lucius Greer', role: 'Druggist who wants to bottle spring water', home: 'drug',
-    look: { shirt: '#f0ece0', pants: '#2a2a3a', hat: 'none', hair: '#8a7a6a', skin: 0, glasses: true },
+    look: { shirt: '#f0ece0', pants: '#2a2a3a', hat: 'none', hair: '#8a7a6a', vest: '#2e2a30', skin: 0, glasses: true },
     sched: [[360, 'drug'], [600, 'coldspring'], [780, 'drug'], [1020, 'springs'], [1110, 'drug']],
     gifts: { love: ['coldwater', 'quartz'], like: ['hotwater', 'greens', 'mushroom'], dislike: ['hay'] },
     lines: [
@@ -321,7 +321,7 @@ export const PEOPLE = {
       { h: 3, t: 'Your strawberries are the best on Central Avenue. I tell everyone.' },
     ] },
   hattie: { ch: 3, name: 'Hattie Coleman', role: 'Bath attendant on the Row', home: 'hattieHome',
-    look: { shirt: '#ffffff', pants: '#3a5a7a', hat: 'cap', hair: '#1a1210', skin: 4 },
+    look: { shirt: '#ffffff', pants: '#3a5a7a', hat: 'cap', hatColor: '#f4f2ec', hair: '#1a1210', dress: true, apron: '#f6f4ee', skin: 4 },
     sched: [[360, 'hattieHome'], [450, 'bathhouse'], [780, 'springs'], [840, 'bathhouse'], [1080, 'hattieHome']],
     gifts: { love: ['tea', 'blackberry'], like: ['milk', 'strawberry', 'hotwater'], dislike: ['charcoal'] },
     lines: [
@@ -345,7 +345,7 @@ export const PEOPLE = {
     ] },
   // Chapter 4
   ora: { ch: 4, name: 'Ora Fenwick', role: 'Runs a tourist court with her husband Dell', home: 'court',
-    look: { shirt: '#3c9a4a', pants: '#4a5675', hat: 'none', hair: '#c8a060', skin: 0 },
+    look: { shirt: '#3c9a4a', pants: '#4a5675', hat: 'none', hair: '#c8a060', dress: true, apron: '#efe7d2', skin: 0 },
     sched: [[360, 'court'], [540, 'store'], [660, 'court'], [1020, 'street'], [1110, 'court']],
     gifts: { love: ['goatmilk', 'cheese'], like: ['sweetpotato', 'pepper', 'tomato'], dislike: ['hay'] },
     lines: [
@@ -367,7 +367,7 @@ export const PEOPLE = {
       { h: 3, t: 'You\'re square, Ray. In this town that\'s rare.' },
     ] },
   june: { ch: 4, name: 'June Talley', role: 'Announcer at the radio station', home: 'radio',
-    look: { shirt: '#f6c933', pants: '#1f2f5c', hat: 'none', hair: '#8a3a2a', skin: 3 },
+    look: { shirt: '#f6c933', pants: '#1f2f5c', hat: 'none', hair: '#8a3a2a', dress: true, skin: 3 },
     sched: [[360, 'juneHome'], [420, 'radio'], [780, 'street'], [900, 'radio'], [1140, 'juneHome']],
     gifts: { love: ['peanut', 'tomato'], like: ['sweetpotato', 'pepper', 'goatmilk'], dislike: ['stone'] },
     lines: [
@@ -379,7 +379,7 @@ export const PEOPLE = {
     ] },
   // Chapter 5
   lorraine: { ch: 5, name: 'Lorraine Pace', role: 'Owns a motor hotel on the avenue', home: 'motel',
-    look: { shirt: '#e26d8e', pants: '#34424a', hat: 'none', hair: '#e8c870', skin: 0 },
+    look: { shirt: '#e26d8e', pants: '#34424a', hat: 'none', hair: '#e8c870', dress: true, skin: 0 },
     sched: [[360, 'motel'], [600, 'store'], [720, 'motel'], [960, 'drivein'], [1080, 'motel']],
     gifts: { love: ['picnic', 'watermelon'], like: ['egg', 'sweetcorn', 'peanut'], dislike: ['hay'] },
     lines: [
@@ -401,7 +401,7 @@ export const PEOPLE = {
       { h: 3, t: 'You have good timing, June. I could make a trainer of you.' },
     ] },
   rusty: { ch: 5, name: 'Rusty Cole', role: 'Farmer moved here when a new lake flooded his valley', home: 'rustyHome',
-    look: { shirt: '#5a7a9a', pants: '#3a4a5a', hat: 'brim', hair: '#a85a2a', skin: 1 },
+    look: { shirt: '#5a7a9a', pants: '#3a4a5a', hat: 'brim', hair: '#a85a2a', overalls: '#3d5a86', skin: 1 },
     sched: [[360, 'rustyHome'], [480, 'field'], [720, 'store'], [900, 'lake'], [1080, 'rustyHome']],
     gifts: { love: ['watermelon', 'kind:fish'], like: ['okra', 'egg', 'collards'], dislike: ['quartz'] },
     lines: [
@@ -413,7 +413,7 @@ export const PEOPLE = {
     ] },
   // Chapter 6
   priya: { ch: 6, name: 'Priya Natarajan', role: 'Brewer in a restored bathhouse', home: 'brewery',
-    look: { shirt: '#b5654a', pants: '#1e4e79', hat: 'none', hair: '#1a1210', skin: 3 },
+    look: { shirt: '#b5654a', pants: '#1e4e79', hat: 'none', hair: '#1a1210', apron: '#5a4030', ponytail: true, skin: 3 },
     sched: [[360, 'priyaHome'], [480, 'brewery'], [780, 'market'], [900, 'brewery'], [1200, 'priyaHome']],
     gifts: { love: ['hops', 'blueberry'], like: ['wheat', 'heirloom', 'hotwater'], dislike: ['hay'] },
     lines: [

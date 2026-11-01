@@ -92,10 +92,17 @@ async function setup(page, s) {
       g.setState(st);
     }
     if (s.tool) g.act('selectItem', s.tool);
+    // Staging so characters can be judged: neighbours placed round the player, animals in the pen.
+    if (s.npcsNear || s.talk) {
+      const st = g.getState(), ids = st.npcs.map((n) => n.id).slice(0, 3), p = st.player;
+      const spots = [[-1.6, -0.2], [1.6, -0.2], [0, -1.6]];
+      g.setState({ npcs: Object.fromEntries(ids.map((id, i) => [id, { hidden: false, x: p.x + spots[i][0], y: p.y + spots[i][1], face: 'down', path: null, moving: false }])) });
+    }
+    if (s.animals) g.setState({ animals: s.animals.map(([kind, x, y], i) => ({ kind, x, y, petDay: -1, born: 0, face: i % 2 ? 'left' : 'right' })) });
     for (const a of s.acts || []) g.act(...a);
   }, s);
   await page.waitForFunction(() => { const st = window.__game.getState(); return st.artPending === 0; }, null, { timeout: 30000 }).catch(() => problems.push(`${s.id}: art still loading`));
-  if (s.talk) await page.evaluate(() => { const st = window.__game.getState(); const n = st.npcs.find((n) => !n.hidden); if (n) window.__game.act('talk', n.id); });
+  if (s.talk) await page.evaluate(() => { const st = window.__game.getState(); const n = st.npcs.find((n) => !n.hidden) || st.npcs[0]; if (n) window.__game.act('talk', n.id); });
   if (s.modal) await page.evaluate((m) => window.__game.scene(m), s.modal);
   await page.evaluate(() => window.__game.act('render'));
   await frames(page, 3);
@@ -141,10 +148,13 @@ for (const vp of VPS) {
     }
     if (STRIPS && s.strip) {
       const shots = [];
+      // The clock is pinned and advanced 50 ms per frame alongside the sim ticks, so time-based animation (tool
+      // swings, NPC steps, particles) is sampled at the same moments every capture.
+      await page.evaluate(() => window.__game.act('clock', 100000));
       if (s.strip.key) await page.keyboard.down(s.strip.key);
       for (let i = 0; i < 8; i++) {
         if (s.strip.act && i === 0) await page.evaluate((a) => window.__game.act(a), s.strip.act);
-        await page.evaluate((n) => window.__game.step(n), s.strip.ticks);
+        await page.evaluate(([n, i]) => { window.__game.act('clock', 100000 + (i + 1) * 50); window.__game.step(n); }, [s.strip.ticks, i]);
         await page.evaluate(() => window.__game.act('render'));
         await frames(page, 1);
         const st2 = await page.evaluate(() => window.__game.getState());
@@ -152,6 +162,7 @@ for (const vp of VPS) {
         shots.push(await crop(await page.screenshot(), r.x, r.y, r.w, r.h, vp === 'desktop' ? 2 : 1));
       }
       if (s.strip.key) await page.keyboard.up(s.strip.key);
+      await page.evaluate(() => window.__game.act('clock', null));
       row.strip = save(path.join(dirOut, 'strips', `${s.id}${vp === 'desktop' ? '' : '-' + vp}.png`), await strip(shots));
     }
     index.shots.push(row);

@@ -61,3 +61,80 @@ export function composeCell(imgs, look, skinHex, face, frame) {
   }
   return o;
 }
+
+// ---------- pixel style ----------
+// Pixel-art atlases (tools/pack-chars-px.py): each tinted layer is three binary mask rows (dark, mid, light), the
+// fixed layer one row in its own colours, overlays three mask rows each. Each mask is filled with one colour of the
+// person's ramp, so every sprite has a handful of deliberate colours instead of a multiply gradient.
+const hsl = (hex) => {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+  let h = 0; const s = d ? d / (1 - Math.abs(2 * l - 1)) : 0;
+  if (d) h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return [(h * 60 + 360) % 360, s, l];
+};
+const hex = (h, s, l) => {
+  s = Math.max(0, Math.min(1, s)); l = Math.max(0, Math.min(1, l));
+  const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2;
+  const [r, g, b] = h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
+  return '#' + [r, g, b].map((v) => Math.round((v + m) * 255).toString(16).padStart(2, '0')).join('');
+};
+// Toward a target hue by up to `by` degrees, the short way round.
+const turn = (h, to, by) => { const d = ((to - h + 540) % 360) - 180; return (h + Math.sign(d) * Math.min(Math.abs(d), by) + 360) % 360; };
+// [shadow, base, highlight]: shadows cooler and a little more saturated, highlights warmer (16-bit hue shifting).
+export function ramp(col) {
+  const [h, s, l] = hsl(col);
+  return [hex(turn(h, 250, 14), s * 1.08 + 0.04, l * 0.64), col, hex(turn(h, 55, 10), s * 0.92, l + (1 - l) * 0.3)];
+}
+const PX_OUTLINE = '#22160f';
+let pxTmp = null;
+// A layer's outline shade: well below its shadow, hue-turned the same way (research/pixel-tradeoffs.md §10: a
+// darkened, hue-matched shade of the adjacent colour, never pure black).
+function outlineOf(col) { const [h, s, l] = hsl(col); return hex(turn(h, 250, 20), Math.min(1, s * 1.1 + 0.05), Math.max(0.06, l * 0.34)); }
+function fillMask(out, img, row, col, color, cw, ch, dx = 1, dy = 1) {
+  if (!pxTmp || pxTmp.width !== cw || pxTmp.height !== ch) { pxTmp = document.createElement('canvas'); pxTmp.width = cw; pxTmp.height = ch; }
+  const t = pxTmp.getContext('2d');
+  t.globalCompositeOperation = 'source-over'; t.clearRect(0, 0, cw, ch);
+  t.drawImage(img, col * cw, row * ch, cw, ch, 0, 0, cw, ch);
+  if (color) { t.globalCompositeOperation = 'source-in'; t.fillStyle = color; t.fillRect(0, 0, cw, ch); }
+  out.drawImage(pxTmp, dx, dy);
+}
+// Pixel atlases from art-src/blender/characters-px.py have 13 cells per direction: idle 0-1, walk 0-5, use 0-4
+// (perDir 13); older ones the painted layout's 7. Frame names: 'idle' | 'idle1' | 'walkN' | 'useN'.
+export function pxCellIndex(face, frame, perDir) {
+  const d = face === 'right' ? 2 : Math.max(0, DIRS.indexOf(face));
+  if (perDir !== 13) return cellIndex(face, frame.replace(/^idle1$/, 'idle').replace(/^walk([4-5])$/, (m, n) => 'walk' + (n - 4)).replace(/^use([2-4])$/, 'use1'));
+  const n = +(frame.match(/\d+$/) || [0])[0];
+  const f = frame.startsWith('idle') ? Math.min(1, n) : frame.startsWith('walk') ? 2 + (n % 6) : 8 + Math.min(4, n);
+  return d * 13 + f;
+}
+// Garment overlay rows (after the 10 hats/beard/glasses rows): look.apron / vest / overalls are colours,
+// look.ponytail takes the hair colour.
+const GARMENT_ROW = { apron: 10, vest: 11, overalls: 12, ponytail: 13 };
+// One person frame at native size plus a 1-px outline border: (cw + 2) x (ch + 2).
+export function composePx(imgs, look, skinHex, face, frame, cw, ch, perDir = 7) {
+  const base = look.dress ? imgs.dress : imgs.trousers, col = pxCellIndex(face, frame, perDir);
+  const c = document.createElement('canvas'); c.width = cw + 2; c.height = ch + 2;
+  const g = c.getContext('2d');
+  // Each part: [atlas, first mask row, shades, colour]. Drawn in this order (later parts cover earlier ones).
+  const parts = [skinHex, look.hair, look.shirt, look.pants].map((tint, L) => [base, L * 3, 3, tint || '#808080']);
+  parts.push([base, 12, 1, null]);
+  if (look.beard) parts.push([imgs.overlay, 24, 3, look.hair]);
+  if (look.glasses) parts.push([imgs.overlay, 27, 3, '#3a3a40']);
+  if (perDir === 13) for (const [k, row] of Object.entries(GARMENT_ROW)) if (look[k]) parts.push([imgs.overlay, row * 3, 3, k === 'ponytail' ? look.hair : look[k]]);
+  if (look.hat && look.hat !== 'none' && HAT_ROW[look.hat] != null) parts.push([imgs.overlay, HAT_ROW[look.hat] * 3, 3, look.hatColor || HAT_COL[look.hat]]);
+  // Outline first: every part's masks moved one pixel each way in that part's outline shade, so the outline
+  // takes the hue of whatever it borders (the figure is drawn over the inner part afterwards).
+  for (const [im, row, n, tint] of parts) {
+    const oc = tint ? outlineOf(tint) : PX_OUTLINE;
+    for (let s = 0; s < n; s++) for (const [dx, dy] of [[2, 1], [0, 1], [1, 2], [1, 0]]) fillMask(g, im, row + s, col, oc, cw, ch, dx, dy);
+  }
+  for (const [im, row, n, tint] of parts) { const rp = tint ? ramp(tint) : null; for (let s = 0; s < n; s++) fillMask(g, im, row + s, col, rp ? rp[s] : null, cw, ch); }
+  const o = c;
+  if (face === 'right') {
+    const m = document.createElement('canvas'); m.width = o.width; m.height = o.height;
+    const mg = m.getContext('2d'); mg.translate(o.width, 0); mg.scale(-1, 1); mg.drawImage(o, 0, 0);
+    return m;
+  }
+  return o;
+}

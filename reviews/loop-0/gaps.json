@@ -1,0 +1,202 @@
+[
+  {
+    "id": "G-pixel-render-core",
+    "category": "pixel",
+    "expectedGain": 4,
+    "severity": 5,
+    "effort": "L",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R04-row",
+      "crops/R04-player",
+      "crops/R03-field"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Render the world to a fixed 480x270 or 640x360 art buffer with integer nearest-neighbour upscale; replace painted/Blender assets with pixel tiles and sprites on shared hue-shifted per-era palettes (<=~32 colours/era) and one outline rule (sel-out, darkest ramp shade) on every sprite family; pixel-integrity check passes on all captures.",
+    "priority": 1.5,
+    "selected": true
+  },
+  {
+    "id": "G-bitmap-ui-era-frames",
+    "category": "ui",
+    "expectedGain": 2,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS6",
+    "evidence": [
+      "desktop/R12",
+      "desktop/R18",
+      "mobile/R04"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "Bitmap pixel font at integer scale keeping the per-era typeface split (serif 1886, deco 1931, rounded 1955); nine-slice frames in one material per era; one icon set on the world grid for shop/hotbar/pack replacing flat seed glyphs and the empty Hen ellipse; dialogue box with portrait. Test: no anti-aliased text pixels in R12/R18 crops.",
+    "priority": 1.5,
+    "selected": true
+  },
+  {
+    "id": "G-heir-silhouettes",
+    "category": "characters",
+    "expectedGain": 3,
+    "severity": 5,
+    "effort": "L",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R04-player",
+      "crops/R02-player",
+      "crops/R17-player",
+      "crops/R07-player"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Add look.lower skirt/petticoat/overalls layer; Ada short-gown+apron+ankle petticoat+pinned hair, Nora deep-brim sun bonnet+work dress, Ray pinched fedora, Sam structured curved-bill cap, June ponytail; ~2.4-head proportions, drawn hands, per-facing hat. Test: each heir identifiable in grayscale silhouette at 1x.",
+    "priority": 1.125,
+    "selected": false
+  },
+  {
+    "id": "G-hoe-swing",
+    "category": "animation",
+    "expectedGain": 1.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14",
+      "desktop/R14"
+    ],
+    "fix": "4-6 frame hoe swing (wind-up, strike, 1-2 frame hit-stop, settle) with soil-chunk burst; target tile switches to tilled on impact. Test: strips/R14 shows >=4 distinct tool poses and a changed tile.",
+    "priority": 1.125,
+    "selected": true
+  },
+  {
+    "id": "G-occluder-fade",
+    "category": "readability",
+    "expectedGain": 0.75,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R03-player",
+      "crops/R08-player",
+      "strips/R13",
+      "mobile/R05"
+    ],
+    "fix": "Not a y-sort bug: fade lamp posts, building overhangs and tall crops overlapping the player's bounds to <=40% opacity (or silhouette the player through them), strengthen the existing faint crop fade, trim building art rising over walkable tiles, and give the target square a 2-px light+dark double stroke for night.",
+    "priority": 1.125,
+    "selected": false
+  },
+  {
+    "id": "G-ongrid-lighting",
+    "category": "lighting",
+    "expectedGain": 2,
+    "severity": 4,
+    "effort": "L",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "desktop/R07",
+      "desktop/R09",
+      "desktop/R10"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Banded/dithered light pools at art resolution that light the ground at each lamp base; remove the diagonal wedges in R05; one sun direction for contact/cast shadows; rain darkening and puddles; graded era evening palette instead of brown multiply; snow roof/terrain sprite variants and winter flora.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-capture-staging",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "desktop/R11",
+      "desktop/R15",
+      "desktop/R16",
+      "desktop/R14"
+    ],
+    "fix": "Capture script opens a dialogue for R11, spawns pen animals for R15, places 1807 neighbours for R16, stages R14 on a tillable field tile, and composites each character close-up beside its reference sheet.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-fog-spares-gameplay",
+    "category": "readability",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R08",
+      "crops/R08-player"
+    ],
+    "fix": "Fog as 2-3 banded layers with <=25% opacity over the actor/interactable layer and the player at full contrast; also cut fog frame cost (p50 17.7 ms vs ~2.5 ms elsewhere in perf.json).",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-placeholder-cleanup",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R07",
+      "desktop/R08",
+      "desktop/R15",
+      "desktop/R17"
+    ],
+    "fix": "Delete translucent ghost structures in R07; replace the springs' parchment terrain, grey boxes and flat cyan pool in R08 with era spring-house props and stone basins; join gapped pen fences in R15/R17; shrink and centre vehicle shadows under the wheels.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-walk-6f",
+    "category": "animation",
+    "expectedGain": 1,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R13",
+      "strips/R13-mobile"
+    ],
+    "fix": "6-frame walk in 4 directions building on the existing arm swing, distinct contact and passing poses, 1-px head bob, hat drawn per facing. Test: strips/R13 shows >=4 distinct poses with no adjacent duplicates.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-env-dressing-density",
+    "category": "environment",
+    "expectedGain": 1,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R03",
+      "desktop/R07",
+      "desktop/R17",
+      "desktop/R05"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Dress lawns with field fences, path edges, stumps and tall-grass clusters; lake reeds, boats, shoreline rocks and marina; vary the 2x4 lot layout and street shape per era.",
+    "priority": 0.75,
+    "selected": false
+  },
+  {
+    "id": "G-era-anachronisms-2026",
+    "category": "authenticity",
+    "expectedGain": 0.75,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R10",
+      "desktop/R07"
+    ],
+    "fix": "Remove 1886 gas street lamps (building-mounted oil lanterns or none; gas posts from 1897); add a 2026 town capture of the restored Row with market canopies, modern vehicles and LED fixtures. Test: blind viewer orders all six era frames.",
+    "priority": 0.563,
+    "selected": false
+  }
+]

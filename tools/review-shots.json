@@ -1,23 +1,396 @@
 {
-  "$comment": "Canonical review captures (tools/shots-gpu.mjs). scene: the __game.scene() argument; setup: setState patch; acts: [name, ...args] __game.act calls before the shot; modal: __game.scene(name) after setup; crops: [name, x, y, w, h] in tiles ('player' = 3x3 tiles round the player); strip: { key, ticks, act? } = 8 frames, `ticks` sim ticks apart; mobile: also captured at 390x844.",
-  "shots": [
-    { "id": "R01", "title": "Title screen", "cats": ["ui", "authenticity"], "title_screen": true, "mobile": true },
-    { "id": "R02", "title": "1807 farm, spring morning", "cats": ["environment", "pixel"], "scene": { "era": 1, "at": "farmDoor", "time": 470, "day": 1 }, "crops": [["player"]], "mobile": true },
-    { "id": "R03", "title": "1871 farm field with crops at every stage", "cats": ["environment", "readability"], "scene": { "era": 2, "at": "field", "time": 700, "day": 9 }, "plot": { "x": 8, "y": 19, "crops": ["corn", "wheat", "potato", "beans", "cabbage"] }, "crops": [["player"], ["field", 7, 18, 7, 5]] },
-    { "id": "R04", "title": "1886 town, Bathhouse Row by day", "cats": ["environment", "authenticity", "pixel"], "scene": { "era": 3, "at": "town", "time": 700 }, "crops": [["player"], ["row", 27, 8, 6, 5]], "mobile": true },
-    { "id": "R05", "title": "1931 town at night", "cats": ["lighting", "authenticity"], "scene": { "era": 4, "at": "town", "time": 1290 }, "crops": [["player"]], "mobile": true },
-    { "id": "R06", "title": "1955 town at dusk", "cats": ["lighting", "authenticity"], "scene": { "era": 5, "at": "town", "time": 1150 }, "crops": [["player"]] },
-    { "id": "R07", "title": "2026 lake, evening", "cats": ["environment", "lighting"], "scene": { "era": 6, "at": "lake", "time": 1100 }, "crops": [["player"]] },
-    { "id": "R08", "title": "1886 springs in morning fog", "cats": ["lighting", "environment"], "scene": { "era": 3, "at": "promenade", "time": 420, "day": 3, "weather": "fog" }, "crops": [["player"]] },
-    { "id": "R09", "title": "1871 town in rain", "cats": ["lighting", "environment"], "scene": { "era": 2, "at": "town", "time": 800, "weather": "rain" }, "crops": [["player"]] },
-    { "id": "R10", "title": "1886 town in snow", "cats": ["environment", "lighting"], "scene": { "era": 3, "at": "town", "time": 640, "day": 24, "weather": "snow" }, "crops": [["player"]] },
-    { "id": "R11", "title": "Dialogue with a neighbour", "cats": ["ui", "characters"], "scene": { "era": 3, "at": "town", "time": 700 }, "talk": true, "mobile": true },
-    { "id": "R12", "title": "Pack and crafting panel", "cats": ["ui", "readability"], "scene": { "era": 4, "at": "farmDoor", "time": 700 }, "modal": "inventory", "mobile": true },
-    { "id": "R13", "title": "Walk cycle (strip)", "cats": ["animation", "characters"], "scene": { "era": 2, "at": "farmDoor", "time": 700 }, "strip": { "key": "ArrowRight", "ticks": 3 }, "mobile": true },
-    { "id": "R14", "title": "Hoe swing on the field (strip)", "cats": ["animation"], "scene": { "era": 1, "at": "farmDoor", "time": 700 }, "tool": "hoe", "strip": { "act": "use", "ticks": 3 } },
-    { "id": "R15", "title": "Animals in the pen", "cats": ["characters", "environment"], "scene": { "era": 2, "at": "trough", "time": 700 }, "crops": [["player"]] },
-    { "id": "R16", "title": "Neighbours close up (1807 trade camp)", "cats": ["characters", "authenticity"], "scene": { "era": 1, "at": "tradeCamp", "time": 700 }, "crops": [["player"], ["npcs", -1, -1, 0, 0]] },
-    { "id": "R17", "title": "1931 farmyard", "cats": ["authenticity", "environment"], "scene": { "era": 4, "at": "farmDoor", "time": 760 }, "crops": [["player"]] },
-    { "id": "R18", "title": "Shop", "cats": ["ui"], "scene": { "era": 5, "at": "town", "time": 700 }, "modal": "shop" }
-  ]
+ "$comment": "Canonical review captures (tools/shots-gpu.mjs). scene: the __game.scene() argument; setup: setState patch; acts: [name, ...args] __game.act calls; modal: __game.scene(name) after setup; talk: open a dialogue with a neighbour placed beside the player; npcsNear: place three neighbours round the player; animals: [kind, x, y] in the pen; crops: [name, x, y, w, h] in tiles (player = 3x3 tiles round the player, npcs = round the nearest neighbour); strip: { key, ticks, act? } = 8 frames, ticks apart; mobile: also captured at 390x844.",
+ "shots": [
+  {
+   "id": "R01",
+   "title": "Title screen",
+   "cats": [
+    "ui",
+    "authenticity"
+   ],
+   "title_screen": true,
+   "mobile": true
+  },
+  {
+   "id": "R02",
+   "title": "1807 farm, spring morning",
+   "cats": [
+    "environment",
+    "pixel"
+   ],
+   "scene": {
+    "era": 1,
+    "at": "farmDoor",
+    "time": 470,
+    "day": 1
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ],
+   "mobile": true
+  },
+  {
+   "id": "R03",
+   "title": "1871 farm field with crops at every stage",
+   "cats": [
+    "environment",
+    "readability"
+   ],
+   "scene": {
+    "era": 2,
+    "at": "field",
+    "time": 700,
+    "day": 9
+   },
+   "plot": {
+    "x": 5,
+    "y": 19,
+    "crops": [
+     "corn",
+     "wheat",
+     "potato",
+     "beans",
+     "cabbage"
+    ]
+   },
+   "crops": [
+    [
+     "player"
+    ],
+    [
+     "field",
+     4,
+     18,
+     7,
+     6
+    ]
+   ]
+  },
+  {
+   "id": "R04",
+   "title": "1886 town, Bathhouse Row by day",
+   "cats": [
+    "environment",
+    "authenticity",
+    "pixel"
+   ],
+   "scene": {
+    "era": 3,
+    "at": "town",
+    "time": 700
+   },
+   "crops": [
+    [
+     "player"
+    ],
+    [
+     "row",
+     27,
+     8,
+     6,
+     5
+    ]
+   ],
+   "mobile": true
+  },
+  {
+   "id": "R05",
+   "title": "1931 town at night",
+   "cats": [
+    "lighting",
+    "authenticity"
+   ],
+   "scene": {
+    "era": 4,
+    "at": "town",
+    "time": 1290
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ],
+   "mobile": true
+  },
+  {
+   "id": "R06",
+   "title": "1955 town at dusk",
+   "cats": [
+    "lighting",
+    "authenticity"
+   ],
+   "scene": {
+    "era": 5,
+    "at": "town",
+    "time": 1150
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ]
+  },
+  {
+   "id": "R07",
+   "title": "2026 lake, evening",
+   "cats": [
+    "environment",
+    "lighting"
+   ],
+   "scene": {
+    "era": 6,
+    "at": "lake",
+    "time": 1100
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ]
+  },
+  {
+   "id": "R08",
+   "title": "1886 springs in morning fog",
+   "cats": [
+    "lighting",
+    "environment"
+   ],
+   "scene": {
+    "era": 3,
+    "at": "promenade",
+    "time": 420,
+    "day": 3,
+    "weather": "fog"
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ]
+  },
+  {
+   "id": "R09",
+   "title": "1871 town in rain",
+   "cats": [
+    "lighting",
+    "environment"
+   ],
+   "scene": {
+    "era": 2,
+    "at": "town",
+    "time": 800,
+    "weather": "rain"
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ]
+  },
+  {
+   "id": "R10",
+   "title": "1886 town in snow",
+   "cats": [
+    "environment",
+    "lighting"
+   ],
+   "scene": {
+    "era": 3,
+    "at": "town",
+    "time": 640,
+    "day": 24,
+    "weather": "snow"
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ]
+  },
+  {
+   "id": "R11",
+   "title": "Dialogue with a neighbour",
+   "cats": [
+    "ui",
+    "characters"
+   ],
+   "scene": {
+    "era": 3,
+    "at": "town",
+    "time": 700
+   },
+   "talk": true,
+   "mobile": true,
+   "crops": [
+    [
+     "npcs",
+     -1,
+     -1,
+     0,
+     0
+    ]
+   ]
+  },
+  {
+   "id": "R12",
+   "title": "Pack and crafting panel",
+   "cats": [
+    "ui",
+    "readability"
+   ],
+   "scene": {
+    "era": 4,
+    "at": "farmDoor",
+    "time": 700
+   },
+   "modal": "inventory",
+   "mobile": true
+  },
+  {
+   "id": "R13",
+   "title": "Walk cycle (strip)",
+   "cats": [
+    "animation",
+    "characters"
+   ],
+   "scene": {
+    "era": 2,
+    "at": "farmDoor",
+    "time": 700
+   },
+   "strip": {
+    "key": "ArrowRight",
+    "ticks": 3
+   },
+   "mobile": true
+  },
+  {
+   "id": "R14",
+   "title": "Hoe swing on the field (strip)",
+   "cats": [
+    "animation"
+   ],
+   "scene": {
+    "era": 1,
+    "at": "farmDoor",
+    "time": 700
+   },
+   "tool": "hoe",
+   "strip": {
+    "act": "use",
+    "ticks": 3
+   }
+  },
+  {
+   "id": "R15",
+   "title": "Animals in the pen",
+   "cats": [
+    "characters",
+    "environment"
+   ],
+   "scene": {
+    "era": 2,
+    "at": "trough",
+    "time": 700
+   },
+   "crops": [
+    [
+     "player"
+    ],
+    [
+     "pen",
+     13,
+     7,
+     7,
+     5
+    ]
+   ],
+   "animals": [
+    [
+     "cow",
+     14.6,
+     9.7
+    ],
+    [
+     "cow",
+     17.2,
+     10.5
+    ],
+    [
+     "goat",
+     18.2,
+     9.3
+    ],
+    [
+     "hen",
+     14.2,
+     11.1
+    ],
+    [
+     "hen",
+     15.4,
+     11.3
+    ]
+   ]
+  },
+  {
+   "id": "R16",
+   "title": "Neighbours close up (1807 trade camp)",
+   "cats": [
+    "characters",
+    "authenticity"
+   ],
+   "scene": {
+    "era": 1,
+    "at": "tradeCamp",
+    "time": 700
+   },
+   "crops": [
+    [
+     "player"
+    ],
+    [
+     "npcs",
+     -1,
+     -1,
+     0,
+     0
+    ]
+   ],
+   "npcsNear": true
+  },
+  {
+   "id": "R17",
+   "title": "1931 farmyard",
+   "cats": [
+    "authenticity",
+    "environment"
+   ],
+   "scene": {
+    "era": 4,
+    "at": "farmDoor",
+    "time": 760
+   },
+   "crops": [
+    [
+     "player"
+    ]
+   ]
+  },
+  {
+   "id": "R18",
+   "title": "Shop",
+   "cats": [
+    "ui"
+   ],
+   "scene": {
+    "era": 5,
+    "at": "town",
+    "time": 700
+   },
+   "modal": "shop"
+  }
+ ]
 }

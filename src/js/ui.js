@@ -3,6 +3,7 @@
 import * as sim from './sim/sim.js';
 import * as D from './sim/data.js';
 import { iconURL, personSprite } from './render/art.js';
+import { PX } from './render/assets.js';
 import * as PA from './render/painted.js';
 import { UI_THEME } from './render/palette.js';
 
@@ -20,6 +21,32 @@ export function applyTheme(ch) {
   const r = document.documentElement.style;
   r.setProperty('--ui-bg', t.bg); r.setProperty('--ui-fg', t.fg); r.setProperty('--ui-accent', t.accent);
   r.setProperty('--ui-accent-fg', t.accentFg); r.setProperty('--ui-muted', t.muted); r.setProperty('--ui-border', t.border); r.setProperty('--ui-font', t.font); r.setProperty('--ui-display', t.display || t.font);
+  if (PX.on) { r.setProperty('--px-frame', `url("${pxFrame(t, ch)}")`); r.setProperty('--px-well', `url("${pxWell(t)}")`); }
+}
+// Pixel style frames: 9-slice SVGs drawn on a 2-CSS-px grid (an integer multiple of the world's art pixel), with
+// notched corners, a dark outline, a two-unit border in the era's colour with a light top-left and a dark
+// bottom-right bevel, and one material detail per era: hide stitching (1807), plank grain (1871), a brass bead
+// (1886), a gilt double line (1931), a chrome highlight (1955), an LED inner line (2026).
+const MATERIAL = { 1: ['#7a5232', 'stitch'], 2: ['#8a6440', 'grain'], 3: ['#b8873a', 'bead'], 4: ['#d4af37', 'double'], 5: ['#9fb8bf', 'chrome'], 6: ['#4c8fa8', 'led'] };
+const svgURL = (body, n) => 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${n}" height="${n}" shape-rendering="crispEdges">${body}</svg>`);
+const rect = (x, y, w, h, c) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;
+function pxFrame(t, ch) {
+  const [mat, kind] = MATERIAL[ch] || MATERIAL[3], n = 12, ink = '#120e0a';
+  let b = rect(1, 0, n - 2, n, ink) + rect(0, 1, n, n - 2, ink); // outline with notched corners
+  b += rect(1, 1, n - 2, n - 2, mat) + rect(1, 1, n - 2, 1, '#ffffff55') + rect(1, 1, 1, n - 2, '#ffffff40') + rect(1, n - 2, n - 2, 1, '#00000059') + rect(n - 2, 1, 1, n - 2, '#00000059');
+  if (kind === 'stitch') b += rect(2, 2, 1, 1, '#e8d8b0') + rect(5, 2, 1, 1, '#e8d8b0') + rect(2, 5, 1, 1, '#e8d8b0');
+  if (kind === 'grain') b += rect(1, 2, n - 2, 1, '#00000030');
+  if (kind === 'bead') b += rect(2, 2, 1, 1, '#f2d27a');
+  if (kind === 'double') b += rect(2, 2, n - 4, 1, '#14121f') + rect(2, 2, 1, n - 4, '#14121f');
+  if (kind === 'chrome') b += rect(2, 2, n - 4, 1, '#ffffffaa');
+  if (kind === 'led') b += rect(3, 3, n - 6, 1, '#7fe8ff') + rect(3, 3, 1, n - 6, '#7fe8ff');
+  b += rect(3, 3, n - 6, n - 6, t.bg) + rect(3, 3, n - 6, 1, '#00000033'); // the fill, with an inner shadow line
+  return svgURL(b, n);
+}
+// A sunken slot: dark top-left, light bottom-right.
+function pxWell(t) {
+  const n = 6;
+  return svgURL(rect(0, 0, n, n, '#00000040') + rect(1, 1, n - 1, n - 1, '#ffffff22') + rect(1, 1, n - 2, n - 2, t.bg) + rect(1, 1, n - 2, n - 2, '#00000022'), n);
 }
 
 // ---------- HUD ----------
@@ -295,6 +322,7 @@ function portrait(ctx, id, w, h, u) {
   if (!sp) return false;
   const cw = sp.c.width * 0.78, ch = cw * h / w;
   ctx.imageSmoothingQuality = 'high';
+  ctx.imageSmoothingEnabled = !PX.on; // pixel style: blocky enlargement, like the sprite on the map
   ctx.drawImage(sp.c, (sp.c.width - cw) / 2, sp.c.height * 0.03, cw, ch, 0, 0, w, h);
   return true;
 }

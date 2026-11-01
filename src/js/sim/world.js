@@ -155,7 +155,8 @@ export function buildWorld(seed, ch, opts = {}) {
   }
   // Lamps: era light sources at doors and along the street.
   const lamps = [];
-  const lampKind = ['', 'fire', 'lantern', 'gas', 'neon', 'sodium', 'led'][ch];
+  // 1886 keeps oil lantern posts: Hot Springs' first iron gas street lamps are recorded by 1897 (research/visual-eras.md).
+  const lampKind = ['', 'fire', 'lantern', 'lantern', 'neon', 'sodium', 'led'][ch];
   // The trade camp's fire burns beside the path, clear of where people stand.
   if (ch === 1) { lamps.push({ x: 26.4, y: 21.2, k: 'fire' }, { x: 5.5, y: 14.2, k: 'fire' }); }
   else {

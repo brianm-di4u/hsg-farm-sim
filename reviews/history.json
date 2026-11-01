@@ -1,0 +1,54 @@
+{
+  "loops": [
+    {
+      "loop": 0,
+      "scores": {
+        "pixel": 2.5,
+        "characters": 3,
+        "environment": 5,
+        "lighting": 4.5,
+        "animation": 3,
+        "ui": 4,
+        "readability": 5.5,
+        "authenticity": 5.5
+      },
+      "total": 33,
+      "stalls": 0,
+      "verdict": "continue",
+      "critics": {
+        "critic-claude": {
+          "pixel": 2.5,
+          "characters": 2.5,
+          "environment": 5,
+          "lighting": 4.5,
+          "animation": 3,
+          "ui": 4,
+          "readability": 5.5,
+          "authenticity": 6
+        },
+        "critic-codex": {
+          "pixel": 2,
+          "characters": 3.5,
+          "environment": 5,
+          "lighting": 4.5,
+          "animation": 3.5,
+          "ui": 3.5,
+          "readability": 6,
+          "authenticity": 5
+        },
+        "advocate": {
+          "pixel": 2.5,
+          "characters": 3.5,
+          "environment": 5,
+          "lighting": 5,
+          "animation": 3.5,
+          "ui": 4,
+          "readability": 6,
+          "authenticity": 6
+        }
+      },
+      "calibration": null,
+      "date": "2026-11-01"
+    }
+  ]
+}

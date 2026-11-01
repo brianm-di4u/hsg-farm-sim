@@ -3,7 +3,7 @@
 // read back). Loading is progressive: the current chapter's set first, everything else after first paint.
 // Until an image is decoded the vector art in art.js is drawn instead; `?art=0` keeps the vector art.
 /* global ART_MANIFEST */
-const MAN = typeof ART_MANIFEST !== 'undefined' ? ART_MANIFEST : {};
+const PAINTED = typeof ART_MANIFEST !== 'undefined' ? ART_MANIFEST : {};
 const gfx = (() => { try { return JSON.parse(localStorage.getItem('vov-farm-settings') || '{}').gfx || ''; } catch { return ''; } })();
 const query = typeof location !== 'undefined' ? location.search : '';
 const off = /[?&]art=0\b/.test(query) || gfx === 'simple';
@@ -12,6 +12,17 @@ const off = /[?&]art=0\b/.test(query) || gfx === 'simple';
 // browser scales it up by a whole number with no smoothing.
 const styleQ = (query.match(/[?&]style=(\w+)/) || [])[1];
 export const PX = { on: styleQ ? styleQ === 'pixel' : gfx === 'pixel', T: [16, 24, 32].includes(+(query.match(/[?&]tile=(\d+)/) || [])[1]) ? +query.match(/[?&]tile=(\d+)/)[1] : 16 };
+
+// The pixel style draws the pixel-art set for its tile size (assets/px/<T>/, packed by tools/pack-px.py) and falls
+// back to the painted image for anything not yet in it.
+/* global ART_MANIFEST_PX */
+const PXMAN = PX.on && typeof ART_MANIFEST_PX !== 'undefined' ? ART_MANIFEST_PX[PX.T] || {} : {};
+const MAN = { ...PAINTED, ...PXMAN };
+export const isPx = (name) => !!PXMAN[name];
+// Pixel terrain textures inlined as data URLs (tools/pack-px.py): they don't taint the terrain chunks they're
+// drawn into, so scene.js can read the chunks back and clean their edges.
+/* global ART_PX_INLINE */
+const PXINLINE = PX.on && typeof ART_PX_INLINE !== 'undefined' ? ART_PX_INLINE[PX.T] || {} : {};
 
 export const ART = { on: !off && Object.keys(MAN).length > 0, imgs: new Map(), loading: new Map(), pending: 0, failed: [], dirty: false, loaded: 0, fresh: [] };
 
@@ -34,7 +45,7 @@ export function want(names) {
       };
       im.onerror = () => { ART.pending--; ART.failed.push(n); ART.loading.delete(n); res(); };
     });
-    im.src = 'assets/' + MAN[n].file;
+    im.src = PXINLINE[n] || 'assets/' + MAN[n].file;
     ART.loading.set(n, p);
     jobs.push(p);
   }

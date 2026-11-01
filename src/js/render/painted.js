@@ -1,9 +1,9 @@
 // Painted sprites: which image each building, tree, prop and person uses, and pre-scaled cached canvases
 // of them at the current tile size. Every function returns null when its art has not loaded (or `?art=0`),
 // and the caller falls back to the vector art in art.js.
-import { img, hasArt, ART, manifest } from './assets.js';
+import { img, hasArt, ART, manifest, isPx } from './assets.js';
 import { cached } from './art.js';
-import { composeCell, CELL_W, CELL_H } from './sprites.js';
+import { composeCell, composePx, CELL_W, CELL_H } from './sprites.js';
 import { SKINS } from '../sim/data.js';
 
 // ---------- buildings ----------
@@ -36,12 +36,14 @@ export function buildingNames(ch) {
 
 // Size survey for packing pixel art at the size each sprite is drawn (`?sizelog`): every request is recorded in
 // tiles (w / SIZES.u) and read back through the `sizeLog` hook.
-export const SIZES = typeof location !== 'undefined' && /[?&]sizelog/.test(location.search) ? { u: 1, log: {} } : null;
+export const SIZES = typeof location !== 'undefined' && /[?&]sizelog\b/.test(location.search) ? { u: 1, log: {} } : null;
 // A loaded image scaled once to w × h device pixels (optionally mirrored).
 export function scaled(name, w, h, flip = false, tint = null) {
   const im = img(name);
   if (!im) return null;
   if (SIZES) { const k = (w / SIZES.u).toFixed(2); (SIZES.log[name] || (SIZES.log[name] = {}))[k] = 1; }
+  // Pixel art is packed at the size it is drawn: always its own size, never resampled or tinted.
+  if (isPx(name)) return flip ? cached(`px|${name}|f`, im.naturalWidth, im.naturalHeight, (g) => { g.translate(im.naturalWidth, 0); g.scale(-1, 1); g.drawImage(im, 0, 0); }) : im;
   w = Math.max(1, Math.round(w)); h = Math.max(1, Math.round(h));
   return cached(`img|${name}|${w}|${h}|${flip ? 1 : 0}|${tint ? tint.join() : ''}`, w, h, (g) => {
     let src = im, sw = im.naturalWidth, sh = im.naturalHeight;
@@ -59,15 +61,17 @@ export function scaled(name, w, h, flip = false, tint = null) {
   });
 }
 const aspect = (name) => { const im = img(name); return im ? im.naturalHeight / im.naturalWidth : 1; };
+// Drawn size [w, h] of an image requested w px wide: pixel art keeps its own (packed) size.
+const size = (name, w) => { const im = img(name); return im && isPx(name) ? [im.naturalWidth, im.naturalHeight] : [w, w * aspect(name)]; };
 
 // Placement of a building's painted sprite in device pixels (world space): the image spans the footprint's
 // width and its base sits on the footprint's south edge, so roofs and chimneys may rise above the footprint.
 export function buildingSprite(ch, b, u, snow = false) {
   const a = buildingArt(ch, b);
   if (!a || !img(a.name)) return null;
-  const w = b.w * u, h = w * aspect(a.name);
-  const c = snow ? snowy(a.name, w, h, a.flip) : scaled(a.name, w, h, a.flip);
-  return { c, x: b.x * u, y: (b.y + b.h) * u - h, w, h };
+  const [w, h] = size(a.name, b.w * u);
+  const c = snow && !isPx(a.name) ? snowy(a.name, w, h, a.flip) : scaled(a.name, w, h, a.flip);
+  return { c, x: Math.round(b.x * u + (b.w * u - w) / 2), y: (b.y + b.h) * u - h, w, h };
 }
 // Snow lying on the roof: the roof fills the top of each painting (the three-quarter view), so a white wash that
 // fades out down the image, kept inside the building's own outline, reads as a snow-covered roof.
@@ -97,24 +101,24 @@ export function treeSprite(kind, sea, u, x = 0, y = 0) {
   const name = treeArt(kind, sea);
   if (!name || !img(name)) return null;
   const vary = 0.88 + ((x * 7 + y * 13) % 9) / 36; // a little size variety
-  const w = (TREE[kind] || TREE.oak).w * u * vary, h = w * aspect(name);
+  const [w, h] = size(name, (TREE[kind] || TREE.oak).w * u * vary);
   const flip = (x * 5 + y * 3) % 2 === 1;
   // The painted summer oak leans yellow; pull it toward the valley's deep summer green.
   const tint = name === 'tree-oak-su' ? ['#3f7a2a', 0.38] : name === 'tree-oak-sp' ? ['#7cc048', 0.45] : null;
-  return { c: scaled(name, w, h, flip, tint), ox: -w / 2, oy: -h };
+  return { c: scaled(name, w, h, flip, tint), ox: -Math.floor(w / 2), oy: -h };
 }
 const PROP_IMG = { hut: 'bld-hut', stand: 'icon-stand', chest: 'icon-chest', sprinkler: 'icon-sprinkler', drip: 'icon-drip', fence: 'icon-fence', fund: 'icon-crate' };
 const PROP = { hut: 1.7, stand: 1.4, chest: 0.85, sprinkler: 0.7, drip: 0.75, fence: 1.0, fund: 0.85, rock: 0.95, outcrop: 1.05, crystal: 0.78, tuft: 0.85, bin: 1.0, trough: 1.5, sign: 1.0, campfire: 1.05, bush: 1.0 };
 export function propSprite(t, u, x = 0, y = 0) {
   const w0 = PROP[t], name = PROP_IMG[t] || t;
   if (!w0 || !img(name)) return null;
-  const w = w0 * u * (t === 'rock' || t === 'tuft' ? 0.9 + ((x * 7 + y * 3) % 5) / 20 : 1), h = w * aspect(name);
+  const [w, h] = size(name, w0 * u * (t === 'rock' || t === 'tuft' ? 0.9 + ((x * 7 + y * 3) % 5) / 20 : 1));
   const flip = !['sign', 'bin', 'hut', 'stand', 'chest', 'fund'].includes(t) && (x + y) % 2 === 1;
   if (t === 'fund' && img('icon-coin')) { // the restoration-fund box: a crate with a coin on its lid
     const c = cached(`fund|${Math.round(w)}`, w, h, (g) => { g.drawImage(scaled(name, w, h), 0, 0); g.drawImage(scaled('icon-coin', w * 0.5, w * 0.5), w * 0.25, 0); });
     return { c, ox: -w / 2, oy: -h };
   }
-  return { c: scaled(name, w, h, flip), ox: -w / 2, oy: -h };
+  return { c: scaled(name, w, h, flip), ox: -Math.floor(w / 2), oy: -h };
 }
 
 // ---------- crops, animals, lamps ----------
@@ -124,27 +128,27 @@ export function cropSprite(id, stage, u) {
   const name = 'crop-' + id, im = img(name);
   if (!im) return null;
   const cell = Math.max(0, Math.min(4, stage < 0 ? 3 : stage)), cw = im.naturalWidth / 5, ch = im.naturalHeight;
-  const w = Math.round(u * 1.08), h = Math.round(w * ch / cw);
+  const px = isPx(name), w = px ? cw : Math.round(u * 1.08), h = px ? ch : Math.round(w * ch / cw);
   const c = cached(`crop|${id}|${stage}|${w}`, w, h, (g) => {
     g.imageSmoothingQuality = 'high';
     g.drawImage(im, cell * cw, 0, cw, ch, 0, 0, w, h);
     if (stage < 0) { g.globalCompositeOperation = 'source-atop'; g.fillStyle = 'rgba(120,88,48,0.72)'; g.fillRect(0, 0, w, h); }
   });
-  return { c, ox: -w / 2, oy: -h };
+  return { c, ox: -Math.floor(w / 2), oy: -h };
 }
 const ANIMAL_W = { cow: 1.55, goat: 1.05, hen: 0.62 };
 export function animalSprite(kind, face, u) {
   const name = 'animal-' + kind;
   if (!img(name)) return null;
-  const w = (ANIMAL_W[kind] || 1) * u, h = w * aspect(name);
-  return { c: scaled(name, w, h, face === 'left'), ox: -w / 2, oy: -h };
+  const [w, h] = size(name, (ANIMAL_W[kind] || 1) * u);
+  return { c: scaled(name, w, h, face === 'left'), ox: -Math.floor(w / 2), oy: -h };
 }
 const LAMP = { lantern: ['lamp-lantern', 0.62], gas: ['lamp-gas', 0.5], neon: ['lamp-deco', 0.95], sodium: ['lamp-sodium', 0.62], led: ['lamp-led', 0.5], fire: ['campfire', 1.0] };
 export function lampSprite(kind, u) {
   const e = LAMP[kind];
   if (!e || !img(e[0])) return null;
-  const w = e[1] * u, h = w * aspect(e[0]);
-  return { c: scaled(e[0], w, h), ox: -w / 2, oy: -h };
+  const [w, h] = size(e[0], e[1] * u);
+  return { c: scaled(e[0], w, h), ox: -Math.floor(w / 2), oy: -h };
 }
 
 // ---------- farmyard decor ----------
@@ -170,8 +174,8 @@ const TOWN_DECO = {
 for (const ch of Object.keys(TOWN_DECO)) DECO[ch].push(...TOWN_DECO[ch]);
 export function decoSprite(name, wTiles, u) {
   if (!img(name)) return null;
-  const w = wTiles * u, h = w * aspect(name);
-  return { c: scaled(name, w, h), ox: -w / 2, oy: -h };
+  const [w, h] = size(name, wTiles * u);
+  return { c: scaled(name, w, h), ox: -Math.floor(w / 2), oy: -h };
 }
 
 // ---------- item icons ----------
@@ -196,9 +200,17 @@ export function iconHtml(id, cls = '') {
 // ---------- people ----------
 export const peopleReady = () => !!(img('chars-trousers') && img('chars-dress') && img('chars-overlay'));
 export const FEET = 164 / 192; // ground point within a character cell
+// Pixel-style people with the 13-frame atlases (walk 6, use 5, idle 2), or false.
+export const pxPeople = () => isPx('chars-trousers') && manifest()['chars-trousers'].perDir === 13;
 // A person frame at u px per tile: 1.0 tile wide × 1.5 tall cell; returns { c, ox, oy } relative to the feet.
 export function personSprite(id, look, face, frame, u) {
   if (!peopleReady()) return null;
+  if (isPx('chars-trousers')) { // pixel style: the native-size cell, outlined
+    const { cell: [cw, ch], perDir } = manifest()['chars-trousers'];
+    const c = cached(`ppx|${id}|${face}|${frame}`, cw + 2, ch + 2, (g) => g.drawImage(composePx({ trousers: img('chars-trousers'), dress: img('chars-dress'), overlay: img('chars-overlay') },
+      face === 'up' ? { ...look, glasses: false } : look, SKINS[look.skin ?? 1], face, frame, cw, ch, perDir), 0, 0));
+    return { c, ox: -Math.floor(c.width / 2), oy: -(Math.round(ch * FEET) + 1) };
+  }
   const w = Math.round(u * 1.3), h = Math.round(w * CELL_H / CELL_W);
   const c = cached(`pp|${id}|${face}|${frame}|${w}`, w, h, (g) => {
     const cell = composeCell({ trousers: img('chars-trousers'), dress: img('chars-dress'), overlay: img('chars-overlay') },

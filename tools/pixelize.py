@@ -234,6 +234,22 @@ def outline(ix, pal, mode, dark='#1c1410'):
     return out, np.concatenate([pal, shades]).astype(np.uint8)
 
 
+def save_png(rgba, path):
+    """Write as an indexed (palette) PNG when the image has at most 255 colours plus transparency (pixel art always
+    does), which is several times smaller than RGBA; otherwise as RGBA."""
+    m = rgba[..., 3] > 0
+    cols, inv = np.unique(rgba[m][:, :3], axis=0, return_inverse=True)
+    if len(cols) > 255 or (m.any() and not np.isin(rgba[..., 3], (0, 255)).all()):
+        Image.fromarray(rgba, 'RGBA').save(path, optimize=True)
+        return
+    ix = np.zeros(rgba.shape[:2], np.uint8)
+    ix[m] = inv.reshape(-1) + 1
+    im = Image.fromarray(ix, 'P')
+    pal = [0, 0, 0] + cols.astype(np.uint8).reshape(-1).tolist()
+    im.putpalette(pal + [0] * (768 - len(pal)))
+    im.save(path, optimize=True, transparency=0)
+
+
 def snap(rgba, pal_rgb):
     m = rgba[..., 3] > 0
     if not m.any():
@@ -308,7 +324,7 @@ def main():
         out = sheet
     else:
         out = run(img, a)
-    Image.fromarray(out, 'RGBA').save(a.dst, optimize=True)
+    save_png(out, a.dst)
     m = out[..., 3] > 0
     ncol = len(np.unique(out[m][:, :3], axis=0)) if m.any() else 0
     print(json.dumps({'out': a.dst, 'w': int(out.shape[1]), 'h': int(out.shape[0]), 'colors': int(ncol)}))

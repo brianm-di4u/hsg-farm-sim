@@ -22,7 +22,7 @@
     },
     "tier": {
       "type": "string",
-      "pattern": "^T(16|24|32)$"
+      "pattern": "^(T(16|24|32)|painted)$"
     },
     "scores": {
       "type": "object",

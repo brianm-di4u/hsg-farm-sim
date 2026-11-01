@@ -1,0 +1,3353 @@
+{
+ "16": {
+  "animal-cow": {
+   "file": "px/16/animal-cow.png",
+   "h": 23,
+   "w": 27
+  },
+  "animal-goat": {
+   "file": "px/16/animal-goat.png",
+   "h": 19,
+   "w": 19
+  },
+  "animal-hen": {
+   "file": "px/16/animal-hen.png",
+   "h": 12,
+   "w": 12
+  },
+  "bin": {
+   "file": "px/16/bin.png",
+   "h": 17,
+   "w": 18
+  },
+  "bld-barn": {
+   "file": "px/16/bld-barn.png",
+   "h": 79,
+   "w": 162
+  },
+  "bld-brickstore": {
+   "file": "px/16/bld-brickstore.png",
+   "h": 85,
+   "w": 82
+  },
+  "bld-brickstore4": {
+   "file": "px/16/bld-brickstore4.png",
+   "h": 82,
+   "w": 82
+  },
+  "bld-cabin": {
+   "file": "px/16/bld-cabin.png",
+   "h": 79,
+   "w": 82
+  },
+  "bld-club": {
+   "file": "px/16/bld-club.png",
+   "h": 82,
+   "w": 82
+  },
+  "bld-court": {
+   "file": "px/16/bld-court.png",
+   "h": 53,
+   "w": 162
+  },
+  "bld-depot": {
+   "file": "px/16/bld-depot.png",
+   "h": 81,
+   "w": 82
+  },
+  "bld-drivein": {
+   "file": "px/16/bld-drivein.png",
+   "h": 78,
+   "w": 82
+  },
+  "bld-drug": {
+   "file": "px/16/bld-drug.png",
+   "h": 84,
+   "w": 82
+  },
+  "bld-farm-brick": {
+   "file": "px/16/bld-farm-brick.png",
+   "h": 72,
+   "w": 98
+  },
+  "bld-farm-bungalow": {
+   "file": "px/16/bld-farm-bungalow.png",
+   "h": 66,
+   "w": 98
+  },
+  "bld-farm-cabin": {
+   "file": "px/16/bld-farm-cabin.png",
+   "h": 66,
+   "w": 98
+  },
+  "bld-farm-plank": {
+   "file": "px/16/bld-farm-plank.png",
+   "h": 66,
+   "w": 98
+  },
+  "bld-farm-ranch": {
+   "file": "px/16/bld-farm-ranch.png",
+   "h": 50,
+   "w": 98
+  },
+  "bld-farm-restored": {
+   "file": "px/16/bld-farm-restored.png",
+   "h": 71,
+   "w": 98
+  },
+  "bld-grandhotel": {
+   "file": "px/16/bld-grandhotel.png",
+   "h": 105,
+   "w": 162
+  },
+  "bld-hardware": {
+   "file": "px/16/bld-hardware.png",
+   "h": 81,
+   "w": 82
+  },
+  "bld-house2": {
+   "file": "px/16/bld-house2.png",
+   "h": 86,
+   "w": 82
+  },
+  "bld-house3": {
+   "file": "px/16/bld-house3.png",
+   "h": 85,
+   "w": 82
+  },
+  "bld-house4": {
+   "file": "px/16/bld-house4.png",
+   "h": 81,
+   "w": 82
+  },
+  "bld-house6": {
+   "file": "px/16/bld-house6.png",
+   "h": 81,
+   "w": 82
+  },
+  "bld-hut": {
+   "file": "px/16/bld-hut.png",
+   "h": 75,
+   "w": 82
+  },
+  "bld-market": {
+   "file": "px/16/bld-market.png",
+   "h": 60,
+   "w": 162
+  },
+  "bld-mill": {
+   "file": "px/16/bld-mill.png",
+   "h": 54,
+   "w": 82
+  },
+  "bld-modernstore": {
+   "file": "px/16/bld-modernstore.png",
+   "h": 72,
+   "w": 82
+  },
+  "bld-motel": {
+   "file": "px/16/bld-motel.png",
+   "h": 78,
+   "w": 162
+  },
+  "bld-plankbath": {
+   "file": "px/16/bld-plankbath.png",
+   "h": 84,
+   "w": 82
+  },
+  "bld-plankbath2": {
+   "file": "px/16/bld-plankbath2.png",
+   "h": 83,
+   "w": 82
+  },
+  "bld-plankhotel": {
+   "file": "px/16/bld-plankhotel.png",
+   "h": 83,
+   "w": 82
+  },
+  "bld-plankstore": {
+   "file": "px/16/bld-plankstore.png",
+   "h": 77,
+   "w": 82
+  },
+  "bld-radio": {
+   "file": "px/16/bld-radio.png",
+   "h": 82,
+   "w": 82
+  },
+  "bld-ranchhouse": {
+   "file": "px/16/bld-ranchhouse.png",
+   "h": 58,
+   "w": 82
+  },
+  "bld-row-1": {
+   "file": "px/16/bld-row-1.png",
+   "h": 80,
+   "w": 82
+  },
+  "bld-row-1r": {
+   "file": "px/16/bld-row-1r.png",
+   "h": 78,
+   "w": 82
+  },
+  "bld-row-2": {
+   "file": "px/16/bld-row-2.png",
+   "h": 78,
+   "w": 82
+  },
+  "bld-row-2r": {
+   "file": "px/16/bld-row-2r.png",
+   "h": 78,
+   "w": 82
+  },
+  "bld-row-3": {
+   "file": "px/16/bld-row-3.png",
+   "h": 80,
+   "w": 82
+  },
+  "bld-row-3r": {
+   "file": "px/16/bld-row-3r.png",
+   "h": 80,
+   "w": 82
+  },
+  "bld-row-4": {
+   "file": "px/16/bld-row-4.png",
+   "h": 78,
+   "w": 82
+  },
+  "bld-row-4r": {
+   "file": "px/16/bld-row-4r.png",
+   "h": 78,
+   "w": 82
+  },
+  "bld-stage": {
+   "file": "px/16/bld-stage.png",
+   "h": 82,
+   "w": 82
+  },
+  "bld-tent": {
+   "file": "px/16/bld-tent.png",
+   "h": 80,
+   "w": 82
+  },
+  "bld-tent2": {
+   "file": "px/16/bld-tent2.png",
+   "h": 85,
+   "w": 82
+  },
+  "bld-twinhotel": {
+   "file": "px/16/bld-twinhotel.png",
+   "h": 105,
+   "w": 162
+  },
+  "bld-vicbath-1": {
+   "file": "px/16/bld-vicbath-1.png",
+   "h": 83,
+   "w": 82
+  },
+  "bld-vicbath-2": {
+   "file": "px/16/bld-vicbath-2.png",
+   "h": 83,
+   "w": 82
+  },
+  "bld-vicbath-3": {
+   "file": "px/16/bld-vicbath-3.png",
+   "h": 83,
+   "w": 82
+  },
+  "bld-vicbath-free": {
+   "file": "px/16/bld-vicbath-free.png",
+   "h": 82,
+   "w": 82
+  },
+  "bush": {
+   "file": "px/16/bush.png",
+   "h": 13,
+   "w": 15
+  },
+  "campfire": {
+   "file": "px/16/campfire.png",
+   "h": 20,
+   "w": 18
+  },
+  "chars-dress": {
+   "cell": [
+    21,
+    32
+   ],
+   "file": "px/16/chars-dress.png",
+   "h": 416,
+   "perDir": 13,
+   "w": 819
+  },
+  "chars-overlay": {
+   "cell": [
+    21,
+    32
+   ],
+   "file": "px/16/chars-overlay.png",
+   "h": 1344,
+   "perDir": 13,
+   "w": 819
+  },
+  "chars-trousers": {
+   "cell": [
+    21,
+    32
+   ],
+   "file": "px/16/chars-trousers.png",
+   "h": 416,
+   "perDir": 13,
+   "w": 819
+  },
+  "crop-beans": {
+   "file": "px/16/crop-beans.png",
+   "h": 40,
+   "w": 95
+  },
+  "crop-blueberry": {
+   "file": "px/16/crop-blueberry.png",
+   "h": 22,
+   "w": 95
+  },
+  "crop-cabbage": {
+   "file": "px/16/crop-cabbage.png",
+   "h": 19,
+   "w": 95
+  },
+  "crop-collards": {
+   "file": "px/16/crop-collards.png",
+   "h": 22,
+   "w": 95
+  },
+  "crop-corn": {
+   "file": "px/16/crop-corn.png",
+   "h": 43,
+   "w": 95
+  },
+  "crop-heirloom": {
+   "file": "px/16/crop-heirloom.png",
+   "h": 32,
+   "w": 95
+  },
+  "crop-hops": {
+   "file": "px/16/crop-hops.png",
+   "h": 55,
+   "w": 95
+  },
+  "crop-okra": {
+   "file": "px/16/crop-okra.png",
+   "h": 29,
+   "w": 95
+  },
+  "crop-peanut": {
+   "file": "px/16/crop-peanut.png",
+   "h": 27,
+   "w": 95
+  },
+  "crop-pepper": {
+   "file": "px/16/crop-pepper.png",
+   "h": 25,
+   "w": 95
+  },
+  "crop-potato": {
+   "file": "px/16/crop-potato.png",
+   "h": 28,
+   "w": 95
+  },
+  "crop-radish": {
+   "file": "px/16/crop-radish.png",
+   "h": 22,
+   "w": 95
+  },
+  "crop-squash": {
+   "file": "px/16/crop-squash.png",
+   "h": 19,
+   "w": 95
+  },
+  "crop-strawberry": {
+   "file": "px/16/crop-strawberry.png",
+   "h": 17,
+   "w": 95
+  },
+  "crop-sweetcorn": {
+   "file": "px/16/crop-sweetcorn.png",
+   "h": 42,
+   "w": 95
+  },
+  "crop-sweetpotato": {
+   "file": "px/16/crop-sweetpotato.png",
+   "h": 20,
+   "w": 95
+  },
+  "crop-tomato": {
+   "file": "px/16/crop-tomato.png",
+   "h": 35,
+   "w": 95
+  },
+  "crop-tulip": {
+   "file": "px/16/crop-tulip.png",
+   "h": 23,
+   "w": 95
+  },
+  "crop-watermelon": {
+   "file": "px/16/crop-watermelon.png",
+   "h": 22,
+   "w": 95
+  },
+  "crop-wheat": {
+   "file": "px/16/crop-wheat.png",
+   "h": 35,
+   "w": 95
+  },
+  "crystal": {
+   "file": "px/16/crystal.png",
+   "h": 17,
+   "w": 14
+  },
+  "deco-barrels": {
+   "file": "px/16/deco-barrels.png",
+   "h": 20,
+   "w": 20
+  },
+  "deco-beehives": {
+   "file": "px/16/deco-beehives.png",
+   "h": 23,
+   "w": 21
+  },
+  "deco-greenhouse": {
+   "file": "px/16/deco-greenhouse.png",
+   "h": 40,
+   "w": 44
+  },
+  "deco-haybale": {
+   "file": "px/16/deco-haybale.png",
+   "h": 22,
+   "w": 21
+  },
+  "deco-haystack": {
+   "file": "px/16/deco-haystack.png",
+   "h": 26,
+   "w": 23
+  },
+  "deco-modelA": {
+   "file": "px/16/deco-modelA.png",
+   "h": 28,
+   "w": 42
+  },
+  "deco-pump": {
+   "file": "px/16/deco-pump.png",
+   "h": 19,
+   "w": 16
+  },
+  "deco-scarecrow": {
+   "file": "px/16/deco-scarecrow.png",
+   "h": 21,
+   "w": 20
+  },
+  "deco-tractor": {
+   "file": "px/16/deco-tractor.png",
+   "h": 29,
+   "w": 40
+  },
+  "deco-wagon": {
+   "file": "px/16/deco-wagon.png",
+   "h": 25,
+   "w": 39
+  },
+  "deco-woodpile": {
+   "file": "px/16/deco-woodpile.png",
+   "h": 26,
+   "w": 26
+  },
+  "icon-acorn": {
+   "file": "px/16/icon-acorn.png",
+   "h": 14,
+   "w": 13
+  },
+  "icon-axe": {
+   "file": "px/16/icon-axe.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-basket": {
+   "file": "px/16/icon-basket.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-bass": {
+   "file": "px/16/icon-bass.png",
+   "h": 13,
+   "w": 18
+  },
+  "icon-beans": {
+   "file": "px/16/icon-beans.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-blackberry": {
+   "file": "px/16/icon-blackberry.png",
+   "h": 16,
+   "w": 13
+  },
+  "icon-blueberry": {
+   "file": "px/16/icon-blueberry.png",
+   "h": 18,
+   "w": 18
+  },
+  "icon-bream": {
+   "file": "px/16/icon-bream.png",
+   "h": 15,
+   "w": 18
+  },
+  "icon-cabbage": {
+   "file": "px/16/icon-cabbage.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-catfish": {
+   "file": "px/16/icon-catfish.png",
+   "h": 11,
+   "w": 18
+  },
+  "icon-charcoal": {
+   "file": "px/16/icon-charcoal.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-cheese": {
+   "file": "px/16/icon-cheese.png",
+   "h": 15,
+   "w": 18
+  },
+  "icon-chest": {
+   "file": "px/16/icon-chest.png",
+   "h": 17,
+   "w": 18
+  },
+  "icon-coin": {
+   "file": "px/16/icon-coin.png",
+   "h": 9,
+   "w": 9
+  },
+  "icon-coldwater": {
+   "file": "px/16/icon-coldwater.png",
+   "h": 29,
+   "w": 18
+  },
+  "icon-collards": {
+   "file": "px/16/icon-collards.png",
+   "h": 21,
+   "w": 18
+  },
+  "icon-corn": {
+   "file": "px/16/icon-corn.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-cornmeal": {
+   "file": "px/16/icon-cornmeal.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-crappie": {
+   "file": "px/16/icon-crappie.png",
+   "h": 15,
+   "w": 18
+  },
+  "icon-crate": {
+   "file": "px/16/icon-crate.png",
+   "h": 15,
+   "w": 16
+  },
+  "icon-drip": {
+   "file": "px/16/icon-drip.png",
+   "h": 16,
+   "w": 18
+  },
+  "icon-drum": {
+   "file": "px/16/icon-drum.png",
+   "h": 14,
+   "w": 18
+  },
+  "icon-egg": {
+   "file": "px/16/icon-egg.png",
+   "h": 22,
+   "w": 18
+  },
+  "icon-emptyjug": {
+   "file": "px/16/icon-emptyjug.png",
+   "h": 24,
+   "w": 18
+  },
+  "icon-feed": {
+   "file": "px/16/icon-feed.png",
+   "h": 18,
+   "w": 18
+  },
+  "icon-fence": {
+   "file": "px/16/icon-fence.png",
+   "h": 17,
+   "w": 18
+  },
+  "icon-gar": {
+   "file": "px/16/icon-gar.png",
+   "h": 10,
+   "w": 18
+  },
+  "icon-goatmilk": {
+   "file": "px/16/icon-goatmilk.png",
+   "h": 33,
+   "w": 18
+  },
+  "icon-greens": {
+   "file": "px/16/icon-greens.png",
+   "h": 16,
+   "w": 13
+  },
+  "icon-hardware": {
+   "file": "px/16/icon-hardware.png",
+   "h": 17,
+   "w": 18
+  },
+  "icon-hay": {
+   "file": "px/16/icon-hay.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-heirloom": {
+   "file": "px/16/icon-heirloom.png",
+   "h": 18,
+   "w": 18
+  },
+  "icon-hickory": {
+   "file": "px/16/icon-hickory.png",
+   "h": 14,
+   "w": 13
+  },
+  "icon-hoe": {
+   "file": "px/16/icon-hoe.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-hops": {
+   "file": "px/16/icon-hops.png",
+   "h": 24,
+   "w": 18
+  },
+  "icon-hotwater": {
+   "file": "px/16/icon-hotwater.png",
+   "h": 36,
+   "w": 18
+  },
+  "icon-hut": {
+   "file": "px/16/icon-hut.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-jug": {
+   "file": "px/16/icon-jug.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-key": {
+   "file": "px/16/icon-key.png",
+   "h": 21,
+   "w": 18
+  },
+  "icon-milk": {
+   "file": "px/16/icon-milk.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-mushroom": {
+   "file": "px/16/icon-mushroom.png",
+   "h": 15,
+   "w": 13
+  },
+  "icon-novaculite": {
+   "file": "px/16/icon-novaculite.png",
+   "h": 21,
+   "w": 18
+  },
+  "icon-oakleaf": {
+   "file": "px/16/icon-oakleaf.png",
+   "h": 16,
+   "w": 13
+  },
+  "icon-okra": {
+   "file": "px/16/icon-okra.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-peanut": {
+   "file": "px/16/icon-peanut.png",
+   "h": 17,
+   "w": 18
+  },
+  "icon-pepper": {
+   "file": "px/16/icon-pepper.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-pick": {
+   "file": "px/16/icon-pick.png",
+   "h": 21,
+   "w": 18
+  },
+  "icon-picnic": {
+   "file": "px/16/icon-picnic.png",
+   "h": 18,
+   "w": 18
+  },
+  "icon-pineknot": {
+   "file": "px/16/icon-pineknot.png",
+   "h": 16,
+   "w": 13
+  },
+  "icon-potato": {
+   "file": "px/16/icon-potato.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-preserves": {
+   "file": "px/16/icon-preserves.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-quartz": {
+   "file": "px/16/icon-quartz.png",
+   "h": 30,
+   "w": 18
+  },
+  "icon-radish": {
+   "file": "px/16/icon-radish.png",
+   "h": 29,
+   "w": 18
+  },
+  "icon-rod": {
+   "file": "px/16/icon-rod.png",
+   "h": 25,
+   "w": 18
+  },
+  "icon-scythe": {
+   "file": "px/16/icon-scythe.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-seedpacket": {
+   "file": "px/16/icon-seedpacket.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-seedsack": {
+   "file": "px/16/icon-seedsack.png",
+   "h": 22,
+   "w": 18
+  },
+  "icon-shingles": {
+   "file": "px/16/icon-shingles.png",
+   "h": 19,
+   "w": 18
+  },
+  "icon-sprinkler": {
+   "file": "px/16/icon-sprinkler.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-squash": {
+   "file": "px/16/icon-squash.png",
+   "h": 26,
+   "w": 18
+  },
+  "icon-stand": {
+   "file": "px/16/icon-stand.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-staves": {
+   "file": "px/16/icon-staves.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-stone": {
+   "file": "px/16/icon-stone.png",
+   "h": 18,
+   "w": 18
+  },
+  "icon-strawberry": {
+   "file": "px/16/icon-strawberry.png",
+   "h": 22,
+   "w": 18
+  },
+  "icon-striper": {
+   "file": "px/16/icon-striper.png",
+   "h": 13,
+   "w": 18
+  },
+  "icon-sweetcorn": {
+   "file": "px/16/icon-sweetcorn.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-sweetpotato": {
+   "file": "px/16/icon-sweetpotato.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-tea": {
+   "file": "px/16/icon-tea.png",
+   "h": 18,
+   "w": 18
+  },
+  "icon-tomato": {
+   "file": "px/16/icon-tomato.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-trout": {
+   "file": "px/16/icon-trout.png",
+   "h": 12,
+   "w": 18
+  },
+  "icon-tub": {
+   "file": "px/16/icon-tub.png",
+   "h": 14,
+   "w": 18
+  },
+  "icon-tulip": {
+   "file": "px/16/icon-tulip.png",
+   "h": 23,
+   "w": 18
+  },
+  "icon-walleye": {
+   "file": "px/16/icon-walleye.png",
+   "h": 12,
+   "w": 18
+  },
+  "icon-watermelon": {
+   "file": "px/16/icon-watermelon.png",
+   "h": 20,
+   "w": 18
+  },
+  "icon-wheat": {
+   "file": "px/16/icon-wheat.png",
+   "h": 25,
+   "w": 18
+  },
+  "icon-whetstone": {
+   "file": "px/16/icon-whetstone.png",
+   "h": 15,
+   "w": 18
+  },
+  "icon-whitebass": {
+   "file": "px/16/icon-whitebass.png",
+   "h": 14,
+   "w": 18
+  },
+  "icon-wood": {
+   "file": "px/16/icon-wood.png",
+   "h": 18,
+   "w": 18
+  },
+  "lamp-deco": {
+   "file": "px/16/lamp-deco.png",
+   "h": 41,
+   "w": 17
+  },
+  "lamp-gas": {
+   "file": "px/16/lamp-gas.png",
+   "h": 34,
+   "w": 10
+  },
+  "lamp-lantern": {
+   "file": "px/16/lamp-lantern.png",
+   "h": 16,
+   "w": 8
+  },
+  "lamp-led": {
+   "file": "px/16/lamp-led.png",
+   "h": 37,
+   "w": 10
+  },
+  "lamp-sodium": {
+   "file": "px/16/lamp-sodium.png",
+   "h": 31,
+   "w": 12
+  },
+  "outcrop": {
+   "file": "px/16/outcrop.png",
+   "h": 22,
+   "w": 19
+  },
+  "rock": {
+   "file": "px/16/rock.png",
+   "h": 15,
+   "w": 17
+  },
+  "sign": {
+   "file": "px/16/sign.png",
+   "h": 17,
+   "w": 18
+  },
+  "street-bench": {
+   "file": "px/16/street-bench.png",
+   "h": 17,
+   "w": 20
+  },
+  "street-bikes": {
+   "file": "px/16/street-bikes.png",
+   "h": 21,
+   "w": 21
+  },
+  "street-buggy": {
+   "file": "px/16/street-buggy.png",
+   "h": 18,
+   "w": 34
+  },
+  "street-car26a": {
+   "file": "px/16/street-car26a.png",
+   "h": 19,
+   "w": 34
+  },
+  "street-car55a": {
+   "file": "px/16/street-car55a.png",
+   "h": 19,
+   "w": 35
+  },
+  "street-car55b": {
+   "file": "px/16/street-car55b.png",
+   "h": 17,
+   "w": 35
+  },
+  "street-carriage": {
+   "file": "px/16/street-carriage.png",
+   "h": 18,
+   "w": 34
+  },
+  "street-coupe31": {
+   "file": "px/16/street-coupe31.png",
+   "h": 19,
+   "w": 34
+  },
+  "street-hitch": {
+   "file": "px/16/street-hitch.png",
+   "h": 20,
+   "w": 21
+  },
+  "street-hydrant": {
+   "file": "px/16/street-hydrant.png",
+   "h": 18,
+   "w": 13
+  },
+  "street-planter": {
+   "file": "px/16/street-planter.png",
+   "h": 20,
+   "w": 18
+  },
+  "street-sedan31": {
+   "file": "px/16/street-sedan31.png",
+   "h": 22,
+   "w": 34
+  },
+  "street-umbrella": {
+   "file": "px/16/street-umbrella.png",
+   "h": 24,
+   "w": 23
+  },
+  "tex-asphalt": {
+   "file": "px/16/tex-asphalt.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-brick": {
+   "file": "px/16/tex-brick.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-clay": {
+   "file": "px/16/tex-clay.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-creek": {
+   "file": "px/16/tex-creek.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-flagstone": {
+   "file": "px/16/tex-flagstone.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-forest": {
+   "file": "px/16/tex-forest.png",
+   "h": 80,
+   "w": 80
+  },
+  "tex-grass": {
+   "file": "px/16/tex-grass.png",
+   "h": 80,
+   "w": 80
+  },
+  "tex-gravel": {
+   "file": "px/16/tex-gravel.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-lake": {
+   "file": "px/16/tex-lake.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-path": {
+   "file": "px/16/tex-path.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-pavers": {
+   "file": "px/16/tex-pavers.png",
+   "h": 40,
+   "w": 40
+  },
+  "tex-road": {
+   "file": "px/16/tex-road.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-rock": {
+   "file": "px/16/tex-rock.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-sand": {
+   "file": "px/16/tex-sand.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-snow": {
+   "file": "px/16/tex-snow.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-soil": {
+   "file": "px/16/tex-soil.png",
+   "h": 32,
+   "w": 32
+  },
+  "tex-soil-wet": {
+   "file": "px/16/tex-soil-wet.png",
+   "h": 32,
+   "w": 32
+  },
+  "tex-tufa": {
+   "file": "px/16/tex-tufa.png",
+   "h": 64,
+   "w": 64
+  },
+  "tree-magnolia": {
+   "file": "px/16/tree-magnolia.png",
+   "h": 39,
+   "w": 31
+  },
+  "tree-oak-fa": {
+   "file": "px/16/tree-oak-fa.png",
+   "h": 47,
+   "w": 38
+  },
+  "tree-oak-sp": {
+   "file": "px/16/tree-oak-sp.png",
+   "h": 47,
+   "w": 38
+  },
+  "tree-oak-su": {
+   "file": "px/16/tree-oak-su.png",
+   "h": 47,
+   "w": 38
+  },
+  "tree-oak-wi": {
+   "file": "px/16/tree-oak-wi.png",
+   "h": 49,
+   "w": 38
+  },
+  "tree-pine": {
+   "file": "px/16/tree-pine.png",
+   "h": 40,
+   "w": 30
+  },
+  "trough": {
+   "file": "px/16/trough.png",
+   "h": 16,
+   "w": 26
+  },
+  "tuft": {
+   "file": "px/16/tuft.png",
+   "h": 17,
+   "w": 16
+  },
+  "vista-1": {
+   "file": "px/16/vista-1.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-2": {
+   "file": "px/16/vista-2.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-3": {
+   "file": "px/16/vista-3.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-4": {
+   "file": "px/16/vista-4.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-5": {
+   "file": "px/16/vista-5.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-6": {
+   "file": "px/16/vista-6.png",
+   "h": 320,
+   "w": 480
+  }
+ },
+ "24": {
+  "animal-cow": {
+   "file": "px/24/animal-cow.png",
+   "h": 33,
+   "w": 39
+  },
+  "animal-goat": {
+   "file": "px/24/animal-goat.png",
+   "h": 27,
+   "w": 27
+  },
+  "animal-hen": {
+   "file": "px/24/animal-hen.png",
+   "h": 17,
+   "w": 17
+  },
+  "bin": {
+   "file": "px/24/bin.png",
+   "h": 25,
+   "w": 26
+  },
+  "bld-barn": {
+   "file": "px/24/bld-barn.png",
+   "h": 117,
+   "w": 242
+  },
+  "bld-brickstore": {
+   "file": "px/24/bld-brickstore.png",
+   "h": 127,
+   "w": 122
+  },
+  "bld-brickstore4": {
+   "file": "px/24/bld-brickstore4.png",
+   "h": 122,
+   "w": 122
+  },
+  "bld-cabin": {
+   "file": "px/24/bld-cabin.png",
+   "h": 118,
+   "w": 122
+  },
+  "bld-club": {
+   "file": "px/24/bld-club.png",
+   "h": 122,
+   "w": 122
+  },
+  "bld-court": {
+   "file": "px/24/bld-court.png",
+   "h": 78,
+   "w": 242
+  },
+  "bld-depot": {
+   "file": "px/24/bld-depot.png",
+   "h": 120,
+   "w": 122
+  },
+  "bld-drivein": {
+   "file": "px/24/bld-drivein.png",
+   "h": 116,
+   "w": 122
+  },
+  "bld-drug": {
+   "file": "px/24/bld-drug.png",
+   "h": 124,
+   "w": 122
+  },
+  "bld-farm-brick": {
+   "file": "px/24/bld-farm-brick.png",
+   "h": 107,
+   "w": 146
+  },
+  "bld-farm-bungalow": {
+   "file": "px/24/bld-farm-bungalow.png",
+   "h": 98,
+   "w": 146
+  },
+  "bld-farm-cabin": {
+   "file": "px/24/bld-farm-cabin.png",
+   "h": 97,
+   "w": 146
+  },
+  "bld-farm-plank": {
+   "file": "px/24/bld-farm-plank.png",
+   "h": 98,
+   "w": 146
+  },
+  "bld-farm-ranch": {
+   "file": "px/24/bld-farm-ranch.png",
+   "h": 74,
+   "w": 146
+  },
+  "bld-farm-restored": {
+   "file": "px/24/bld-farm-restored.png",
+   "h": 105,
+   "w": 146
+  },
+  "bld-grandhotel": {
+   "file": "px/24/bld-grandhotel.png",
+   "h": 157,
+   "w": 242
+  },
+  "bld-hardware": {
+   "file": "px/24/bld-hardware.png",
+   "h": 121,
+   "w": 122
+  },
+  "bld-house2": {
+   "file": "px/24/bld-house2.png",
+   "h": 128,
+   "w": 122
+  },
+  "bld-house3": {
+   "file": "px/24/bld-house3.png",
+   "h": 127,
+   "w": 122
+  },
+  "bld-house4": {
+   "file": "px/24/bld-house4.png",
+   "h": 121,
+   "w": 122
+  },
+  "bld-house6": {
+   "file": "px/24/bld-house6.png",
+   "h": 120,
+   "w": 122
+  },
+  "bld-hut": {
+   "file": "px/24/bld-hut.png",
+   "h": 111,
+   "w": 122
+  },
+  "bld-market": {
+   "file": "px/24/bld-market.png",
+   "h": 89,
+   "w": 242
+  },
+  "bld-mill": {
+   "file": "px/24/bld-mill.png",
+   "h": 81,
+   "w": 122
+  },
+  "bld-modernstore": {
+   "file": "px/24/bld-modernstore.png",
+   "h": 107,
+   "w": 122
+  },
+  "bld-motel": {
+   "file": "px/24/bld-motel.png",
+   "h": 117,
+   "w": 242
+  },
+  "bld-plankbath": {
+   "file": "px/24/bld-plankbath.png",
+   "h": 125,
+   "w": 122
+  },
+  "bld-plankbath2": {
+   "file": "px/24/bld-plankbath2.png",
+   "h": 123,
+   "w": 122
+  },
+  "bld-plankhotel": {
+   "file": "px/24/bld-plankhotel.png",
+   "h": 124,
+   "w": 122
+  },
+  "bld-plankstore": {
+   "file": "px/24/bld-plankstore.png",
+   "h": 115,
+   "w": 122
+  },
+  "bld-radio": {
+   "file": "px/24/bld-radio.png",
+   "h": 122,
+   "w": 122
+  },
+  "bld-ranchhouse": {
+   "file": "px/24/bld-ranchhouse.png",
+   "h": 86,
+   "w": 122
+  },
+  "bld-row-1": {
+   "file": "px/24/bld-row-1.png",
+   "h": 120,
+   "w": 122
+  },
+  "bld-row-1r": {
+   "file": "px/24/bld-row-1r.png",
+   "h": 117,
+   "w": 122
+  },
+  "bld-row-2": {
+   "file": "px/24/bld-row-2.png",
+   "h": 116,
+   "w": 122
+  },
+  "bld-row-2r": {
+   "file": "px/24/bld-row-2r.png",
+   "h": 116,
+   "w": 122
+  },
+  "bld-row-3": {
+   "file": "px/24/bld-row-3.png",
+   "h": 118,
+   "w": 122
+  },
+  "bld-row-3r": {
+   "file": "px/24/bld-row-3r.png",
+   "h": 118,
+   "w": 122
+  },
+  "bld-row-4": {
+   "file": "px/24/bld-row-4.png",
+   "h": 116,
+   "w": 122
+  },
+  "bld-row-4r": {
+   "file": "px/24/bld-row-4r.png",
+   "h": 116,
+   "w": 122
+  },
+  "bld-stage": {
+   "file": "px/24/bld-stage.png",
+   "h": 122,
+   "w": 122
+  },
+  "bld-tent": {
+   "file": "px/24/bld-tent.png",
+   "h": 120,
+   "w": 122
+  },
+  "bld-tent2": {
+   "file": "px/24/bld-tent2.png",
+   "h": 126,
+   "w": 122
+  },
+  "bld-twinhotel": {
+   "file": "px/24/bld-twinhotel.png",
+   "h": 156,
+   "w": 242
+  },
+  "bld-vicbath-1": {
+   "file": "px/24/bld-vicbath-1.png",
+   "h": 124,
+   "w": 122
+  },
+  "bld-vicbath-2": {
+   "file": "px/24/bld-vicbath-2.png",
+   "h": 124,
+   "w": 122
+  },
+  "bld-vicbath-3": {
+   "file": "px/24/bld-vicbath-3.png",
+   "h": 124,
+   "w": 122
+  },
+  "bld-vicbath-free": {
+   "file": "px/24/bld-vicbath-free.png",
+   "h": 122,
+   "w": 122
+  },
+  "bush": {
+   "file": "px/24/bush.png",
+   "h": 18,
+   "w": 21
+  },
+  "campfire": {
+   "file": "px/24/campfire.png",
+   "h": 29,
+   "w": 26
+  },
+  "chars-dress": {
+   "cell": [
+    31,
+    46
+   ],
+   "file": "px/24/chars-dress.png",
+   "h": 598,
+   "perDir": 13,
+   "w": 1209
+  },
+  "chars-overlay": {
+   "cell": [
+    31,
+    46
+   ],
+   "file": "px/24/chars-overlay.png",
+   "h": 1932,
+   "perDir": 13,
+   "w": 1209
+  },
+  "chars-trousers": {
+   "cell": [
+    31,
+    46
+   ],
+   "file": "px/24/chars-trousers.png",
+   "h": 598,
+   "perDir": 13,
+   "w": 1209
+  },
+  "crop-beans": {
+   "file": "px/24/crop-beans.png",
+   "h": 61,
+   "w": 140
+  },
+  "crop-blueberry": {
+   "file": "px/24/crop-blueberry.png",
+   "h": 32,
+   "w": 140
+  },
+  "crop-cabbage": {
+   "file": "px/24/crop-cabbage.png",
+   "h": 28,
+   "w": 140
+  },
+  "crop-collards": {
+   "file": "px/24/crop-collards.png",
+   "h": 32,
+   "w": 140
+  },
+  "crop-corn": {
+   "file": "px/24/crop-corn.png",
+   "h": 65,
+   "w": 140
+  },
+  "crop-heirloom": {
+   "file": "px/24/crop-heirloom.png",
+   "h": 48,
+   "w": 140
+  },
+  "crop-hops": {
+   "file": "px/24/crop-hops.png",
+   "h": 84,
+   "w": 140
+  },
+  "crop-okra": {
+   "file": "px/24/crop-okra.png",
+   "h": 43,
+   "w": 140
+  },
+  "crop-peanut": {
+   "file": "px/24/crop-peanut.png",
+   "h": 40,
+   "w": 140
+  },
+  "crop-pepper": {
+   "file": "px/24/crop-pepper.png",
+   "h": 37,
+   "w": 140
+  },
+  "crop-potato": {
+   "file": "px/24/crop-potato.png",
+   "h": 42,
+   "w": 140
+  },
+  "crop-radish": {
+   "file": "px/24/crop-radish.png",
+   "h": 33,
+   "w": 140
+  },
+  "crop-squash": {
+   "file": "px/24/crop-squash.png",
+   "h": 27,
+   "w": 140
+  },
+  "crop-strawberry": {
+   "file": "px/24/crop-strawberry.png",
+   "h": 25,
+   "w": 140
+  },
+  "crop-sweetcorn": {
+   "file": "px/24/crop-sweetcorn.png",
+   "h": 63,
+   "w": 140
+  },
+  "crop-sweetpotato": {
+   "file": "px/24/crop-sweetpotato.png",
+   "h": 30,
+   "w": 140
+  },
+  "crop-tomato": {
+   "file": "px/24/crop-tomato.png",
+   "h": 52,
+   "w": 140
+  },
+  "crop-tulip": {
+   "file": "px/24/crop-tulip.png",
+   "h": 34,
+   "w": 140
+  },
+  "crop-watermelon": {
+   "file": "px/24/crop-watermelon.png",
+   "h": 33,
+   "w": 140
+  },
+  "crop-wheat": {
+   "file": "px/24/crop-wheat.png",
+   "h": 53,
+   "w": 140
+  },
+  "crystal": {
+   "file": "px/24/crystal.png",
+   "h": 25,
+   "w": 21
+  },
+  "deco-barrels": {
+   "file": "px/24/deco-barrels.png",
+   "h": 28,
+   "w": 28
+  },
+  "deco-beehives": {
+   "file": "px/24/deco-beehives.png",
+   "h": 33,
+   "w": 31
+  },
+  "deco-greenhouse": {
+   "file": "px/24/deco-greenhouse.png",
+   "h": 58,
+   "w": 64
+  },
+  "deco-haybale": {
+   "file": "px/24/deco-haybale.png",
+   "h": 32,
+   "w": 31
+  },
+  "deco-haystack": {
+   "file": "px/24/deco-haystack.png",
+   "h": 38,
+   "w": 33
+  },
+  "deco-modelA": {
+   "file": "px/24/deco-modelA.png",
+   "h": 40,
+   "w": 62
+  },
+  "deco-pump": {
+   "file": "px/24/deco-pump.png",
+   "h": 29,
+   "w": 24
+  },
+  "deco-scarecrow": {
+   "file": "px/24/deco-scarecrow.png",
+   "h": 29,
+   "w": 28
+  },
+  "deco-tractor": {
+   "file": "px/24/deco-tractor.png",
+   "h": 43,
+   "w": 60
+  },
+  "deco-wagon": {
+   "file": "px/24/deco-wagon.png",
+   "h": 37,
+   "w": 57
+  },
+  "deco-woodpile": {
+   "file": "px/24/deco-woodpile.png",
+   "h": 38,
+   "w": 38
+  },
+  "icon-acorn": {
+   "file": "px/24/icon-acorn.png",
+   "h": 20,
+   "w": 19
+  },
+  "icon-axe": {
+   "file": "px/24/icon-axe.png",
+   "h": 34,
+   "w": 26
+  },
+  "icon-basket": {
+   "file": "px/24/icon-basket.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-bass": {
+   "file": "px/24/icon-bass.png",
+   "h": 18,
+   "w": 26
+  },
+  "icon-beans": {
+   "file": "px/24/icon-beans.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-blackberry": {
+   "file": "px/24/icon-blackberry.png",
+   "h": 23,
+   "w": 19
+  },
+  "icon-blueberry": {
+   "file": "px/24/icon-blueberry.png",
+   "h": 25,
+   "w": 26
+  },
+  "icon-bream": {
+   "file": "px/24/icon-bream.png",
+   "h": 22,
+   "w": 26
+  },
+  "icon-cabbage": {
+   "file": "px/24/icon-cabbage.png",
+   "h": 27,
+   "w": 26
+  },
+  "icon-catfish": {
+   "file": "px/24/icon-catfish.png",
+   "h": 16,
+   "w": 26
+  },
+  "icon-charcoal": {
+   "file": "px/24/icon-charcoal.png",
+   "h": 27,
+   "w": 26
+  },
+  "icon-cheese": {
+   "file": "px/24/icon-cheese.png",
+   "h": 22,
+   "w": 26
+  },
+  "icon-chest": {
+   "file": "px/24/icon-chest.png",
+   "h": 25,
+   "w": 26
+  },
+  "icon-coin": {
+   "file": "px/24/icon-coin.png",
+   "h": 12,
+   "w": 12
+  },
+  "icon-coldwater": {
+   "file": "px/24/icon-coldwater.png",
+   "h": 42,
+   "w": 26
+  },
+  "icon-collards": {
+   "file": "px/24/icon-collards.png",
+   "h": 31,
+   "w": 26
+  },
+  "icon-corn": {
+   "file": "px/24/icon-corn.png",
+   "h": 34,
+   "w": 26
+  },
+  "icon-cornmeal": {
+   "file": "px/24/icon-cornmeal.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-crappie": {
+   "file": "px/24/icon-crappie.png",
+   "h": 21,
+   "w": 26
+  },
+  "icon-crate": {
+   "file": "px/24/icon-crate.png",
+   "h": 21,
+   "w": 22
+  },
+  "icon-drip": {
+   "file": "px/24/icon-drip.png",
+   "h": 23,
+   "w": 26
+  },
+  "icon-drum": {
+   "file": "px/24/icon-drum.png",
+   "h": 20,
+   "w": 26
+  },
+  "icon-egg": {
+   "file": "px/24/icon-egg.png",
+   "h": 32,
+   "w": 26
+  },
+  "icon-emptyjug": {
+   "file": "px/24/icon-emptyjug.png",
+   "h": 35,
+   "w": 26
+  },
+  "icon-feed": {
+   "file": "px/24/icon-feed.png",
+   "h": 26,
+   "w": 26
+  },
+  "icon-fence": {
+   "file": "px/24/icon-fence.png",
+   "h": 24,
+   "w": 26
+  },
+  "icon-gar": {
+   "file": "px/24/icon-gar.png",
+   "h": 13,
+   "w": 26
+  },
+  "icon-goatmilk": {
+   "file": "px/24/icon-goatmilk.png",
+   "h": 48,
+   "w": 26
+  },
+  "icon-greens": {
+   "file": "px/24/icon-greens.png",
+   "h": 24,
+   "w": 19
+  },
+  "icon-hardware": {
+   "file": "px/24/icon-hardware.png",
+   "h": 25,
+   "w": 26
+  },
+  "icon-hay": {
+   "file": "px/24/icon-hay.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-heirloom": {
+   "file": "px/24/icon-heirloom.png",
+   "h": 25,
+   "w": 26
+  },
+  "icon-hickory": {
+   "file": "px/24/icon-hickory.png",
+   "h": 21,
+   "w": 19
+  },
+  "icon-hoe": {
+   "file": "px/24/icon-hoe.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-hops": {
+   "file": "px/24/icon-hops.png",
+   "h": 35,
+   "w": 26
+  },
+  "icon-hotwater": {
+   "file": "px/24/icon-hotwater.png",
+   "h": 53,
+   "w": 26
+  },
+  "icon-hut": {
+   "file": "px/24/icon-hut.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-jug": {
+   "file": "px/24/icon-jug.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-key": {
+   "file": "px/24/icon-key.png",
+   "h": 30,
+   "w": 26
+  },
+  "icon-milk": {
+   "file": "px/24/icon-milk.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-mushroom": {
+   "file": "px/24/icon-mushroom.png",
+   "h": 22,
+   "w": 19
+  },
+  "icon-novaculite": {
+   "file": "px/24/icon-novaculite.png",
+   "h": 30,
+   "w": 26
+  },
+  "icon-oakleaf": {
+   "file": "px/24/icon-oakleaf.png",
+   "h": 23,
+   "w": 19
+  },
+  "icon-okra": {
+   "file": "px/24/icon-okra.png",
+   "h": 34,
+   "w": 26
+  },
+  "icon-peanut": {
+   "file": "px/24/icon-peanut.png",
+   "h": 25,
+   "w": 26
+  },
+  "icon-pepper": {
+   "file": "px/24/icon-pepper.png",
+   "h": 27,
+   "w": 26
+  },
+  "icon-pick": {
+   "file": "px/24/icon-pick.png",
+   "h": 30,
+   "w": 26
+  },
+  "icon-picnic": {
+   "file": "px/24/icon-picnic.png",
+   "h": 26,
+   "w": 26
+  },
+  "icon-pineknot": {
+   "file": "px/24/icon-pineknot.png",
+   "h": 23,
+   "w": 19
+  },
+  "icon-potato": {
+   "file": "px/24/icon-potato.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-preserves": {
+   "file": "px/24/icon-preserves.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-quartz": {
+   "file": "px/24/icon-quartz.png",
+   "h": 44,
+   "w": 26
+  },
+  "icon-radish": {
+   "file": "px/24/icon-radish.png",
+   "h": 43,
+   "w": 26
+  },
+  "icon-rod": {
+   "file": "px/24/icon-rod.png",
+   "h": 36,
+   "w": 26
+  },
+  "icon-scythe": {
+   "file": "px/24/icon-scythe.png",
+   "h": 34,
+   "w": 26
+  },
+  "icon-seedpacket": {
+   "file": "px/24/icon-seedpacket.png",
+   "h": 34,
+   "w": 26
+  },
+  "icon-seedsack": {
+   "file": "px/24/icon-seedsack.png",
+   "h": 33,
+   "w": 26
+  },
+  "icon-shingles": {
+   "file": "px/24/icon-shingles.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-sprinkler": {
+   "file": "px/24/icon-sprinkler.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-squash": {
+   "file": "px/24/icon-squash.png",
+   "h": 38,
+   "w": 26
+  },
+  "icon-stand": {
+   "file": "px/24/icon-stand.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-staves": {
+   "file": "px/24/icon-staves.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-stone": {
+   "file": "px/24/icon-stone.png",
+   "h": 26,
+   "w": 26
+  },
+  "icon-strawberry": {
+   "file": "px/24/icon-strawberry.png",
+   "h": 32,
+   "w": 26
+  },
+  "icon-striper": {
+   "file": "px/24/icon-striper.png",
+   "h": 19,
+   "w": 26
+  },
+  "icon-sweetcorn": {
+   "file": "px/24/icon-sweetcorn.png",
+   "h": 33,
+   "w": 26
+  },
+  "icon-sweetpotato": {
+   "file": "px/24/icon-sweetpotato.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-tea": {
+   "file": "px/24/icon-tea.png",
+   "h": 27,
+   "w": 26
+  },
+  "icon-tomato": {
+   "file": "px/24/icon-tomato.png",
+   "h": 28,
+   "w": 26
+  },
+  "icon-trout": {
+   "file": "px/24/icon-trout.png",
+   "h": 17,
+   "w": 26
+  },
+  "icon-tub": {
+   "file": "px/24/icon-tub.png",
+   "h": 21,
+   "w": 26
+  },
+  "icon-tulip": {
+   "file": "px/24/icon-tulip.png",
+   "h": 33,
+   "w": 26
+  },
+  "icon-walleye": {
+   "file": "px/24/icon-walleye.png",
+   "h": 18,
+   "w": 26
+  },
+  "icon-watermelon": {
+   "file": "px/24/icon-watermelon.png",
+   "h": 29,
+   "w": 26
+  },
+  "icon-wheat": {
+   "file": "px/24/icon-wheat.png",
+   "h": 37,
+   "w": 26
+  },
+  "icon-whetstone": {
+   "file": "px/24/icon-whetstone.png",
+   "h": 21,
+   "w": 26
+  },
+  "icon-whitebass": {
+   "file": "px/24/icon-whitebass.png",
+   "h": 20,
+   "w": 26
+  },
+  "icon-wood": {
+   "file": "px/24/icon-wood.png",
+   "h": 26,
+   "w": 26
+  },
+  "lamp-deco": {
+   "file": "px/24/lamp-deco.png",
+   "h": 62,
+   "w": 25
+  },
+  "lamp-gas": {
+   "file": "px/24/lamp-gas.png",
+   "h": 50,
+   "w": 14
+  },
+  "lamp-lantern": {
+   "file": "px/24/lamp-lantern.png",
+   "h": 24,
+   "w": 11
+  },
+  "lamp-led": {
+   "file": "px/24/lamp-led.png",
+   "h": 55,
+   "w": 14
+  },
+  "lamp-sodium": {
+   "file": "px/24/lamp-sodium.png",
+   "h": 46,
+   "w": 17
+  },
+  "outcrop": {
+   "file": "px/24/outcrop.png",
+   "h": 32,
+   "w": 27
+  },
+  "rock": {
+   "file": "px/24/rock.png",
+   "h": 21,
+   "w": 25
+  },
+  "sign": {
+   "file": "px/24/sign.png",
+   "h": 25,
+   "w": 26
+  },
+  "street-bench": {
+   "file": "px/24/street-bench.png",
+   "h": 24,
+   "w": 28
+  },
+  "street-bikes": {
+   "file": "px/24/street-bikes.png",
+   "h": 31,
+   "w": 31
+  },
+  "street-buggy": {
+   "file": "px/24/street-buggy.png",
+   "h": 26,
+   "w": 50
+  },
+  "street-car26a": {
+   "file": "px/24/street-car26a.png",
+   "h": 28,
+   "w": 50
+  },
+  "street-car55a": {
+   "file": "px/24/street-car55a.png",
+   "h": 27,
+   "w": 51
+  },
+  "street-car55b": {
+   "file": "px/24/street-car55b.png",
+   "h": 24,
+   "w": 51
+  },
+  "street-carriage": {
+   "file": "px/24/street-carriage.png",
+   "h": 26,
+   "w": 50
+  },
+  "street-coupe31": {
+   "file": "px/24/street-coupe31.png",
+   "h": 28,
+   "w": 50
+  },
+  "street-hitch": {
+   "file": "px/24/street-hitch.png",
+   "h": 29,
+   "w": 31
+  },
+  "street-hydrant": {
+   "file": "px/24/street-hydrant.png",
+   "h": 27,
+   "w": 19
+  },
+  "street-planter": {
+   "file": "px/24/street-planter.png",
+   "h": 29,
+   "w": 26
+  },
+  "street-sedan31": {
+   "file": "px/24/street-sedan31.png",
+   "h": 32,
+   "w": 50
+  },
+  "street-umbrella": {
+   "file": "px/24/street-umbrella.png",
+   "h": 34,
+   "w": 33
+  },
+  "tex-asphalt": {
+   "file": "px/24/tex-asphalt.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-brick": {
+   "file": "px/24/tex-brick.png",
+   "h": 72,
+   "w": 72
+  },
+  "tex-clay": {
+   "file": "px/24/tex-clay.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-creek": {
+   "file": "px/24/tex-creek.png",
+   "h": 72,
+   "w": 72
+  },
+  "tex-flagstone": {
+   "file": "px/24/tex-flagstone.png",
+   "h": 72,
+   "w": 72
+  },
+  "tex-forest": {
+   "file": "px/24/tex-forest.png",
+   "h": 120,
+   "w": 120
+  },
+  "tex-grass": {
+   "file": "px/24/tex-grass.png",
+   "h": 120,
+   "w": 120
+  },
+  "tex-gravel": {
+   "file": "px/24/tex-gravel.png",
+   "h": 72,
+   "w": 72
+  },
+  "tex-lake": {
+   "file": "px/24/tex-lake.png",
+   "h": 144,
+   "w": 144
+  },
+  "tex-path": {
+   "file": "px/24/tex-path.png",
+   "h": 72,
+   "w": 72
+  },
+  "tex-pavers": {
+   "file": "px/24/tex-pavers.png",
+   "h": 60,
+   "w": 60
+  },
+  "tex-road": {
+   "file": "px/24/tex-road.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-rock": {
+   "file": "px/24/tex-rock.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-sand": {
+   "file": "px/24/tex-sand.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-snow": {
+   "file": "px/24/tex-snow.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-soil": {
+   "file": "px/24/tex-soil.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-soil-wet": {
+   "file": "px/24/tex-soil-wet.png",
+   "h": 48,
+   "w": 48
+  },
+  "tex-tufa": {
+   "file": "px/24/tex-tufa.png",
+   "h": 96,
+   "w": 96
+  },
+  "tree-magnolia": {
+   "file": "px/24/tree-magnolia.png",
+   "h": 59,
+   "w": 46
+  },
+  "tree-oak-fa": {
+   "file": "px/24/tree-oak-fa.png",
+   "h": 71,
+   "w": 57
+  },
+  "tree-oak-sp": {
+   "file": "px/24/tree-oak-sp.png",
+   "h": 71,
+   "w": 57
+  },
+  "tree-oak-su": {
+   "file": "px/24/tree-oak-su.png",
+   "h": 70,
+   "w": 57
+  },
+  "tree-oak-wi": {
+   "file": "px/24/tree-oak-wi.png",
+   "h": 74,
+   "w": 57
+  },
+  "tree-pine": {
+   "file": "px/24/tree-pine.png",
+   "h": 60,
+   "w": 44
+  },
+  "trough": {
+   "file": "px/24/trough.png",
+   "h": 23,
+   "w": 38
+  },
+  "tuft": {
+   "file": "px/24/tuft.png",
+   "h": 23,
+   "w": 22
+  },
+  "vista-1": {
+   "file": "px/24/vista-1.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-2": {
+   "file": "px/24/vista-2.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-3": {
+   "file": "px/24/vista-3.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-4": {
+   "file": "px/24/vista-4.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-5": {
+   "file": "px/24/vista-5.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-6": {
+   "file": "px/24/vista-6.png",
+   "h": 320,
+   "w": 480
+  }
+ },
+ "32": {
+  "animal-cow": {
+   "file": "px/32/animal-cow.png",
+   "h": 43,
+   "w": 52
+  },
+  "animal-goat": {
+   "file": "px/32/animal-goat.png",
+   "h": 36,
+   "w": 36
+  },
+  "animal-hen": {
+   "file": "px/32/animal-hen.png",
+   "h": 22,
+   "w": 22
+  },
+  "bin": {
+   "file": "px/32/bin.png",
+   "h": 32,
+   "w": 34
+  },
+  "bld-barn": {
+   "file": "px/32/bld-barn.png",
+   "h": 155,
+   "w": 322
+  },
+  "bld-brickstore": {
+   "file": "px/32/bld-brickstore.png",
+   "h": 168,
+   "w": 162
+  },
+  "bld-brickstore4": {
+   "file": "px/32/bld-brickstore4.png",
+   "h": 162,
+   "w": 162
+  },
+  "bld-cabin": {
+   "file": "px/32/bld-cabin.png",
+   "h": 157,
+   "w": 162
+  },
+  "bld-club": {
+   "file": "px/32/bld-club.png",
+   "h": 162,
+   "w": 162
+  },
+  "bld-court": {
+   "file": "px/32/bld-court.png",
+   "h": 104,
+   "w": 322
+  },
+  "bld-depot": {
+   "file": "px/32/bld-depot.png",
+   "h": 159,
+   "w": 162
+  },
+  "bld-drivein": {
+   "file": "px/32/bld-drivein.png",
+   "h": 154,
+   "w": 162
+  },
+  "bld-drug": {
+   "file": "px/32/bld-drug.png",
+   "h": 165,
+   "w": 162
+  },
+  "bld-farm-brick": {
+   "file": "px/32/bld-farm-brick.png",
+   "h": 142,
+   "w": 194
+  },
+  "bld-farm-bungalow": {
+   "file": "px/32/bld-farm-bungalow.png",
+   "h": 130,
+   "w": 194
+  },
+  "bld-farm-cabin": {
+   "file": "px/32/bld-farm-cabin.png",
+   "h": 129,
+   "w": 194
+  },
+  "bld-farm-plank": {
+   "file": "px/32/bld-farm-plank.png",
+   "h": 130,
+   "w": 194
+  },
+  "bld-farm-ranch": {
+   "file": "px/32/bld-farm-ranch.png",
+   "h": 98,
+   "w": 194
+  },
+  "bld-farm-restored": {
+   "file": "px/32/bld-farm-restored.png",
+   "h": 139,
+   "w": 194
+  },
+  "bld-grandhotel": {
+   "file": "px/32/bld-grandhotel.png",
+   "h": 209,
+   "w": 322
+  },
+  "bld-hardware": {
+   "file": "px/32/bld-hardware.png",
+   "h": 161,
+   "w": 162
+  },
+  "bld-house2": {
+   "file": "px/32/bld-house2.png",
+   "h": 170,
+   "w": 162
+  },
+  "bld-house3": {
+   "file": "px/32/bld-house3.png",
+   "h": 168,
+   "w": 162
+  },
+  "bld-house4": {
+   "file": "px/32/bld-house4.png",
+   "h": 160,
+   "w": 162
+  },
+  "bld-house6": {
+   "file": "px/32/bld-house6.png",
+   "h": 160,
+   "w": 162
+  },
+  "bld-hut": {
+   "file": "px/32/bld-hut.png",
+   "h": 147,
+   "w": 162
+  },
+  "bld-market": {
+   "file": "px/32/bld-market.png",
+   "h": 118,
+   "w": 322
+  },
+  "bld-mill": {
+   "file": "px/32/bld-mill.png",
+   "h": 107,
+   "w": 162
+  },
+  "bld-modernstore": {
+   "file": "px/32/bld-modernstore.png",
+   "h": 142,
+   "w": 162
+  },
+  "bld-motel": {
+   "file": "px/32/bld-motel.png",
+   "h": 155,
+   "w": 322
+  },
+  "bld-plankbath": {
+   "file": "px/32/bld-plankbath.png",
+   "h": 166,
+   "w": 162
+  },
+  "bld-plankbath2": {
+   "file": "px/32/bld-plankbath2.png",
+   "h": 164,
+   "w": 162
+  },
+  "bld-plankhotel": {
+   "file": "px/32/bld-plankhotel.png",
+   "h": 164,
+   "w": 162
+  },
+  "bld-plankstore": {
+   "file": "px/32/bld-plankstore.png",
+   "h": 152,
+   "w": 162
+  },
+  "bld-radio": {
+   "file": "px/32/bld-radio.png",
+   "h": 162,
+   "w": 162
+  },
+  "bld-ranchhouse": {
+   "file": "px/32/bld-ranchhouse.png",
+   "h": 114,
+   "w": 162
+  },
+  "bld-row-1": {
+   "file": "px/32/bld-row-1.png",
+   "h": 159,
+   "w": 162
+  },
+  "bld-row-1r": {
+   "file": "px/32/bld-row-1r.png",
+   "h": 155,
+   "w": 162
+  },
+  "bld-row-2": {
+   "file": "px/32/bld-row-2.png",
+   "h": 154,
+   "w": 162
+  },
+  "bld-row-2r": {
+   "file": "px/32/bld-row-2r.png",
+   "h": 154,
+   "w": 162
+  },
+  "bld-row-3": {
+   "file": "px/32/bld-row-3.png",
+   "h": 157,
+   "w": 162
+  },
+  "bld-row-3r": {
+   "file": "px/32/bld-row-3r.png",
+   "h": 157,
+   "w": 162
+  },
+  "bld-row-4": {
+   "file": "px/32/bld-row-4.png",
+   "h": 154,
+   "w": 162
+  },
+  "bld-row-4r": {
+   "file": "px/32/bld-row-4r.png",
+   "h": 154,
+   "w": 162
+  },
+  "bld-stage": {
+   "file": "px/32/bld-stage.png",
+   "h": 162,
+   "w": 162
+  },
+  "bld-tent": {
+   "file": "px/32/bld-tent.png",
+   "h": 159,
+   "w": 162
+  },
+  "bld-tent2": {
+   "file": "px/32/bld-tent2.png",
+   "h": 167,
+   "w": 162
+  },
+  "bld-twinhotel": {
+   "file": "px/32/bld-twinhotel.png",
+   "h": 208,
+   "w": 322
+  },
+  "bld-vicbath-1": {
+   "file": "px/32/bld-vicbath-1.png",
+   "h": 164,
+   "w": 162
+  },
+  "bld-vicbath-2": {
+   "file": "px/32/bld-vicbath-2.png",
+   "h": 164,
+   "w": 162
+  },
+  "bld-vicbath-3": {
+   "file": "px/32/bld-vicbath-3.png",
+   "h": 165,
+   "w": 162
+  },
+  "bld-vicbath-free": {
+   "file": "px/32/bld-vicbath-free.png",
+   "h": 162,
+   "w": 162
+  },
+  "bush": {
+   "file": "px/32/bush.png",
+   "h": 24,
+   "w": 28
+  },
+  "campfire": {
+   "file": "px/32/campfire.png",
+   "h": 39,
+   "w": 34
+  },
+  "chars-dress": {
+   "cell": [
+    42,
+    63
+   ],
+   "file": "px/32/chars-dress.png",
+   "h": 819,
+   "perDir": 13,
+   "w": 1638
+  },
+  "chars-overlay": {
+   "cell": [
+    42,
+    63
+   ],
+   "file": "px/32/chars-overlay.png",
+   "h": 2646,
+   "perDir": 13,
+   "w": 1638
+  },
+  "chars-trousers": {
+   "cell": [
+    42,
+    63
+   ],
+   "file": "px/32/chars-trousers.png",
+   "h": 819,
+   "perDir": 13,
+   "w": 1638
+  },
+  "crop-beans": {
+   "file": "px/32/crop-beans.png",
+   "h": 81,
+   "w": 185
+  },
+  "crop-blueberry": {
+   "file": "px/32/crop-blueberry.png",
+   "h": 42,
+   "w": 185
+  },
+  "crop-cabbage": {
+   "file": "px/32/crop-cabbage.png",
+   "h": 37,
+   "w": 185
+  },
+  "crop-collards": {
+   "file": "px/32/crop-collards.png",
+   "h": 42,
+   "w": 185
+  },
+  "crop-corn": {
+   "file": "px/32/crop-corn.png",
+   "h": 87,
+   "w": 185
+  },
+  "crop-heirloom": {
+   "file": "px/32/crop-heirloom.png",
+   "h": 64,
+   "w": 185
+  },
+  "crop-hops": {
+   "file": "px/32/crop-hops.png",
+   "h": 112,
+   "w": 185
+  },
+  "crop-okra": {
+   "file": "px/32/crop-okra.png",
+   "h": 57,
+   "w": 185
+  },
+  "crop-peanut": {
+   "file": "px/32/crop-peanut.png",
+   "h": 53,
+   "w": 185
+  },
+  "crop-pepper": {
+   "file": "px/32/crop-pepper.png",
+   "h": 49,
+   "w": 185
+  },
+  "crop-potato": {
+   "file": "px/32/crop-potato.png",
+   "h": 55,
+   "w": 185
+  },
+  "crop-radish": {
+   "file": "px/32/crop-radish.png",
+   "h": 44,
+   "w": 185
+  },
+  "crop-squash": {
+   "file": "px/32/crop-squash.png",
+   "h": 36,
+   "w": 185
+  },
+  "crop-strawberry": {
+   "file": "px/32/crop-strawberry.png",
+   "h": 33,
+   "w": 185
+  },
+  "crop-sweetcorn": {
+   "file": "px/32/crop-sweetcorn.png",
+   "h": 84,
+   "w": 185
+  },
+  "crop-sweetpotato": {
+   "file": "px/32/crop-sweetpotato.png",
+   "h": 40,
+   "w": 185
+  },
+  "crop-tomato": {
+   "file": "px/32/crop-tomato.png",
+   "h": 70,
+   "w": 185
+  },
+  "crop-tulip": {
+   "file": "px/32/crop-tulip.png",
+   "h": 45,
+   "w": 185
+  },
+  "crop-watermelon": {
+   "file": "px/32/crop-watermelon.png",
+   "h": 44,
+   "w": 185
+  },
+  "crop-wheat": {
+   "file": "px/32/crop-wheat.png",
+   "h": 71,
+   "w": 185
+  },
+  "crystal": {
+   "file": "px/32/crystal.png",
+   "h": 33,
+   "w": 27
+  },
+  "deco-barrels": {
+   "file": "px/32/deco-barrels.png",
+   "h": 38,
+   "w": 37
+  },
+  "deco-beehives": {
+   "file": "px/32/deco-beehives.png",
+   "h": 43,
+   "w": 40
+  },
+  "deco-greenhouse": {
+   "file": "px/32/deco-greenhouse.png",
+   "h": 77,
+   "w": 85
+  },
+  "deco-haybale": {
+   "file": "px/32/deco-haybale.png",
+   "h": 42,
+   "w": 40
+  },
+  "deco-haystack": {
+   "file": "px/32/deco-haystack.png",
+   "h": 51,
+   "w": 44
+  },
+  "deco-modelA": {
+   "file": "px/32/deco-modelA.png",
+   "h": 53,
+   "w": 82
+  },
+  "deco-pump": {
+   "file": "px/32/deco-pump.png",
+   "h": 38,
+   "w": 31
+  },
+  "deco-scarecrow": {
+   "file": "px/32/deco-scarecrow.png",
+   "h": 39,
+   "w": 37
+  },
+  "deco-tractor": {
+   "file": "px/32/deco-tractor.png",
+   "h": 57,
+   "w": 79
+  },
+  "deco-wagon": {
+   "file": "px/32/deco-wagon.png",
+   "h": 49,
+   "w": 76
+  },
+  "deco-woodpile": {
+   "file": "px/32/deco-woodpile.png",
+   "h": 50,
+   "w": 50
+  },
+  "icon-acorn": {
+   "file": "px/32/icon-acorn.png",
+   "h": 25,
+   "w": 24
+  },
+  "icon-axe": {
+   "file": "px/32/icon-axe.png",
+   "h": 45,
+   "w": 34
+  },
+  "icon-basket": {
+   "file": "px/32/icon-basket.png",
+   "h": 38,
+   "w": 34
+  },
+  "icon-bass": {
+   "file": "px/32/icon-bass.png",
+   "h": 24,
+   "w": 34
+  },
+  "icon-beans": {
+   "file": "px/32/icon-beans.png",
+   "h": 39,
+   "w": 34
+  },
+  "icon-blackberry": {
+   "file": "px/32/icon-blackberry.png",
+   "h": 29,
+   "w": 24
+  },
+  "icon-blueberry": {
+   "file": "px/32/icon-blueberry.png",
+   "h": 33,
+   "w": 34
+  },
+  "icon-bream": {
+   "file": "px/32/icon-bream.png",
+   "h": 28,
+   "w": 34
+  },
+  "icon-cabbage": {
+   "file": "px/32/icon-cabbage.png",
+   "h": 35,
+   "w": 34
+  },
+  "icon-catfish": {
+   "file": "px/32/icon-catfish.png",
+   "h": 21,
+   "w": 34
+  },
+  "icon-charcoal": {
+   "file": "px/32/icon-charcoal.png",
+   "h": 36,
+   "w": 34
+  },
+  "icon-cheese": {
+   "file": "px/32/icon-cheese.png",
+   "h": 28,
+   "w": 34
+  },
+  "icon-chest": {
+   "file": "px/32/icon-chest.png",
+   "h": 33,
+   "w": 34
+  },
+  "icon-coin": {
+   "file": "px/32/icon-coin.png",
+   "h": 16,
+   "w": 15
+  },
+  "icon-coldwater": {
+   "file": "px/32/icon-coldwater.png",
+   "h": 56,
+   "w": 34
+  },
+  "icon-collards": {
+   "file": "px/32/icon-collards.png",
+   "h": 40,
+   "w": 34
+  },
+  "icon-corn": {
+   "file": "px/32/icon-corn.png",
+   "h": 45,
+   "w": 34
+  },
+  "icon-cornmeal": {
+   "file": "px/32/icon-cornmeal.png",
+   "h": 36,
+   "w": 34
+  },
+  "icon-crappie": {
+   "file": "px/32/icon-crappie.png",
+   "h": 27,
+   "w": 34
+  },
+  "icon-crate": {
+   "file": "px/32/icon-crate.png",
+   "h": 28,
+   "w": 29
+  },
+  "icon-drip": {
+   "file": "px/32/icon-drip.png",
+   "h": 30,
+   "w": 34
+  },
+  "icon-drum": {
+   "file": "px/32/icon-drum.png",
+   "h": 26,
+   "w": 34
+  },
+  "icon-egg": {
+   "file": "px/32/icon-egg.png",
+   "h": 41,
+   "w": 34
+  },
+  "icon-emptyjug": {
+   "file": "px/32/icon-emptyjug.png",
+   "h": 47,
+   "w": 34
+  },
+  "icon-feed": {
+   "file": "px/32/icon-feed.png",
+   "h": 34,
+   "w": 34
+  },
+  "icon-fence": {
+   "file": "px/32/icon-fence.png",
+   "h": 32,
+   "w": 34
+  },
+  "icon-gar": {
+   "file": "px/32/icon-gar.png",
+   "h": 17,
+   "w": 34
+  },
+  "icon-goatmilk": {
+   "file": "px/32/icon-goatmilk.png",
+   "h": 63,
+   "w": 34
+  },
+  "icon-greens": {
+   "file": "px/32/icon-greens.png",
+   "h": 31,
+   "w": 24
+  },
+  "icon-hardware": {
+   "file": "px/32/icon-hardware.png",
+   "h": 33,
+   "w": 34
+  },
+  "icon-hay": {
+   "file": "px/32/icon-hay.png",
+   "h": 36,
+   "w": 34
+  },
+  "icon-heirloom": {
+   "file": "px/32/icon-heirloom.png",
+   "h": 33,
+   "w": 34
+  },
+  "icon-hickory": {
+   "file": "px/32/icon-hickory.png",
+   "h": 26,
+   "w": 24
+  },
+  "icon-hoe": {
+   "file": "px/32/icon-hoe.png",
+   "h": 37,
+   "w": 34
+  },
+  "icon-hops": {
+   "file": "px/32/icon-hops.png",
+   "h": 47,
+   "w": 34
+  },
+  "icon-hotwater": {
+   "file": "px/32/icon-hotwater.png",
+   "h": 70,
+   "w": 34
+  },
+  "icon-hut": {
+   "file": "px/32/icon-hut.png",
+   "h": 39,
+   "w": 34
+  },
+  "icon-jug": {
+   "file": "px/32/icon-jug.png",
+   "h": 38,
+   "w": 34
+  },
+  "icon-key": {
+   "file": "px/32/icon-key.png",
+   "h": 39,
+   "w": 34
+  },
+  "icon-milk": {
+   "file": "px/32/icon-milk.png",
+   "h": 38,
+   "w": 34
+  },
+  "icon-mushroom": {
+   "file": "px/32/icon-mushroom.png",
+   "h": 28,
+   "w": 24
+  },
+  "icon-novaculite": {
+   "file": "px/32/icon-novaculite.png",
+   "h": 39,
+   "w": 34
+  },
+  "icon-oakleaf": {
+   "file": "px/32/icon-oakleaf.png",
+   "h": 30,
+   "w": 24
+  },
+  "icon-okra": {
+   "file": "px/32/icon-okra.png",
+   "h": 45,
+   "w": 34
+  },
+  "icon-peanut": {
+   "file": "px/32/icon-peanut.png",
+   "h": 32,
+   "w": 34
+  },
+  "icon-pepper": {
+   "file": "px/32/icon-pepper.png",
+   "h": 35,
+   "w": 34
+  },
+  "icon-pick": {
+   "file": "px/32/icon-pick.png",
+   "h": 40,
+   "w": 34
+  },
+  "icon-picnic": {
+   "file": "px/32/icon-picnic.png",
+   "h": 34,
+   "w": 34
+  },
+  "icon-pineknot": {
+   "file": "px/32/icon-pineknot.png",
+   "h": 30,
+   "w": 24
+  },
+  "icon-potato": {
+   "file": "px/32/icon-potato.png",
+   "h": 37,
+   "w": 34
+  },
+  "icon-preserves": {
+   "file": "px/32/icon-preserves.png",
+   "h": 37,
+   "w": 34
+  },
+  "icon-quartz": {
+   "file": "px/32/icon-quartz.png",
+   "h": 58,
+   "w": 34
+  },
+  "icon-radish": {
+   "file": "px/32/icon-radish.png",
+   "h": 57,
+   "w": 34
+  },
+  "icon-rod": {
+   "file": "px/32/icon-rod.png",
+   "h": 47,
+   "w": 34
+  },
+  "icon-scythe": {
+   "file": "px/32/icon-scythe.png",
+   "h": 45,
+   "w": 34
+  },
+  "icon-seedpacket": {
+   "file": "px/32/icon-seedpacket.png",
+   "h": 45,
+   "w": 34
+  },
+  "icon-seedsack": {
+   "file": "px/32/icon-seedsack.png",
+   "h": 43,
+   "w": 34
+  },
+  "icon-shingles": {
+   "file": "px/32/icon-shingles.png",
+   "h": 36,
+   "w": 34
+  },
+  "icon-sprinkler": {
+   "file": "px/32/icon-sprinkler.png",
+   "h": 38,
+   "w": 34
+  },
+  "icon-squash": {
+   "file": "px/32/icon-squash.png",
+   "h": 50,
+   "w": 34
+  },
+  "icon-stand": {
+   "file": "px/32/icon-stand.png",
+   "h": 38,
+   "w": 34
+  },
+  "icon-staves": {
+   "file": "px/32/icon-staves.png",
+   "h": 37,
+   "w": 34
+  },
+  "icon-stone": {
+   "file": "px/32/icon-stone.png",
+   "h": 34,
+   "w": 34
+  },
+  "icon-strawberry": {
+   "file": "px/32/icon-strawberry.png",
+   "h": 41,
+   "w": 34
+  },
+  "icon-striper": {
+   "file": "px/32/icon-striper.png",
+   "h": 24,
+   "w": 34
+  },
+  "icon-sweetcorn": {
+   "file": "px/32/icon-sweetcorn.png",
+   "h": 44,
+   "w": 34
+  },
+  "icon-sweetpotato": {
+   "file": "px/32/icon-sweetpotato.png",
+   "h": 38,
+   "w": 34
+  },
+  "icon-tea": {
+   "file": "px/32/icon-tea.png",
+   "h": 35,
+   "w": 34
+  },
+  "icon-tomato": {
+   "file": "px/32/icon-tomato.png",
+   "h": 37,
+   "w": 34
+  },
+  "icon-trout": {
+   "file": "px/32/icon-trout.png",
+   "h": 22,
+   "w": 34
+  },
+  "icon-tub": {
+   "file": "px/32/icon-tub.png",
+   "h": 27,
+   "w": 34
+  },
+  "icon-tulip": {
+   "file": "px/32/icon-tulip.png",
+   "h": 44,
+   "w": 34
+  },
+  "icon-walleye": {
+   "file": "px/32/icon-walleye.png",
+   "h": 23,
+   "w": 34
+  },
+  "icon-watermelon": {
+   "file": "px/32/icon-watermelon.png",
+   "h": 39,
+   "w": 34
+  },
+  "icon-wheat": {
+   "file": "px/32/icon-wheat.png",
+   "h": 49,
+   "w": 34
+  },
+  "icon-whetstone": {
+   "file": "px/32/icon-whetstone.png",
+   "h": 27,
+   "w": 34
+  },
+  "icon-whitebass": {
+   "file": "px/32/icon-whitebass.png",
+   "h": 26,
+   "w": 34
+  },
+  "icon-wood": {
+   "file": "px/32/icon-wood.png",
+   "h": 34,
+   "w": 34
+  },
+  "lamp-deco": {
+   "file": "px/32/lamp-deco.png",
+   "h": 81,
+   "w": 32
+  },
+  "lamp-gas": {
+   "file": "px/32/lamp-gas.png",
+   "h": 66,
+   "w": 18
+  },
+  "lamp-lantern": {
+   "file": "px/32/lamp-lantern.png",
+   "h": 31,
+   "w": 14
+  },
+  "lamp-led": {
+   "file": "px/32/lamp-led.png",
+   "h": 72,
+   "w": 18
+  },
+  "lamp-sodium": {
+   "file": "px/32/lamp-sodium.png",
+   "h": 60,
+   "w": 22
+  },
+  "outcrop": {
+   "file": "px/32/outcrop.png",
+   "h": 43,
+   "w": 36
+  },
+  "rock": {
+   "file": "px/32/rock.png",
+   "h": 27,
+   "w": 32
+  },
+  "sign": {
+   "file": "px/32/sign.png",
+   "h": 33,
+   "w": 34
+  },
+  "street-bench": {
+   "file": "px/32/street-bench.png",
+   "h": 32,
+   "w": 37
+  },
+  "street-bikes": {
+   "file": "px/32/street-bikes.png",
+   "h": 41,
+   "w": 40
+  },
+  "street-buggy": {
+   "file": "px/32/street-buggy.png",
+   "h": 35,
+   "w": 66
+  },
+  "street-car26a": {
+   "file": "px/32/street-car26a.png",
+   "h": 36,
+   "w": 66
+  },
+  "street-car55a": {
+   "file": "px/32/street-car55a.png",
+   "h": 36,
+   "w": 68
+  },
+  "street-car55b": {
+   "file": "px/32/street-car55b.png",
+   "h": 32,
+   "w": 68
+  },
+  "street-carriage": {
+   "file": "px/32/street-carriage.png",
+   "h": 35,
+   "w": 66
+  },
+  "street-coupe31": {
+   "file": "px/32/street-coupe31.png",
+   "h": 37,
+   "w": 66
+  },
+  "street-hitch": {
+   "file": "px/32/street-hitch.png",
+   "h": 38,
+   "w": 40
+  },
+  "street-hydrant": {
+   "file": "px/32/street-hydrant.png",
+   "h": 34,
+   "w": 24
+  },
+  "street-planter": {
+   "file": "px/32/street-planter.png",
+   "h": 38,
+   "w": 34
+  },
+  "street-sedan31": {
+   "file": "px/32/street-sedan31.png",
+   "h": 43,
+   "w": 66
+  },
+  "street-umbrella": {
+   "file": "px/32/street-umbrella.png",
+   "h": 45,
+   "w": 44
+  },
+  "tex-asphalt": {
+   "file": "px/32/tex-asphalt.png",
+   "h": 128,
+   "w": 128
+  },
+  "tex-brick": {
+   "file": "px/32/tex-brick.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-clay": {
+   "file": "px/32/tex-clay.png",
+   "h": 128,
+   "w": 128
+  },
+  "tex-creek": {
+   "file": "px/32/tex-creek.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-flagstone": {
+   "file": "px/32/tex-flagstone.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-forest": {
+   "file": "px/32/tex-forest.png",
+   "h": 160,
+   "w": 160
+  },
+  "tex-grass": {
+   "file": "px/32/tex-grass.png",
+   "h": 160,
+   "w": 160
+  },
+  "tex-gravel": {
+   "file": "px/32/tex-gravel.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-lake": {
+   "file": "px/32/tex-lake.png",
+   "h": 192,
+   "w": 192
+  },
+  "tex-path": {
+   "file": "px/32/tex-path.png",
+   "h": 96,
+   "w": 96
+  },
+  "tex-pavers": {
+   "file": "px/32/tex-pavers.png",
+   "h": 80,
+   "w": 80
+  },
+  "tex-road": {
+   "file": "px/32/tex-road.png",
+   "h": 128,
+   "w": 128
+  },
+  "tex-rock": {
+   "file": "px/32/tex-rock.png",
+   "h": 128,
+   "w": 128
+  },
+  "tex-sand": {
+   "file": "px/32/tex-sand.png",
+   "h": 128,
+   "w": 128
+  },
+  "tex-snow": {
+   "file": "px/32/tex-snow.png",
+   "h": 128,
+   "w": 128
+  },
+  "tex-soil": {
+   "file": "px/32/tex-soil.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-soil-wet": {
+   "file": "px/32/tex-soil-wet.png",
+   "h": 64,
+   "w": 64
+  },
+  "tex-tufa": {
+   "file": "px/32/tex-tufa.png",
+   "h": 128,
+   "w": 128
+  },
+  "tree-magnolia": {
+   "file": "px/32/tree-magnolia.png",
+   "h": 78,
+   "w": 61
+  },
+  "tree-oak-fa": {
+   "file": "px/32/tree-oak-fa.png",
+   "h": 93,
+   "w": 75
+  },
+  "tree-oak-sp": {
+   "file": "px/32/tree-oak-sp.png",
+   "h": 93,
+   "w": 75
+  },
+  "tree-oak-su": {
+   "file": "px/32/tree-oak-su.png",
+   "h": 93,
+   "w": 75
+  },
+  "tree-oak-wi": {
+   "file": "px/32/tree-oak-wi.png",
+   "h": 97,
+   "w": 75
+  },
+  "tree-pine": {
+   "file": "px/32/tree-pine.png",
+   "h": 78,
+   "w": 57
+  },
+  "trough": {
+   "file": "px/32/trough.png",
+   "h": 29,
+   "w": 50
+  },
+  "tuft": {
+   "file": "px/32/tuft.png",
+   "h": 31,
+   "w": 29
+  },
+  "vista-1": {
+   "file": "px/32/vista-1.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-2": {
+   "file": "px/32/vista-2.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-3": {
+   "file": "px/32/vista-3.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-4": {
+   "file": "px/32/vista-4.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-5": {
+   "file": "px/32/vista-5.png",
+   "h": 320,
+   "w": 480
+  },
+  "vista-6": {
+   "file": "px/32/vista-6.png",
+   "h": 320,
+   "w": 480
+  }
+ }
+}
