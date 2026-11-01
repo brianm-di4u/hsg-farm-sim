@@ -1,6 +1,6 @@
 // Frame rendering: chunk-cached ground and buildings, a y-sorted dynamic layer, particles,
 // weather and night lighting.
-import { W, H, G } from '../sim/world.js';
+import { W, H, G, FIELD } from '../sim/world.js';
 import * as sim from '../sim/sim.js';
 import { PEOPLE, CHAPTERS, QUESTS, ITEMS } from '../sim/data.js';
 import { palette, LIGHT, NIGHT, SIGN_FONT, rgba, mix, shade } from './palette.js';
@@ -298,6 +298,7 @@ export function draw(gm, ui) {
     const sp = PA.decoSprite(name, dw, u);
     if (sp) list.push({ y: dy, sh: [dx, dy + 0.02, dw * 0.46], d: () => ctx.drawImage(sp.c, dx * u + sp.ox, dy * u + sp.oy) });
   }
+  if (PX.on) scatter(gm, list, ctx, sx0, sy0, sx1, sy1, u);
   for (const b of gm.world.buildings) {
     if (b.x + b.w < sx0 - 1 || b.x > sx1 + 1 || b.y > sy1 + 1 || b.y + b.h < sy0 - 1) continue;
     const sp = PA.buildingSprite(S.ch, b, u, S.weather === 'snow');
@@ -582,6 +583,39 @@ function blobShadow(ctx, x, y, r, u, sun) {
   if (PX.on) { const e = pxEllipse(r * 1.4 * u, r * u * 0.42); ctx.drawImage(e, Math.round((x + sun.sx * 0.12) * u - e.width / 2), Math.round((y + 0.02) * u - e.height / 2)); }
   else { ctx.beginPath(); ctx.ellipse((x + sun.sx * 0.12) * u, (y - 0.04) * u, r * u, r * u * 0.38, 0, 0, 7); ctx.fill(); }
   ctx.globalAlpha = 1;
+}
+// Pixel style: render-only dressing scattered on grass so the farm and the shore aren't bare lawn: stumps, field
+// stones, logs, shrubs and wildflowers round the farm (only flowers and stones, sparse, in the unworked field), era
+// tools in the yard, reeds
+// along creek and lake edges. Placement is a fixed function of the tile; a prop shows only once its art exists.
+const SCATTER = { all: ['deco-stump', 'deco-rocks', 'deco-bush', 'deco-flowers', 'deco-logs', 'deco-flowers', 'deco-bush', 'deco-rocks'],
+  yard: { 1: 'deco-barrow', 2: 'deco-plow', 3: 'deco-plow', 4: 'deco-milkcans', 5: 'deco-milkcans', 6: 'deco-barrow' } };
+const SCATTER_W = { 'deco-stump': 0.8, 'deco-rocks': 0.9, 'deco-logs': 1.3, 'deco-bush': 0.9, 'deco-flowers': 0.9, 'deco-barrow': 1.0, 'deco-plow': 1.2, 'deco-reeds': 0.75, 'deco-milkcans': 0.65, 'deco-rowboat': 1.7 };
+function scatter(gm, list, ctx, sx0, sy0, sx1, sy1, u) {
+  const S = gm.S, g = gm.world.g, at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? -1 : g[y * W + x]);
+  const water = (v) => v === G.WATER || v === G.DEEP;
+  const taken = new Set([...(PA.DECO[S.ch] || []), ...(PA.STREET_PROPS[S.ch] || [])].flatMap(([, dx, dy, dw]) => [-1, 0, 1].map((o) => Math.floor(dx + o * dw * 0.5) + ',' + Math.floor(dy - 0.05))));
+  for (let y = Math.max(1, sy0); y <= Math.min(H - 2, sy1); y++) for (let x = Math.max(1, sx0); x <= Math.min(W - 2, sx1); x++) {
+    if (at(x, y) !== G.GRASS) continue;
+    const k = x + ',' + y;
+    if (S.objs[k] || S.crops[k] || S.soil[k] || gm.world.special[k] || taken.has(k)) continue;
+    let name = null;
+    const n = noise(x, y, 731);
+    if (x >= FIELD.x0 - 1 && x <= FIELD.x1 + 1 && y >= FIELD.y0 - 1 && y <= FIELD.y1 + 1) {
+      // Unworked field: only wildflowers and the odd field stone, sparse, and never beside worked soil (tilling clears them).
+      let near = false; for (let j = -1; j <= 1 && !near; j++) for (let i = -1; i <= 1; i++) if (S.soil[(x + i) + ',' + (y + j)] || S.crops[(x + i) + ',' + (y + j)]) { near = true; break; }
+      name = !near && n < 0.06 ? (noise(x, y, 735) < 0.7 ? 'deco-flowers' : 'deco-rocks') : null;
+      if (!name || !artImg(name)) continue;
+    }
+    const lake = (i, j) => water(at(i, j)) && gm.world.lake[j * W + i];
+    if (name) { /* chosen above */ } else if ((lake(x, y + 1) || lake(x + 1, y) || lake(x - 1, y)) && n < 0.06) name = 'deco-rowboat'; // a boat pulled up here and there
+    else if ((water(at(x + 1, y)) || water(at(x - 1, y)) || water(at(x, y + 1))) && n < 0.4) name = 'deco-reeds';
+    else if (x < 24 && n < 0.05) name = n < 0.006 ? SCATTER.yard[S.ch] : SCATTER.all[Math.floor(noise(x, y, 732) * SCATTER.all.length)];
+    if (!name || !artImg(name)) continue;
+    const w = SCATTER_W[name] || 1, sp = PA.decoSprite(name, w, u); if (!sp) continue;
+    const bx = x + 0.3 + noise(x, y, 733) * 0.4, by = y + 0.75 + noise(x, y, 734) * 0.2;
+    list.push({ y: by, sh: name === 'deco-flowers' || name === 'deco-reeds' ? null : [bx, by + 0.02, w * 0.4], d: () => ctx.drawImage(sp.c, Math.round(bx * u + sp.ox), Math.round(by * u + sp.oy)) });
+  }
 }
 // Which generated prop stands on a spring tile in the pixel style (1886 on, once its art has loaded), or null.
 function springProp(ch, x, y, kind) {
@@ -1163,16 +1197,17 @@ function townsfolk(gm, now) {
     const g = gm.world.g, rows = [];
     for (let y = 0; y < H; y++) { let run = 0, best = null; for (let x = 0; x <= W; x++) { if (x < W && g[y * W + x] === G.STREET) run++; else { if (run >= 14 && (!best || run > best[1] - best[0])) best = [x - run, x - 1]; run = 0; } } if (best) rows.push([y, ...best]); }
     const F = FOLK[S.ch] || FOLK[3], n = Math.min(6, rows.length * 2), list = [];
+    let wn = 0; // women so far: period headwear cycles bonnet, bare head, headscarf, so no two passers-by are clones
     for (let i = 0; i < n; i++) {
       const r = rows[i % rows.length], h = (k) => noise(i, S.ch, 900 + k);
       const woman = h(1) < 0.45, dress = woman && S.ch < 5;
       list.push({ id: `folk${S.ch}-${i}`, x: 0, y: 0, y0: r[0] + 0.55 + h(3) * 0.3, x0: r[1] + 0.5, x1: r[2] + 0.5, off: h(2) * 2, speed: 1.3 + h(5) * 0.7, step: 0,
-        look: { shirt: F.shirts[Math.floor(h(6) * F.shirts.length)], pants: F.pants[Math.floor(h(7) * F.pants.length)], hat: woman && S.ch <= 3 ? (h(12) < 0.5 ? 'bonnet' : h(12) < 0.75 ? 'scarf' : 'none') : F.hats[Math.floor(h(8) * F.hats.length)], hair: HAIR[Math.floor(h(9) * HAIR.length)], skin: Math.floor(h(10) * 5), dress, ponytail: woman && S.ch >= 5, apron: dress && h(11) < 0.4 ? '#e8e0cc' : undefined } });
+        look: { shirt: F.shirts[Math.floor(h(6) * F.shirts.length)], pants: F.pants[Math.floor(h(7) * F.pants.length)], hat: woman && S.ch <= 3 ? ['bonnet', 'none', 'scarf'][wn++ % 3] : F.hats[Math.floor(h(8) * F.hats.length)], hair: HAIR[Math.floor(h(9) * HAIR.length)], skin: Math.floor(h(10) * 5), dress, ponytail: woman && S.ch >= 5, apron: dress && h(11) < 0.4 ? '#e8e0cc' : undefined } });
     }
     R.folk = { key, list };
   }
   // Positions are a function of the clock (tiles per second, back and forth), so pinned-clock captures repeat exactly.
-  const obs = [S.player, ...Object.values(S.npcs).filter((n) => n && !n.hidden && n.x != null)];
+  const obs = [S.player, ...Object.values(S.npcs).filter((n) => n && !n.hidden && n.x != null)], posts = gm.world.lamps.filter((l) => l.post);
   for (const w of R.folk.list) {
     const len = w.x1 - w.x0, t = R.reduced ? w.off * len : (now / 1000) * w.speed + w.off * len, ph = ((t % (2 * len)) + 2 * len) % (2 * len);
     w.x = w.x0 + (ph < len ? ph : 2 * len - ph); w.face = ph < len ? 'right' : 'left'; w.step = t * 4.5;
@@ -1180,6 +1215,7 @@ function townsfolk(gm, now) {
     // and one that would still overlap is not drawn (render-only walkers never stand in someone's sprite).
     w.y = w.y0; w.hide = false;
     for (const o of obs) { const dx = Math.abs(w.x - o.x), dy = w.y0 - o.y; if (dx < 1.8 && Math.abs(dy) < 1.6) w.y += (dy >= 0 ? 1 : -1) * 1.4 * (1 - dx / 1.8); }
+    for (const l of posts) { const dx = Math.abs(w.x - l.x), dy = w.y - (l.y + 0.05); if (dx < 0.8 && Math.abs(dy) < 0.6) w.y += (dy >= 0 ? 1 : -1) * (0.6 - Math.abs(dy)); } // and step round lamp posts
     for (const o of obs) if (Math.abs(w.x - o.x) < 0.95 && Math.abs(w.y - o.y) < 1.3) w.hide = true; // a figure is 1.5 tiles tall
   }
   return R.folk.list.filter((w) => !w.hide);

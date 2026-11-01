@@ -357,6 +357,56 @@
         "lighting": 6
       },
       "date": "2026-11-01"
+    },
+    {
+      "loop": 7,
+      "scores": {
+        "pixel": 6.5,
+        "characters": 5,
+        "environment": 6.5,
+        "lighting": 6,
+        "animation": 5.5,
+        "ui": 7,
+        "readability": 6.5,
+        "authenticity": 7
+      },
+      "total": 50,
+      "stalls": 1,
+      "verdict": "continue",
+      "critics": {
+        "critic-claude": {
+          "pixel": 6.5,
+          "characters": 5,
+          "environment": 6.5,
+          "lighting": 6,
+          "animation": 5.5,
+          "ui": 6.5,
+          "readability": 6.5,
+          "authenticity": 7
+        },
+        "critic-codex": {
+          "pixel": 6,
+          "characters": 5.5,
+          "environment": 6.5,
+          "lighting": 6,
+          "animation": 5.5,
+          "ui": 7,
+          "readability": 6.5,
+          "authenticity": 6.5
+        },
+        "advocate": {
+          "pixel": 6.5,
+          "characters": 5.5,
+          "environment": 6.5,
+          "lighting": 6,
+          "animation": 5.5,
+          "ui": 7,
+          "readability": 6.5,
+          "authenticity": 7
+        }
+      },
+      "calibration": null,
+      "date": "2026-11-01"
     }
   ]
 }

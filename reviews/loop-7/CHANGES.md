@@ -1,0 +1,10 @@
+- **Side and back views of people:** headwear is scaled per view direction in the Blender rig.
+  - Front views keep the oversized silhouette a hat needs to read at sprite size.
+  - In profile and from behind, hats are drawn 5–18% smaller.
+  - The sun bonnet's forward brim is flattened to half its depth.
+  - Townsfolk and neighbours seen from the side or back show a head and shoulders under the hat instead of a disc or dome bigger than the body.
+- **Townsfolk:** passing women in 1871–1886 wear a bonnet, a headscarf or no hat, instead of identical bonnets.
+- **Animals:** animal sprites keep their white paint. The packer no longer treats a white patch enclosed by darker coat as an opening, so the goat no longer shows grass through its side.
+- **UI:**
+  - Slot numbers and stack counts sit on chips with a light 1-dot ring, so a digit never runs into the icon beside it.
+  - On touch screens, buttons no longer show keyboard hints ("Esc").

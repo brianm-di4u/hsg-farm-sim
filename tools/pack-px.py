@@ -47,7 +47,10 @@ FAMILY = [('tex-', dict(colors=10, smooth=3, outline='none')),
           ('', dict(colors=18, smooth=3, outline='selout', line_weight=1.5))]
 SKIP = ('chars-',)
 # Pixel-only images (no painted counterpart): generated sources in art-src/px-gen/, width in tiles.
-EXTRA = {'prop-springbox': 0.85, 'prop-springdisplay': 1.15, 'prop-pump': 0.6, 'prop-bench': 1.1, 'prop-pool': 2.3}  # character atlases: the character pipeline renders these natively
+EXTRA = {'prop-springbox': 0.85, 'prop-springdisplay': 1.15, 'prop-pump': 0.6, 'prop-bench': 1.1, 'prop-pool': 2.3,
+         # loop 7 farm and shore dressing (batch-10)
+         'deco-stump': 0.8, 'deco-rocks': 0.9, 'deco-logs': 1.3, 'deco-bush': 0.9, 'deco-flowers': 0.9, 'deco-barrow': 1.0,
+         'deco-plow': 1.2, 'deco-reeds': 0.75, 'deco-rowboat': 1.7, 'deco-milkcans': 0.65}  # character atlases: the character pipeline renders these natively
 
 
 def match(table, name):

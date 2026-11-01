@@ -1,0 +1,9 @@
+- **Farm and shore dressing:** ten new generated pixel props (`art-src/px-prompts/batch-10.md`), scattered render-only on grass at fixed, tile-seeded spots:
+  - Round the farm: stumps, field stones, felled logs, berry shrubs and wildflower patches.
+  - An era tool now and then in the yard: a wheelbarrow, a walking plough, milk cans.
+  - Reeds and cattails along the creek and lake edges.
+  - A rowboat pulled up here and there on the lake shore.
+  - Inside the unworked field: only wildflowers and the odd field stone, sparse, never next to worked soil (tilling clears them).
+- **Hats in profile and from behind** are smaller again: the slouch brim, fedora, visor and toque are drawn 20–32% smaller than in the front view. In the walk strip, the head and shoulders now show under the hat.
+- **Townsfolk:** passing women in 1871–1886 cycle through a bonnet, a bare head and a headscarf, so no two in a row are clones.
+- **Phone hotbar:** slot numbers and stack counts are half the size on 2× screens (still whole device pixels), so they no longer cover the item icons.

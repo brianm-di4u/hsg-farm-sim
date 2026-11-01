@@ -23,4 +23,4 @@ Generated images go to `art-src/px-gen/<name>.png` (git-ignored like all art-src
 
 Batches: `batch-1.md` (1807, 1871, farm cabin and plank house), `batch-2.md` (1886), `batch-3.md` (1931),
 `batch-4.md` (1955, 2026), `batch-5.md` (nature and lamps), `batch-6.md` (farm and street props), `batch-7.md` (crops),
-`batch-8.md` (terrain textures), `batch-9.md` (panoramas).
+`batch-8.md` (terrain textures), `batch-9.md` (panoramas), `batch-10.md` (farm and shore dressing).

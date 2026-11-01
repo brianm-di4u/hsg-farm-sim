@@ -109,7 +109,10 @@ async function setup(page, s) {
     // Staging so characters can be judged: neighbours placed round the player, animals in the pen.
     if (s.npcsNear || s.talk) {
       const st = g.getState(), ids = st.npcs.map((n) => n.id).slice(0, 3), p = st.player;
-      const spots = [[-1.6, -0.2], [1.6, -0.2], [0, -1.6]];
+      // Three spots round the player; a spot on a blocked tile (inside a tent, a wall) gives way to the next free one,
+      // as a neighbour never stands inside a building.
+      const free = [[-1.6, -0.2], [1.6, -0.2], [0, -1.6], [-1.6, 1.2], [1.6, 1.2], [-2.6, -0.2], [2.6, -0.2], [0, 1.8]].filter(([dx, dy]) => !g.act('blocked', Math.floor(p.x + dx), Math.floor(p.y + dy - 0.5)));
+      const spots = free.length >= 3 ? free : [[-1.6, -0.2], [1.6, -0.2], [0, -1.6]];
       g.setState({ npcs: Object.fromEntries(ids.map((id, i) => [id, { hidden: false, x: p.x + spots[i][0], y: p.y + spots[i][1], face: 'down', path: null, moving: false }])) });
     }
     if (s.animals) g.setState({ animals: s.animals.map(([kind, x, y], i) => ({ kind, x, y, petDay: -1, born: 0, face: i % 2 ? 'left' : 'right' })) });

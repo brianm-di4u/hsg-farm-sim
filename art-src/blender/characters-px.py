@@ -183,8 +183,8 @@ def hatobj(name, bm, loc=(0, 0, 0), mat='grey'):
 # Pixel style: headwear seen in profile or from behind is drawn smaller than in the front views (a front view needs the
 # oversized silhouette to read; side and back views of the same hat became discs bigger than the body). Per part:
 # uniform scale, or (x, y, z) where y is the depth toward the face.
-HAT_SIDE = {'brim': 0.82, 'fedora': 0.85, 'cap_d': 0.95, 'cap_v': 0.8, 'helmet': 0.92, 'bonnet_s': 0.92, 'bonnet_f': (0.8, 0.5, 0.8),
-            'scarf': 0.95, 'toque': 0.85, 'capfur': 0.9}
+HAT_SIDE = {'brim': 0.68, 'fedora': 0.75, 'cap_d': 0.95, 'cap_v': 0.7, 'helmet': 0.85, 'bonnet_s': 0.92, 'bonnet_f': (0.8, 0.5, 0.8),
+            'scarf': 0.95, 'toque': 0.8, 'capfur': 0.85}
 def hat_scale(o, direction):
     if direction == 'down':
         return (1, 1, 1)

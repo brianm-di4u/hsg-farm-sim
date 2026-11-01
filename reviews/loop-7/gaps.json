@@ -1,0 +1,220 @@
+[
+  {
+    "id": "G-regression-animation",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered animation since loop 6",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-sort-collision-staging",
+    "category": "readability",
+    "expectedGain": 0.75,
+    "severity": 4,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "crops/R08-player",
+      "crops/R15-player",
+      "strips/R13",
+      "desktop/R06",
+      "crops/R16-npcs",
+      "desktop/R08"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Foot-line sort for props (R08 post, R15 trough); 1-tile collision footprint on lamp posts and signposts with NPC paths kept off it (R13, R06); scripted groups keep NPCs out of the tile behind the player (R16 Ezra). Test: no prop whose foot y is less than an actor's foot y draws over that actor in any capture.",
+    "priority": 1.125,
+    "selected": true
+  },
+  {
+    "id": "G-1886-townsfolk-variety",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R08",
+      "mobile/R04",
+      "desktop/R09"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Send 1886 passers-by through the bonnet/headscarf/no-hat roll that already works in 1871, plus at least 3 skirt swatches. Test: no two visible 1886 women share both headwear and skirt colour.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-checklist-headwear",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 5,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R03-player",
+      "crops/R17-player",
+      "crops/R16-npcs",
+      "crops/R11-npcs",
+      "crops/R06-player"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Rig parts for Caleb's slouch brim (breaking the head outline by at least 2 px a side), Ray's pinched fedora with snapped brim, Josiah's fur cap with tail, Margaux's scarf at least 60 degrees of hue from her hair, June's ponytail, Walt's knickers and stockings, Ada's pinned hair; 3 mouth and brow variants per named person.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-tool-feel",
+    "category": "animation",
+    "expectedGain": 1,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R14",
+      "strips/R13"
+    ],
+    "fix": "Hoe: 2-frame crouch, a 3-5 particle soil burst plus clod pop, 1-frame squash with 60 ms hit-stop, 2-frame recovery. Walk: 1 px head and hat bob on passing frames, 6 distinct poses.",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-profile-back-headwear",
+    "category": "characters",
+    "expectedGain": 0.75,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "strips/R13",
+      "desktop/R05",
+      "desktop/R04",
+      "desktop/R09"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Side and back views: brim width at most shoulder width plus 2 art px, with nape and collar visible, for the player, the 1931 straw hat and the 1886 bonnets; a sheet script checks every side and back frame.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-weather-time-grade",
+    "category": "lighting",
+    "expectedGain": 0.75,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R09",
+      "desktop/R07",
+      "desktop/R08",
+      "desktop/R06"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Rain: 2-tone dithered road sheen, puddle tiles with 3-frame splash rings, 10% darker and cooler grade. A warm, low-angle banded grade from 17:30. Fog: 3 banded density layers with distance falloff instead of a flat wash.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-empty-screens",
+    "category": "environment",
+    "expectedGain": 0.75,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R03",
+      "desktop/R07",
+      "desktop/R08",
+      "desktop/R02"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Farm: at least 4 activity clusters, a path network and 2-3 large grass patches. Lake: reeds, lily pads, rocks, moored boat, posted pier end. Springs: tufa terraces, runnels, boardwalk. Merge the seed and sprout pads into continuous soil.",
+    "priority": 0.563,
+    "selected": false
+  },
+  {
+    "id": "G-mobile-hotbar-chips",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R04",
+      "mobile/R12"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "Below 768 px: slot number as a 1x digit outside the slot's top edge; stack count only above 1, bottom-right, chip at most 25% of slot area. Test: at least 80% of icon pixels visible in slots 7 and 8.",
+    "priority": 0.5,
+    "selected": true
+  },
+  {
+    "id": "G-label-spacing",
+    "category": "readability",
+    "expectedGain": 0.25,
+    "severity": 1,
+    "effort": "S",
+    "workstream": "WS6",
+    "evidence": [
+      "crops/R16-npcs",
+      "crops/R11-npcs"
+    ],
+    "fix": "At least 4 art px between name-tag boxes, staggered vertically when needed, or show names only for the targeted NPC.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-character-ramps",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS1",
+    "evidence": [
+      "strips/R13",
+      "crops/R17-player",
+      "desktop/R05"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Posterize each character material to a 3-4 tone hue-shifted ramp from the era palette, keeping the outline. Test: at most 4 colours per character material.",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-sprite-light-shadow",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "L",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R05",
+      "crops/R05-player",
+      "desktop/R10"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Directional cast shadows from the sun angle for actors and tall props instead of blob shadows; lamp tint and a 1 px rim on sprites inside lamp pools, with lighter dither over faces.",
+    "priority": 0.188,
+    "selected": false
+  },
+  {
+    "id": "G-row-vehicles-layout",
+    "category": "authenticity",
+    "expectedGain": 0.5,
+    "severity": 2,
+    "effort": "L",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R05",
+      "desktop/R19"
+    ],
+    "fix": "Period vehicles on the 1931, 1955 and 2026 streets; then the Row as one continuous Central Avenue frontage under the mountain. Five-globe lamps already exist.",
+    "priority": 0.037,
+    "selected": false
+  }
+]

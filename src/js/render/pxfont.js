@@ -57,12 +57,14 @@ export function pxText(ctx, text, x, y, color, scale = 1) {
 // The text as a tiny SVG on a solid chip, 2 CSS px per font pixel with crisp edges, as a data URL: DOM numbers (slot
 // keys, stack counts) drawn like this get no sub-pixel colour fringes and stay on the pixel grid.
 const svgs = new Map();
-export function pxTextSVG(text, color = '#f4ecd8', bg = '#18140f') {
-  const k = `${text}|${color}|${bg}`;
+export function pxTextSVG(text, color = '#f4ecd8', bg = '#18140f', ring = '#d8cfbc') {
+  const k = `${text}|${color}|${bg}|${ring}|${typeof devicePixelRatio !== 'undefined' ? devicePixelRatio : 1}`;
   if (svgs.has(k)) return svgs.get(k);
-  const w = pxTextWidth(text) + 2, h = 9, s = 2;
-  let r = `<rect width="${w}" height="${h}" fill="${bg}"/>`, x = 1;
-  for (const ch of text) { const g = glyph(ch); for (let y = 0; y < 7; y++) for (let c = 0; c < g[y].length; c++) if (g[y][c] === '#') r += `<rect x="${x + c}" y="${y + 1}" width="1" height="1"/>`; x += g[0].length + 1; }
+  // A 1-dot light ring round the chip keeps the digits apart from the icon beside them (slot 5 read "57").
+  // 2 CSS px a dot below 2x; from 2x up 1 CSS px is already 2+ device px, and the chip stays small on a phone slot.
+  const w = pxTextWidth(text) + 4, h = 11, s = typeof devicePixelRatio !== 'undefined' && devicePixelRatio >= 2 ? 1 : 2;
+  let r = `<rect width="${w}" height="${h}" fill="${ring}"/><rect x="1" y="1" width="${w - 2}" height="${h - 2}" fill="${bg}"/>`, x = 2;
+  for (const ch of text) { const g = glyph(ch); for (let y = 0; y < 7; y++) for (let c = 0; c < g[y].length; c++) if (g[y][c] === '#') r += `<rect x="${x + c}" y="${y + 2}" width="1" height="1"/>`; x += g[0].length + 1; }
   const url = 'data:image/svg+xml,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w * s}" height="${h * s}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" fill="${color}">${r}</svg>`);
   svgs.set(k, url);
   return url;
