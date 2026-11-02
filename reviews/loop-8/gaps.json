@@ -1,0 +1,237 @@
+[
+  {
+    "id": "G-regression-pixel",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered pixel since loop 7",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-regression-ui",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered ui since loop 7",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-regression-authenticity",
+    "category": "authenticity",
+    "expectedGain": 0.5,
+    "severity": 5,
+    "effort": "S",
+    "workstream": "WS1",
+    "fix": "Find and undo what lowered authenticity since loop 7",
+    "priority": 99,
+    "selected": true
+  },
+  {
+    "id": "G-char-checklist-headwear",
+    "category": "characters",
+    "expectedGain": 1,
+    "severity": 5,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R03-player",
+      "crops/R06-player",
+      "crops/R19-player",
+      "crops/R11-npcs",
+      "crops/R16-npcs"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Caleb: low-crown slouch hat whose wide brim breaks the head outline by at least 2 art px each side, no chest smear; Sam: cap bill projecting past the forehead edge; June: ponytail in front and side frames plus rolled cuffs; Walt: knickers lower body with white stockings and a recoloured collar; Josiah: fur cap with tail, grey beard, fringed shirt; Ezra: long coat and walking stick",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-pixel-fog-quantize",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS1",
+    "evidence": [
+      "desktop/R08"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Redraw fog curls at least 2 art px thick with hard edges, and render terrace ovals and steam as 2-3-step ordered-dither alpha like the R05 lamp pools",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-light-sprite-shadows",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R06"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Hard-edged 2-art-px darkest-ramp contact shadow under every character and animal, elongated at dusk",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-env-farm-variation-shore",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R02",
+      "desktop/R17",
+      "desktop/R07",
+      "desktop/R14"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Seed farm prop, shrub and flower placement per era so R02 and R17 differ; 3-4 variants per weed, reed and shrub with flips and sub-tile jitter; check that batch-10 reeds and rowboats render on the R07 shore",
+    "priority": 0.75,
+    "selected": true
+  },
+  {
+    "id": "G-auth-1886-signs-winter",
+    "category": "authenticity",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "S",
+    "workstream": "WS7",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R10"
+    ],
+    "benchmark": "snes-earthbound-1.png",
+    "fix": "Replace the 1886 BATHS/HOT BATHS signs with the period bathhouse names from research/bathhouse-row-and-springs.md; put townsfolk and the player in coats and shawls in snow scenes",
+    "priority": 0.5,
+    "selected": false
+  },
+  {
+    "id": "G-char-backviews-clones",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "M",
+    "workstream": "WS2",
+    "evidence": [
+      "desktop/R08",
+      "desktop/R09",
+      "mobile/R05"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Cap hair and hats at about 40% of sprite height in side and back frames, with shoulders and garment back visible; never show the same garment and headwear combination twice on screen",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-light-dusk-evening-rain",
+    "category": "lighting",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS4",
+    "evidence": [
+      "desktop/R06",
+      "desktop/R07",
+      "desktop/R09",
+      "desktop/R05"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "Light street lamps from 18:00; warm-to-violet grade for the 2026 evening; on-grid puddle and splash tiles in rain; centre lamp pools under their posts",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-anim-walk-staging-secondary",
+    "category": "animation",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS5",
+    "evidence": [
+      "strips/R13",
+      "strips/R14"
+    ],
+    "benchmark": "stardew-1.jpg",
+    "fix": "Move the double-lantern post or the R13 path so nothing occludes the walker; add a 1-px body bob and a hair or hat bob lagged by one frame; cut the hoe settle to 2 frames and add a recoil and dirt-clod burst",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-ui-portraits-tags",
+    "category": "ui",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS6",
+    "evidence": [
+      "mobile/R11",
+      "desktop/R11",
+      "desktop/R16"
+    ],
+    "benchmark": "stardew-5.jpg",
+    "fix": "48-64 px bust portraits for named people; one nine-slice panel frame per era; lay out name tags so they never cover another NPC sprite",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-pixel-terrain-grain",
+    "category": "pixel",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "M",
+    "workstream": "WS1",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R07"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Redraw grass, cobble and water tiles at the 2-px art grain used by the buildings; draw cobbles as outlined stone clusters instead of random speckle",
+    "priority": 0.375,
+    "selected": false
+  },
+  {
+    "id": "G-char-body-template",
+    "category": "characters",
+    "expectedGain": 0.5,
+    "severity": 3,
+    "effort": "L",
+    "workstream": "WS2",
+    "evidence": [
+      "crops/R16-npcs",
+      "crops/R03-player",
+      "crops/R11-npcs"
+    ],
+    "benchmark": "seastars-2.jpg",
+    "fix": "At least 3 body and posture templates (stooped elder, broad man, slim youth); 1-2 px mouth and brow; separate cuffs from hands; darkest-ramp outline rule matching the buildings",
+    "priority": 0.188,
+    "selected": false
+  },
+  {
+    "id": "G-env-town-backdrop",
+    "category": "environment",
+    "expectedGain": 0.5,
+    "severity": 4,
+    "effort": "L",
+    "workstream": "WS3",
+    "evidence": [
+      "desktop/R04",
+      "desktop/R09",
+      "desktop/R19"
+    ],
+    "benchmark": "chained-5.jpg",
+    "fix": "Wooded mountain-slope tile band behind the Row; sidewalks, fences and side lots; per-era street plan (also +0.5 authenticity)",
+    "priority": 0.188,
+    "selected": false
+  }
+]

@@ -7,3 +7,5 @@
 - **Hats in profile and from behind** are smaller again: the slouch brim, fedora, visor and toque are drawn 20–32% smaller than in the front view. In the walk strip, the head and shoulders now show under the hat.
 - **Townsfolk:** passing women in 1871–1886 cycle through a bonnet, a bare head and a headscarf, so no two in a row are clones.
 - **Phone hotbar:** slot numbers and stack counts are half the size on 2× screens (still whole device pixels), so they no longer cover the item icons.
+- **Passers-by step round lamp posts** instead of walking through them.
+- **Captures:** neighbour staging moves anyone placed on a blocked tile (inside a tent) to a free spot beside the player. R15 stands the player a tile south of the trough, facing the camera, and R08 a tile east, so a trough or post no longer sits in front of the face.
