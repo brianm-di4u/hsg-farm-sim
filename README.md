@@ -1,8 +1,13 @@
 # Valley of Vapors: Through the Ages
 
-Farming and life sim across the town's eras. Part of **Hot Springs Games**, an open-source (MIT) collection of browser games set in
-Hot Springs, Arkansas. The game ships as a self-contained `index.html`: art is drawn in code or painted into
-`assets/`, sound is synthesized with WebAudio, and nothing loads from the network.
+Farming and life sim across the town's eras, in 16-bit-style pixel art. Part of **Hot Springs Games**, an
+open-source (MIT) collection of browser games set in Hot Springs, Arkansas. The game ships as a self-contained
+`index.html`: pixel art is packed into `assets/`, sound is synthesized with WebAudio, and nothing loads from the
+network.
+
+The collection's other sim, Woodland Gardens Keeper, lives in
+[hsg-garden-sim](https://github.com/brianm-di4u/hsg-garden-sim). It began as this game, so both repositories
+share history up to 29 October 2026.
 
 All games in the collection are original designs. Real places, schools and businesses appear as setting and
 history only; no logos are reproduced and nothing implies endorsement. School rosters are fictional.
@@ -17,9 +22,19 @@ Open `index.html` in a browser, or serve the folder (`python -m http.server 8765
 npm run setup   # installs Playwright and Chromium for the test harness
 npm run build   # rebuilds index.html from src/ (edit src/, not index.html)
 npm test        # runs tests/*.test.mjs; screenshots land in screenshots/
+HS_QUERY=style=pixel npm test   # the same suite with the pixel style forced on
+python -I tools/pack-px.py --tile 32   # repacks the pixel art from art-src/ (generated sources are git-ignored)
 ```
 
-Design docs: `PRD.md`, `MECHANICS.md`, `DEV-PLAN.md`, `REPORT.md`, `VISUAL-PLAN.md`, `VISUAL-REPORT.md`.
+Design docs: `PRD.md`, `MECHANICS.md`, `DEV-PLAN.md`, `REPORT.md`, `VISUAL-PLAN-PX.md` and `VISUAL-REPORT.md`
+(the pixel-art campaign, its scores and the judge's backlog), and `reviews/` (the review-loop protocol, rubric
+and every loop's critiques). `VISUAL-PLAN.md` is the earlier painted-art plan.
+
+## History
+
+The pixel-art campaign (1 November 2026) ran in the offline monorepo and was replayed here commit by commit on
+top of the split commit it grew from. A painted-art fix pass made in this repository on 29 October is not part of
+this line. It survives in hsg-garden-sim's history (`eda8488`).
 
 ## Vendored from the collection
 
