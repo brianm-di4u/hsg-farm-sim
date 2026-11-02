@@ -11,6 +11,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const GAME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// Benchmark screenshots (git-ignored): the workspace's shared reference/benchmarks/farming-sims/, else benchmarks/ here.
+const BENCH = [path.resolve(GAME, '..', '..', 'reference', 'benchmarks', 'farming-sims'), BENCH].find((d) => fs.existsSync(d)) || BENCH;
 const args = process.argv.slice(2);
 const N = +args.find((a) => /^\d+$/.test(a));
 if (!(N >= 0)) { console.error('usage: review-prep.mjs <N> [--tier=high] [--shots=review-loop-N]'); process.exit(2); }
@@ -52,7 +54,7 @@ let drift = '';
 if (N > 0 && N % 3 === 0) {
   // Pixel-art calibration images only (football's lesson: photoreal anchors mark stylized art down); listed in research/pixel-anchors.md.
   const pick = (read(path.join(GAME, 'research', 'calibration.txt')).match(/\S+\.(?:jpg|png)/g) || ['stardew-2.jpg', 'mistria-3.jpg', 'sunhaven-2.jpg'])[(N / 3 - 1) % 3];
-  const src = path.join(GAME, 'benchmarks', pick);
+  const src = path.join(BENCH, pick);
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, path.join(loopDir, 'calibration.jpg'));
     fs.writeFileSync(path.join(loopDir, '.calibration'), pick + '\n');

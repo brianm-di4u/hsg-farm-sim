@@ -1,0 +1,80 @@
+{
+ "made": "2026-11-01T19:02:31.833Z",
+ "rows": [
+  {
+   "tier": "T16",
+   "viewport": "mobile",
+   "scene": "1931 town, night, rain",
+   "throttle": 6,
+   "gpu": true,
+   "fps": 57.3,
+   "p50": 14.1,
+   "p95": 39.1,
+   "worst": 109,
+   "scriptMs": 8.87,
+   "heapMB": 11.3,
+   "bakeSettleMs": 177,
+   "maxBakeMs": 299
+  },
+  {
+   "tier": "T16",
+   "viewport": "mobile",
+   "scene": "1886 town, snow",
+   "throttle": 6,
+   "gpu": true,
+   "fps": 52.5,
+   "p50": 17.1,
+   "p95": 56.1,
+   "worst": 144,
+   "scriptMs": 1.14,
+   "heapMB": 11.3,
+   "bakeSettleMs": 548,
+   "maxBakeMs": 166
+  },
+  {
+   "tier": "T16",
+   "viewport": "mobile",
+   "scene": "1886 springs, fog",
+   "throttle": 6,
+   "gpu": true,
+   "fps": 62.1,
+   "p50": 17.8,
+   "p95": 38,
+   "worst": 74,
+   "scriptMs": 10.7,
+   "heapMB": 11.3,
+   "bakeSettleMs": 786,
+   "maxBakeMs": 360
+  },
+  {
+   "tier": "T16",
+   "viewport": "mobile",
+   "scene": "2026 lake, evening",
+   "throttle": 6,
+   "gpu": true,
+   "fps": 61.2,
+   "p50": 12.5,
+   "p95": 35,
+   "worst": 93,
+   "scriptMs": 6.96,
+   "heapMB": 11.3,
+   "bakeSettleMs": 1105,
+   "maxBakeMs": 122
+  },
+  {
+   "tier": "T16",
+   "viewport": "mobile",
+   "scene": "1871 farm, day",
+   "throttle": 6,
+   "gpu": true,
+   "fps": 50.4,
+   "p50": 14.7,
+   "p95": 35.1,
+   "worst": 138,
+   "scriptMs": 8.39,
+   "heapMB": 11.3,
+   "bakeSettleMs": 199,
+   "maxBakeMs": 122
+  }
+ ]
+}

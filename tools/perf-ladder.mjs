@@ -4,7 +4,7 @@
 // render-only load, and records fps, p95 and worst frame, the game's script time per frame and the heap.
 //
 //   node tools/perf-ladder.mjs [--profiles=gpu,sw,phone4,phone6] [--axes=sprites,size,frames,lights,particles,tile]
-//        [--out=benchmarks/ladder.json]
+//        [--out=reviews/perf/ladder.json]
 //
 // Profiles: gpu = desktop 1280x800 on the real GPU (vsync off); sw = the same in SwiftShader (the harness's renderer);
 // phone4 / phone6 = 390x844@3 on the GPU with 4x / 6x CDP CPU throttling (main thread only: raster cost is
@@ -22,7 +22,7 @@ const args = process.argv.slice(2);
 const opt = (k, d) => { const a = args.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : d; };
 const PROFILES = opt('profiles', 'gpu,sw,phone4,phone6').split(',');
 const AXES = opt('axes', 'sprites,size,frames,lights,particles,tile').split(',');
-const OUT = opt('out', 'benchmarks/ladder.json');
+const OUT = opt('out', 'reviews/perf/ladder.json');
 const GPU = ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--disable-gpu-vsync', '--disable-frame-rate-limit'];
 const PROF = {
   gpu: { launch: { channel: 'chrome', args: GPU }, ctx: { viewport: { width: 1280, height: 800 } }, throttle: 1, pass: (r) => r.fps >= 58 && r.scriptMs <= 4 },
