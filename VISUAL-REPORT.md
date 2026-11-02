@@ -1,5 +1,80 @@
 # Valley of Vapors — visual enhancement report
 
+## Pixel-art campaign (2026-11-01): the game is now 16-bit-style pixel art
+
+The painted look described further down was replaced by a classic 16-bit pixel-art style through an autonomous
+review loop. The sim, saves, quests and balance are unchanged (`check-facts` 0 problems, `balance 6` steady). Plan
+and pivots: `VISUAL-PLAN-PX.md`. Per-loop evidence: `reviews/loop-0` … `reviews/loop-8`, `reviews/HISTORY.md`.
+
+**Status:** pixel art is the only art style. Settings → Graphics offers Pixel and Simple (the vector fallback);
+a saved "Painted" choice now reads as Pixel. The painted images are no longer shipped or loaded. They live on in
+`art-src/painted/` as the source `tools/pack-px.py` pixelizes for anything without a generated pixel original.
+The non-pixel branches in the renderer remain because the Simple mode uses them.
+
+### Scores (judged, 8 categories × 10; gates 7, authenticity 6)
+
+| Loop | Total | What moved it |
+|---|---|---|
+| 0 | 33.0 | painted build scored against the pixel rubric (baseline) |
+| 1 | 39.0 | pixel render core, pack-time pixelizer, Blender pixel characters |
+| 2 | 45.5 | Codex-generated pixel art for every building, prop and crop |
+| 3 | 44.5 | 32 art px per tile after a blind tier study; townsfolk; T32 bake fix |
+| 4 | 47.0 | face window under hats, hoe swing that tills on impact, pixel ground, the game's own 5×7 pixel UI face |
+| 5 | 47.5 | face window per view, dithered see-through, bitmap slot numbers |
+| 6 | **50.5** (best) | smaller hats, walk bob, dithered lamp light, pixel HUD icons, pixel font on phones |
+| 7 | 50.0 | hats scaled per view direction, animal art fix, UI touch fixes |
+| 8 | 49.5 | generated farm and shore dressing, staging fixes |
+
+The loop stopped under the agreed rule: loops 7 and 8 did not beat loop 6. The shipped build is loop 8. Its
+judged total is 1.0 below the best, within the reviewers' half-point steps, and it keeps fixes reviewers asked
+for: the goat's coat, side-view hats, clear slot icons and Ezra's staging. **Gates met:** UI (7, loops 6–7),
+readability (7, loop 8), authenticity (≥ 6 since loop 1). **Not met:** pixel 6–6.5, characters 5, environment 6.5,
+lighting 6, animation 6. A blind pixel benchmark (a Stardew frame) scored 8 / 7.5 / 6.5 under the same judge.
+
+### How it is made
+
+- **Render core:** a low-resolution canvas at 32 art px per tile, integer-scaled with no smoothing, the camera
+  locked to the art grid. An automated pixel-integrity check runs on every capture.
+- **Art:** Codex-generated pixel art in ten batches (`art-src/px-prompts/`), packed by `tools/pack-px.py`, which
+  handles palette, majority-vote downsampling, line weighting, background keying and snow variants.
+- **Characters:** a Blender rig (`art-src/blender/characters-px.py`), 13 frames per direction, garment overlays,
+  hats scaled per view, packed by `tools/pack-chars-px.py` into mask rows that the game fills with hue-shifted
+  ramps. A face window keeps eyes visible under headwear.
+- **Light:** dithered lamp and window pools, stepped night darkness capped at 75%, pixel fog, dithered see-through.
+- **Text:** the game's own 5×7 bitmap face as a webfont (`tools/build-pxfont.py`), sized so every dot is whole
+  device pixels on desktop and phones.
+
+### Performance (hard gate every loop; `research/pixel-budget.md`)
+
+Loop 8: desktop GPU 492–1057 fps. Phone 4× throttle: 87–142 fps, median p95 ≤ 32.6 ms. Phone 6×: 54–91 fps.
+Heap ≤ 24.8 MB. Pixel assets about 1.7 MB at T32. Throttled runs vary a lot, so the gate takes the median of 3
+(`perf-gpu.mjs --repeat=3`). An A/B against the last commit caught one regression (a sprite pre-compose that slowed
+first visits), and it was removed.
+
+### Known gaps (the judge's backlog at the stop)
+
+- **Characters (5):** named people miss parts of their checklist (Caleb's slouch hat, June's ponytail, Walt's
+  knickers and stockings, Josiah's fur cap, Ezra's stoop and coat). All share one face and body template. Back
+  views read as blobs.
+- **Pixel (6):** grass, cobble and water clusters are twice the art pixel of the buildings; fog shapes are still
+  soft.
+- **Lighting (6):** people cast no shadow in town light, dusk and 2026 evening read close to day, and street
+  lamps are off at 19:10.
+- **Environment (6.5):** farm and town layouts repeat across eras; the lake is mostly open water.
+- **Animation (6):** walk has no head or hat motion; the hoe has a lean and squash but little weight.
+
+### Process notes
+
+- The loop-0 painted captures (git-ignored) were overwritten once by running the capture tool without an output
+  folder. The tool now requires one. Scores and review texts are unaffected.
+- The loop 8 commit message gives the wrong delta: it says −1.0, but the true change was −0.5 against
+  loop 7's 50.0. `reviews/HISTORY.md` is correct.
+
+---
+
+*The sections below describe the earlier painted pass (2026-10-29), now retired; kept for the record.*
+
+
 The vector prototype became a painted, lit, era-specific top-down farming game. The simulation, saves, quests
 and balance are unchanged (the only sim-side edit moves the 1807 trade-camp fire's drawing position off the
 spot where people stand). Plan: `VISUAL-PLAN.md`. Nothing is committed.

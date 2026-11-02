@@ -30,7 +30,7 @@ function loadSettings() {
   let s = {};
   try { s = JSON.parse(load(save.SETTINGS_KEY) || '{}') || {}; } catch { s = {}; }
   const keys = { ...DEFAULT_KEYS, ...(s.keys || {}) };
-  return { text: s.text || 1, motion: s.motion || 'auto', touch: s.touch || 'auto', mute: !!s.mute, volume: s.volume ?? 0.5, assist: !!s.assist, contrast: !!s.contrast, gfx: ['simple', 'pixel'].includes(s.gfx) ? s.gfx : 'painted', keys };
+  return { text: s.text || 1, motion: s.motion || 'auto', touch: s.touch || 'auto', mute: !!s.mute, volume: s.volume ?? 0.5, assist: !!s.assist, contrast: !!s.contrast, gfx: s.gfx === 'simple' ? 'simple' : 'pixel', keys }; // 'painted' (retired) reads as pixel
 }
 function saveSettings() { store(save.SETTINGS_KEY, JSON.stringify(app.settings)); }
 function saveGame() {
@@ -458,7 +458,7 @@ function onClick(e) {
     case 'vol': app.settings.volume = +arg; app.settings.mute = false; saveSettings(); applySettings(); play('coin'); refreshModal(); break;
     case 'assist': app.settings.assist = arg === 'on'; saveSettings(); applySettings(); refreshModal(); break;
     case 'contrast': app.settings.contrast = arg === 'on'; saveSettings(); applySettings(); refreshModal(); break;
-    case 'gfx': if (app.settings.gfx !== arg) { app.settings.gfx = arg; saveSettings(); ui.toast(`${{ simple: 'Simple', pixel: 'Pixel' }[arg] || 'Painted'} graphics from the next start (reload the page).`, 'good'); } refreshModal(); break;
+    case 'gfx': if (app.settings.gfx !== arg) { app.settings.gfx = arg; saveSettings(); ui.toast(`${arg === 'simple' ? 'Simple' : 'Pixel'} graphics from the next start (reload the page).`, 'good'); } refreshModal(); break;
     case 'rebind': app.ui.rebinding = arg; ui.settingsScreen(arg); break;
     case 'resetkeys': app.settings.keys = JSON.parse(JSON.stringify(DEFAULT_KEYS)); saveSettings(); refreshModal(); break;
   }

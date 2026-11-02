@@ -1,27 +1,23 @@
-// Painted art loader. Images listed in assets/manifest.json (inlined at build time as ART_MANIFEST) are
-// loaded with new Image() + decode(), which works from file:// as well as http, and only ever drawn (never
-// read back). Loading is progressive: the current chapter's set first, everything else after first paint.
-// Until an image is decoded the vector art in art.js is drawn instead; `?art=0` keeps the vector art.
-/* global ART_MANIFEST */
-const PAINTED = typeof ART_MANIFEST !== 'undefined' ? ART_MANIFEST : {};
+// Art loader. The pixel-art set for the tile size (assets/px/<T>/, listed in assets/px/manifest.json, inlined at build
+// time as ART_MANIFEST_PX) is loaded with new Image() + decode(), which works from file:// as well as http, and only
+// ever drawn (never read back), except the terrain textures, inlined as data URLs. Loading is progressive: the current
+// chapter's set first, everything else after first paint. Until an image is decoded the vector art in art.js is drawn
+// instead; `?art=0` or Settings → Graphics → Simple keeps the vector art. (The painted set this replaced lives on in
+// art-src/painted/ as pack sources only.)
 const gfx = (() => { try { return JSON.parse(localStorage.getItem('vov-farm-settings') || '{}').gfx || ''; } catch { return ''; } })();
 const query = typeof location !== 'undefined' ? location.search : '';
 const off = /[?&]art=0\b/.test(query) || gfx === 'simple';
-// Pixel style (`?style=pixel`, or Settings → Graphics → Pixel): the world is drawn into a low-resolution canvas,
-// one canvas pixel per art pixel, `PX.T` pixels to a tile (`?tile=24` / `32` for the larger tiers), and the
-// browser scales it up by a whole number with no smoothing.
-const styleQ = (query.match(/[?&]style=(\w+)/) || [])[1];
+// Pixel style (the art style whenever art is on): the world is drawn into a low-resolution canvas, one canvas pixel
+// per art pixel, `PX.T` pixels to a tile, and the browser scales it up by a whole number with no smoothing.
 // T = art px per tile: 32 by default (chosen in the blind tier study, VISUAL-PLAN-PX.md "Pivots"); ?tile=16|24 for A/B.
 // S = whole-number scale for code-drawn pixel elements (bitmap text, fences, badges) so they keep their screen size.
 const tileQ = +(query.match(/[?&]tile=(\d+)/) || [])[1];
 const T = [16, 24, 32].includes(tileQ) ? tileQ : 32;
-export const PX = { on: styleQ ? styleQ === 'pixel' : gfx === 'pixel', T, S: T >= 24 ? 2 : 1 };
+export const PX = { on: !off, T, S: T >= 24 ? 2 : 1 };
 
-// The pixel style draws the pixel-art set for its tile size (assets/px/<T>/, packed by tools/pack-px.py) and falls
-// back to the painted image for anything not yet in it.
 /* global ART_MANIFEST_PX */
 const PXMAN = PX.on && typeof ART_MANIFEST_PX !== 'undefined' ? ART_MANIFEST_PX[PX.T] || {} : {};
-const MAN = { ...PAINTED, ...PXMAN };
+const MAN = PXMAN;
 export const isPx = (name) => !!PXMAN[name];
 // Pixel terrain textures inlined as data URLs (tools/pack-px.py): they don't taint the terrain chunks they're
 // drawn into, so scene.js can read the chunks back and clean their edges.

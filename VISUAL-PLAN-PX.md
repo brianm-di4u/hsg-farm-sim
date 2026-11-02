@@ -89,3 +89,8 @@ Readback of loaded images is impossible under file://, so all pixel processing h
   - **Risk both panelists named:** bitmap labels shrink with the finer grid. Code-drawn pixel elements (signs, name tags, badges, fences, weather) now scale by a whole-number `PX.S` (2 at 32 px), so they keep their screen size.
   - **Still available:** `?tile=16` remains for A/B. The research table's "T16 default" is overruled by this measurement, as its own text allows.
 
+## Status (2026-11-01)
+
+The campaign stopped after loop 8 under the stop rule (best 50.5/80 at loop 6; loops 7 and 8 scored 50.0 and
+49.5). Pixel art is now the only art style. The painted set moved to `art-src/painted/` as pack sources, and the
+Simple vector fallback stays. Results, gaps and process notes: `VISUAL-REPORT.md`, pixel-art campaign section.

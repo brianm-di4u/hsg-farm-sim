@@ -7,18 +7,20 @@
 //   - "sheet": [cols, rows] cut a sprite sheet (crop stages) into equal cells, each trimmed, packed into one
 //     strip of cells "w" × "h" with every cell bottom-aligned.
 //
-//   node tools/pack-art.mjs [--only a,b] [--group tex]
+//   node games/farm-sim/tools/pack-art.mjs [--only a,b] [--group tex]
 //
 // art-src/art.json: { "quality": 0.82, "items": [ { "name", "src", "w", "h"?, "keyWhite"?, "trim"?, "seamless"?,
-//   "sheet"?, "quality"? } ] }. Writes assets/<name>.webp, assets/manifest.json, art-src/sheet.png (review).
-import { chromium } from '../shared/test-harness/node_modules/playwright/index.mjs';
+//   "sheet"?, "quality"? } ] }. Writes art-src/painted/<name>.webp, art-src/painted/manifest.json, art-src/sheet.png (review).
+import { chromium } from '../../../shared/test-harness/node_modules/playwright/index.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const GAME = path.resolve(HERE, '..');
-const srcDir = path.join(GAME, 'art-src'), outDir = path.join(GAME, 'assets');
+// Since the pixel style replaced it, the painted set is no longer shipped: it is kept in art-src/painted/ as the
+// source tools/pack-px.py pixelizes for anything without a generated pixel original.
+const srcDir = path.join(GAME, 'art-src'), outDir = path.join(GAME, 'art-src', 'painted');
 const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 const only = opt('--only') ? opt('--only').split(',') : null;

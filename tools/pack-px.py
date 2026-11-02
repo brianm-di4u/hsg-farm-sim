@@ -5,7 +5,7 @@
 
 Source for each image: a generated pixel-art picture in art-src/px-gen/<name>.png when there is one (Codex, prompts
 in art-src/px-prompts/; white background keyed here, no smoothing: it is already flat-cluster art), else the packed
-painted asset (assets/<name>.webp: already keyed, trimmed, split and, for textures, seamless). Each one goes through tools/pixelize.py
+painted asset (art-src/painted/<name>.webp, the retired painted set: already keyed, trimmed, split and, for textures, seamless). Each one goes through tools/pixelize.py
 at exactly the size the game draws it, in art pixels:
   - width in tiles from art-src/px-sizes.json (the drawn-size survey, tools/px-sizes.mjs), else the defaults
     below, which mirror the size tables in src/js/render/painted.js and terrain.js;
@@ -169,7 +169,7 @@ def main():
     ap.add_argument('--group', default=None)
     a = ap.parse_args()
     T = a.tile
-    man = json.load(open(os.path.join(GAME, 'assets', 'manifest.json'), encoding='utf-8'))
+    man = json.load(open(os.path.join(GAME, 'art-src', 'painted', 'manifest.json'), encoding='utf-8'))  # the retired painted set: pack sources only
     sizes = json.load(open(os.path.join(GAME, 'art-src', 'px-sizes.json'), encoding='utf-8'))
     over_path = os.path.join(GAME, 'art-src', 'px.json')
     over = json.load(open(over_path, encoding='utf-8')) if os.path.exists(over_path) else {}
@@ -192,7 +192,7 @@ def main():
             continue
         gen = os.path.join(GAME, 'art-src', 'px-gen', name + '.png')
         is_gen = os.path.exists(gen)
-        src = Image.open(gen if is_gen else os.path.join(GAME, 'assets', ent['file']))
+        src = Image.open(gen if is_gen else os.path.join(GAME, 'art-src', 'painted', os.path.basename(ent['file'])))
         o = opts_for(name, over)
         if is_gen:  # flat-cluster pixel art already: no median flattening, a slightly larger palette, key the white
             o.update(smooth=0, colors=o['colors'] + 8, key='auto')
