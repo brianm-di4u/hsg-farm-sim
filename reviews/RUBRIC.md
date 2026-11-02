@@ -1,9 +1,9 @@
 # Pixel-art review rubric (Valley of Vapors)
 
 Eight categories, each scored 1–10 in 0.5 steps (total out of 80). The bar is shipped pixel-art games in the genre
-and its 16-bit ancestors, not "good for a browser game". Benchmarks are in `games/farm-sim/benchmarks/`
+and its 16-bit ancestors, not "good for a browser game". Benchmarks are in `benchmarks/`
 (`SOURCES.md` names each image). Only pixel-art images are anchors; 3D benchmarks (`coral-*`) are not used for scoring.
-Detailed per-category anchor notes, once written, are in `games/farm-sim/research/pixel-anchors.md`.
+Detailed per-category anchor notes, once written, are in `research/pixel-anchors.md`.
 
 **Evidence rule:** every score cites at least 2 captures by path. `animation` must cite a motion strip.
 `characters` must cite at least one character close-up beside its reference sheet. Uncited claims are dropped.

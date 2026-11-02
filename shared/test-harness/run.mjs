@@ -391,7 +391,9 @@ export async function runSuite({ gameDir, testDir, milestone = 'latest', viewpor
       const t = makeT({ page, viewportName: vpName, shotDir, milestone, origin, results, test });
       t.fileUrl = asFile;
       t.gpu = gpu;
-      const rel = test.url || 'index.html';
+      // HS_QUERY=a=1&b=2 appends query parameters to every test's url (e.g. to run a suite on an alternate render style).
+      let rel = test.url || 'index.html';
+      if (process.env.HS_QUERY) { const h = rel.indexOf('#'), base = h < 0 ? rel : rel.slice(0, h); rel = base + (base.includes('?') ? '&' : '?') + process.env.HS_QUERY + (h < 0 ? '' : rel.slice(h)); }
       const q = rel.search(/[?#]/);
       const url = asFile ? pathToFileURL(path.join(gameDir, q < 0 ? rel : rel.slice(0, q))).href + (q < 0 ? '' : rel.slice(q))
         : `${origin}/${relGame ? relGame + '/' : ''}${rel}`;

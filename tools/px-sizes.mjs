@@ -2,14 +2,14 @@
 // Size survey for the pixel-art packer: tours every chapter, season and weather in the painted style with
 // `?sizelog`, walks the player over the whole map so every building, tree, prop and person is drawn, and records
 // the size (in tiles) each image was requested at. Writes art-src/px-sizes.json: { name: [widths in tiles] }.
-//   node games/farm-sim/tools/px-sizes.mjs
+//   node tools/px-sizes.mjs
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const require = createRequire(path.resolve(HERE, '../../../shared/test-harness/package.json'));
+const require = createRequire(path.resolve(HERE, '../shared/test-harness/package.json'));
 const { chromium } = require('playwright');
 const url = pathToFileURL(path.resolve(HERE, '..', 'index.html')).href + '?sizelog';
 const browser = await chromium.launch();

@@ -2,7 +2,7 @@
 // Writes the briefs for review loop N from the templates in reviews/briefs/: the capture index (from shots.json),
 // this loop's CHANGES.md (facts only) and the perf summary (perf.json). No scores go into any brief.
 //
-//   node games/farm-sim/tools/review-prep.mjs <N> [--tier=T16] [--shots=review-loop-N]
+//   node tools/review-prep.mjs <N> [--tier=T16] [--shots=review-loop-N]
 //
 // Output: reviews/loop-N/brief.md (both critics), brief-advocate.md, brief-judge.md, and calibration.jpg every
 // third loop (a benchmark image the judge scores blind, to catch drift).
@@ -56,7 +56,7 @@ if (N > 0 && N % 3 === 0) {
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, path.join(loopDir, 'calibration.jpg'));
     fs.writeFileSync(path.join(loopDir, '.calibration'), pick + '\n');
-    drift = '- **Calibration:** also open `games/farm-sim/reviews/loop-' + N + '/calibration.jpg`, an unlabeled reference frame. Score its `pixel`, `environment` and `lighting` on the rubric anchors alone, and add `"calibration": {"pixel": x, "environment": y, "lighting": z}` to your JSON block.';
+    drift = '- **Calibration:** also open `reviews/loop-' + N + '/calibration.jpg`, an unlabeled reference frame. Score its `pixel`, `environment` and `lighting` on the rubric anchors alone, and add `"calibration": {"pixel": x, "environment": y, "lighting": z}` to your JSON block.';
   }
 }
 fs.writeFileSync(path.join(loopDir, 'brief-judge.md'), fill(read(path.join(briefs, 'judge.md')), { DRIFT: drift }));

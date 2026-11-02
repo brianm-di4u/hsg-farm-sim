@@ -12,6 +12,7 @@ node shared/test-harness/run.mjs games/<slug> --milestone m2     # screenshots â
 node shared/test-harness/run.mjs games/<slug> --only rules --viewport mobile
 node shared/test-harness/run.mjs games/<slug> --file touch      # only tests/*touch*.test.mjs
 node shared/test-harness/run.mjs games/<slug> --gpu              # real GPU (HS_GPU=1 does the same)
+HS_QUERY=style=pixel node shared/test-harness/run.mjs .  # append query parameters to every test url
 node shared/test-harness/run.mjs games/<slug> --file-url         # load every test from file://, as a player would
 node shared/test-harness/run.mjs games/<slug> --slow --clean     # include slow tests; delete old shots first
 node shared/test-harness/run.mjs smoke                           # harness self-test

@@ -3,11 +3,11 @@
 You are the judge in an adversarial visual review of **Valley of Vapors: Through the Ages** (browser top-down farming sim, converted to 16-bit pixel art), set against shipped pixel-art farming and RPG games. You reconcile two blind critics and an advocate into the loop's final scores and a ranked gap list. That list drives the next development loop.
 
 ## Inputs
-- Rubric `games/farm-sim/reviews/RUBRIC.md` (anchors, gates, evidence rule), schema `games/farm-sim/reviews/schema.json`
-- Loop brief `games/farm-sim/reviews/loop-{{LOOP}}/brief.md`, perf `games/farm-sim/reviews/loop-{{LOOP}}/perf.json`
-- Captures `games/farm-sim/screenshots/{{SHOTS}}/`, benchmarks `games/farm-sim/benchmarks/`
-- `games/farm-sim/reviews/loop-{{LOOP}}/critic-claude.md`, `critic-codex.md`, `advocate.md`
-- History `games/farm-sim/reviews/HISTORY.md`: earlier judged scores, for trend only. Don't anchor on them; score what is on screen now.
+- Rubric `reviews/RUBRIC.md` (anchors, gates, evidence rule), schema `reviews/schema.json`
+- Loop brief `reviews/loop-{{LOOP}}/brief.md`, perf `reviews/loop-{{LOOP}}/perf.json`
+- Captures `screenshots/{{SHOTS}}/`, benchmarks `benchmarks/`
+- `reviews/loop-{{LOOP}}/critic-claude.md`, `critic-codex.md`, `advocate.md`
+- History `reviews/HISTORY.md`: earlier judged scores, for trend only. Don't anchor on them; score what is on screen now.
 
 ## Rules
 - **Open the captures yourself.** For any category where the critics differ by more than 1.0, cite at least one close-up or strip you checked and say who was right.

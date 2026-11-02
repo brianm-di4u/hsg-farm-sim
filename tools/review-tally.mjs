@@ -3,7 +3,7 @@
 // scores.json and gaps.json from the judge, updates reviews/HISTORY.md, applies the stop rule (PROTOCOL.md) and
 // prints the ranked backlog for the next development loop.
 //
-//   node games/farm-sim/tools/review-tally.mjs <N> [--validate]   (--validate: check the files only)
+//   node tools/review-tally.mjs <N> [--validate]   (--validate: check the files only)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

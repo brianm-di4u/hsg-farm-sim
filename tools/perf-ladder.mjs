@@ -3,8 +3,8 @@
 // Climbs one axis at a time from a busy base scene (1886 town, walking), using the __game.bench() hook to add
 // render-only load, and records fps, p95 and worst frame, the game's script time per frame and the heap.
 //
-//   node games/farm-sim/tools/perf-ladder.mjs [--profiles=gpu,sw,phone4,phone6] [--axes=sprites,size,frames,lights,particles,tile]
-//        [--out=games/farm-sim/benchmarks/ladder.json]
+//   node tools/perf-ladder.mjs [--profiles=gpu,sw,phone4,phone6] [--axes=sprites,size,frames,lights,particles,tile]
+//        [--out=benchmarks/ladder.json]
 //
 // Profiles: gpu = desktop 1280x800 on the real GPU (vsync off); sw = the same in SwiftShader (the harness's renderer);
 // phone4 / phone6 = 390x844@3 on the GPU with 4x / 6x CDP CPU throttling (main thread only: raster cost is
@@ -15,14 +15,14 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const GAME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ROOT = path.resolve(GAME, '..', '..');
+const ROOT = GAME;
 const require = createRequire(path.resolve(ROOT, 'shared', 'test-harness', 'package.json'));
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);
 const opt = (k, d) => { const a = args.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : d; };
 const PROFILES = opt('profiles', 'gpu,sw,phone4,phone6').split(',');
 const AXES = opt('axes', 'sprites,size,frames,lights,particles,tile').split(',');
-const OUT = opt('out', 'games/farm-sim/benchmarks/ladder.json');
+const OUT = opt('out', 'benchmarks/ladder.json');
 const GPU = ['--enable-gpu', '--use-angle=d3d11', '--ignore-gpu-blocklist', '--disable-gpu-vsync', '--disable-frame-rate-limit'];
 const PROF = {
   gpu: { launch: { channel: 'chrome', args: GPU }, ctx: { viewport: { width: 1280, height: 800 } }, throttle: 1, pass: (r) => r.fps >= 58 && r.scriptMs <= 4 },

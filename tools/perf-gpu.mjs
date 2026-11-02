@@ -3,8 +3,8 @@
 // for the busiest scenes, per viewport, while the player walks. --throttle=N adds CDP CPU throttling (4 ≈ a mid-range
 // phone, 6 ≈ a low-end one). --software uses the harness's SwiftShader instead of the GPU.
 //
-//   node games/farm-sim/tools/perf-gpu.mjs [--viewports=desktop,mobile] [--throttle=4] [--query=style=pixel]
-//        [--software] [--only=snow,lake] [--repeat=3] [--out=games/farm-sim/reviews/loop-0/perf.json]
+//   node tools/perf-gpu.mjs [--viewports=desktop,mobile] [--throttle=4] [--query=style=pixel]
+//        [--software] [--only=snow,lake] [--repeat=3] [--out=reviews/loop-0/perf.json]
 //
 // Rows: { tier, viewport, scene, throttle, gpu, fps, p50, p95, worst, scriptMs, heapMB }. With --out, rows merge
 // into the file (same tier/viewport/scene/throttle/gpu replaced), so throttled and normal runs share one perf.json.
@@ -14,7 +14,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const GAME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ROOT = path.resolve(GAME, '..', '..');
+const ROOT = GAME;
 const require = createRequire(path.resolve(ROOT, 'shared', 'test-harness', 'package.json'));
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);

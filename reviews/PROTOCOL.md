@@ -1,6 +1,6 @@
 # Adversarial review loop: protocol (pixel-art campaign)
 
-The pixel-art campaign (`VISUAL-PLAN-PX.md`) runs as a loop: **build → test → capture → independent critiques → advocate → judge → tally → develop**. This file is the procedure. RUBRIC.md defines the scores and schema.json the output shape. The machinery is adapted from games/football's v3 campaign.
+The pixel-art campaign (`VISUAL-PLAN-PX.md`) runs as a loop: **build → test → capture → independent critiques → advocate → judge → tally → develop**. This file is the procedure. RUBRIC.md defines the scores and schema.json the output shape. The machinery is adapted from hsg-football's v3 campaign.
 
 ## Roles
 
@@ -19,15 +19,15 @@ The developer (the main session) writes CHANGES.md and inspects every capture be
 - Every third loop, the judge scores one unlabeled pixel-art benchmark (`calibration.jpg`) to detect drift. Calibration images must be pixel art: football's photoreal anchors marked stylized art down.
 
 ## The loop (N = loop number)
-1. `node shared/tools/inline.mjs games/farm-sim`
-2. `HS_QUERY=style=pixel node shared/test-harness/run.mjs games/farm-sim --milestone px-loop-N` and the same without `HS_QUERY` (until the painted path is removed). Both must be all green: a hard gate.
-3. `node games/farm-sim/tools/shots-gpu.mjs review-loop-N --verify`, which also runs the pixel-integrity check (a hard gate).
-4. `node games/farm-sim/tools/perf-gpu.mjs --out=games/farm-sim/reviews/loop-N/perf.json`, then again with `--throttle=4 --viewports=mobile --repeat=3` and `--throttle=6 --viewports=mobile --repeat=3` and the **same** `--out`. The budget in `research/pixel-budget.md` is a hard gate.
+1. `node shared/tools/inline.mjs .`
+2. `HS_QUERY=style=pixel node shared/test-harness/run.mjs . --milestone px-loop-N` and the same without `HS_QUERY` (until the painted path is removed). Both must be all green: a hard gate.
+3. `node tools/shots-gpu.mjs review-loop-N --verify`, which also runs the pixel-integrity check (a hard gate).
+4. `node tools/perf-gpu.mjs --out=reviews/loop-N/perf.json`, then again with `--throttle=4 --viewports=mobile --repeat=3` and `--throttle=6 --viewports=mobile --repeat=3` and the **same** `--out`. The budget in `research/pixel-budget.md` is a hard gate.
 5. The developer opens every frame, close-up and strip, and writes `loop-N/CHANGES.md`.
-6. `node games/farm-sim/tools/review-prep.mjs N` writes `loop-N/brief.md`.
+6. `node tools/review-prep.mjs N` writes `loop-N/brief.md`.
 7. Critics A and B in parallel (blind), then the advocate, then the judge (judge.md, with the final JSON block).
-8. `node games/farm-sim/tools/review-tally.mjs N` validates every JSON block, writes `scores.json` and `gaps.json`, updates HISTORY.md, applies the stop rule and prints the ranked backlog for the next loop.
-9. Develop the backlog. Commit only `games/farm-sim/` (code, art sources, packed assets, `reviews/loop-N/`); never push. Then go to step 1 with N+1.
+8. `node tools/review-tally.mjs N` validates every JSON block, writes `scores.json` and `gaps.json`, updates HISTORY.md, applies the stop rule and prints the ranked backlog for the next loop.
+9. Develop the backlog. Commit only `` (code, art sources, packed assets, `reviews/loop-N/`); never push. Then go to step 1 with N+1.
 
 ## Backlog selection
 - **Priority** = expectedGain × weight ÷ effort cost. Weight is 1.5 for a category below its gate, 1.0 otherwise, 0.3 once a category is 1 above its gate. Effort cost: S = 1, M = 2, L = 4.

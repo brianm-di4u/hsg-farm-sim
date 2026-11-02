@@ -3,14 +3,14 @@
 // with --compare=<older set>, before/after pairs of the same frame. For a fast first sweep; full-size files remain
 // the evidence.
 //
-//   node games/farm-sim/tools/review-sheets.mjs review-loop-1 [--compare=review-loop-0] [--tier=T16] [--base-tier=painted]
+//   node tools/review-sheets.mjs review-loop-1 [--compare=review-loop-0] [--tier=T16] [--base-tier=painted]
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const GAME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ROOT = path.resolve(GAME, '..', '..');
+const ROOT = GAME;
 const require = createRequire(path.resolve(ROOT, 'shared', 'test-harness', 'package.json'));
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);

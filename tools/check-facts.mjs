@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Checks every history fact the game can display.
 //   node tools/check-facts.mjs
-// 1. data/facts.json: bank facts exist in the audited bank (games/trivia/data/questions.json), are
+// 1. data/facts.json: bank facts exist in the audited bank (shared/data/trivia-questions.json), are
 //    `confirmed`, cite the same source and URL, and the card text contains the key part(s) of the bank's
 //    answer; corpus facts quote strings that really appear in the named research file.
 // 2. src/js/sim/data.js: every fact/ref id it uses exists in facts.json.

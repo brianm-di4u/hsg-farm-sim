@@ -3,10 +3,10 @@
 // rendered by the installed Chrome (headless, ANGLE/D3D11) from file://. Also writes nearest-neighbour close-ups,
 // 8-frame motion strips, an index (shots.json) for the review brief, and runs the pixel-integrity check.
 //
-//   node games/farm-sim/tools/shots-gpu.mjs <out> [--only=R04,R10] [--viewports=desktop,mobile]
+//   node tools/shots-gpu.mjs <out> [--only=R04,R10] [--viewports=desktop,mobile]
 //        [--query=style=pixel] [--no-crops] [--no-strips] [--verify] [--max-bad=0.004]
 //
-// Output: games/farm-sim/screenshots/<out>/<viewport>/<id>.png, crops/<id>-<name>.png, strips/<id>.png, shots.json.
+// Output: screenshots/<out>/<viewport>/<id>.png, crops/<id>-<name>.png, strips/<id>.png, shots.json.
 // Pixel integrity (hard gate): with the pixel style, every k×k block of device pixels (k = device px per art px)
 // outside the DOM UI must be one colour. The share of mixed blocks per frame must stay under --max-bad; the
 // worst frames are listed in shots.json. --verify captures R04 twice and fails if the two differ.
@@ -16,13 +16,13 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const GAME = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ROOT = path.resolve(GAME, '..', '..');
+const ROOT = GAME;
 const require = createRequire(path.resolve(ROOT, 'shared', 'test-harness', 'package.json'));
 const { chromium } = require('playwright');
 const args = process.argv.slice(2);
 const opt = (k, d) => { const a = args.find((x) => x.startsWith(`--${k}=`)); return a ? a.slice(k.length + 3) : d; };
 const out = args.find((a) => !a.startsWith('--'));
-if (!out) { console.error('usage: node games/farm-sim/tools/shots-gpu.mjs <out> [--only=R04,R10] [--viewports=desktop,mobile] [--query=style=pixel]'); process.exit(1); }
+if (!out) { console.error('usage: node tools/shots-gpu.mjs <out> [--only=R04,R10] [--viewports=desktop,mobile] [--query=style=pixel]'); process.exit(1); }
 const ONLY = opt('only', '') ? opt('only', '').split(',') : null;
 const VPS = opt('viewports', 'desktop,mobile').split(',');
 const QUERY = opt('query', 'style=pixel'), MAXBAD = +opt('max-bad', '0.004');
