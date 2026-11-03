@@ -1339,36 +1339,36 @@
   "file": "vista-1.webp",
   "w": 1536,
   "h": 1024,
-  "bytes": 383738
+  "bytes": 378674
  },
  "vista-2": {
   "file": "vista-2.webp",
   "w": 1536,
   "h": 1024,
-  "bytes": 354574
+  "bytes": 322282
  },
  "vista-3": {
   "file": "vista-3.webp",
   "w": 1536,
   "h": 1024,
-  "bytes": 400792
+  "bytes": 406408
  },
  "vista-4": {
   "file": "vista-4.webp",
   "w": 1536,
   "h": 1024,
-  "bytes": 453180
+  "bytes": 565248
  },
  "vista-5": {
   "file": "vista-5.webp",
   "w": 1536,
   "h": 1024,
-  "bytes": 447280
+  "bytes": 362736
  },
  "vista-6": {
   "file": "vista-6.webp",
   "w": 1536,
   "h": 1024,
-  "bytes": 420146
+  "bytes": 424176
  }
 }

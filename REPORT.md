@@ -205,3 +205,13 @@ machine, not the game. The final run waited for the CPU to stay under 50% before
 `research/town-content.md`, `data/facts.json`, `tools/balance.mjs`, `tools/check-facts.mjs`,
 `tests/*.test.mjs` (13 files plus `helpers.mjs`), `src/` (index, CSS, `js/main.js`, `js/ui.js`,
 `js/audio.js`, `js/sim/` rng, data, world, path, sim, save; `js/render/` palette, art, scene).
+
+## Update: repainted backgrounds (2026-11-02)
+
+The six era vistas were repainted. The generated pixel vistas moved to `art-src/px-gen/retired/`, because
+`tools/pack-px.py` prefers `art-src/px-gen/<name>.png` over the painting; the shipped pixel vistas are now pixelized
+from the new paintings. The new source PNGs replace the `art-src/art.json` sources (git-ignored; the workspace keeps
+copies of the old and new paintings in `reference/backgrounds/`) and were packed with the usual tools. Older
+descriptions of these paintings in VISUAL-REPORT.md refer to the previous art.
+
+`npm test`: 88/88 passed.
