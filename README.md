@@ -36,6 +36,16 @@ The pixel-art campaign (1 November 2026) ran in the offline monorepo and was rep
 top of the split commit it grew from. A painted-art fix pass made in this repository on 29 October is not part of
 this line. It survives in hsg-garden-sim's history (`eda8488`).
 
+## Paths outside this repo
+
+The game, its build and its tests use files inside this repo. The tools below can also use shared material from the Hot
+Springs Games workspace (`reference/`, `research/`, or a sibling checkout in `repos/`). They find the workspace through the
+`HSG_WORKSPACE` environment variable; when it is unset, the workspace is this repo's grandparent, which is right when the
+repo sits at `<workspace>/repos/<repo>`. When the workspace copy is not there, each tool falls back to a path in this repo or
+skips that step with a message.
+
+- `tools/review-prep.mjs`: benchmark screenshots from `reference/benchmarks/farming-sims/`, else `benchmarks/` here.
+
 ## Vendored from the collection
 
 This repo was split out of the original Hot Springs Games monorepo (kept offline), which holds the full research
