@@ -19,3 +19,7 @@ art-src/**/renders/
 /art-src/dem/
 # Raw downloaded map data (USGS, Census, NHD, OSM; refetched by game tools)
 /art-src/geo/raw/
+
+# Python bytecode
+__pycache__/
+*.pyc
